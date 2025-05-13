@@ -97,7 +97,15 @@ function Account() {
                                 <tbody>
                                     <tr>
                                         <th className="p-2 border border-gray-300 text-left w-2/6">
-                                            Name:
+                                            Username:
+                                        </th>
+                                        <td className="p-2 border border-gray-300 w-4/6">
+                                            {user?.username}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th className="p-2 border border-gray-300 text-left w-2/6">
+                                            Full Name:
                                         </th>
                                         <td className="p-2 border border-gray-300 w-4/6">
                                             {user?.firstname} {user?.lastname}

@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\JobApplicationController;
-use App\Http\Controllers\JobController;
-use App\Http\Controllers\JobPoster\DashboardController;
-use App\Http\Controllers\JobPoster\NotificationController;
-use App\Http\Controllers\JobPoster\ProfileController;
+use App\Http\Controllers\GigPoster\PosterGigController;
+use App\Http\Controllers\GigPoster\GigApplicationController;
+use App\Http\Controllers\Gig\GigController;
+use App\Http\Controllers\GigPoster\DashboardController;
+use App\Http\Controllers\GigPoster\NotificationController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,8 +18,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Profile
     Route::get('/get-user', [DashboardController::class, 'getUser']);
-    Route::post('/jobposter/profile/update-photo', [ProfileController::class, 'updatePhoto']);
-    Route::post('/jobposter/update-profile/{userId}', [ProfileController::class, 'updateProfile']);
+    Route::post('/jobposter/profile/update-photo', [UserController::class, 'updatePhoto']);
+    Route::post('/jobposter/update-profile/{userId}', [UserController::class, 'updateProfile']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
 
     // Job Poster Dashboard
@@ -27,18 +28,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/jobposter/applications-per-month', [DashboardController::class, 'applicationsPerMonthsChart']);
 
     // Jobs
-    Route::get('/job-categories', [JobController::class, 'getJobCategories']);
-    Route::post('/jobposter/jobs/create', [JobController::class, 'createJob']);
-    Route::post('/jobposter/jobs', [JobController::class, 'getJobs']);
-    Route::get('/jobposter/jobs/{jobId}', [JobController::class, 'getJob']);
-    Route::put('/jobposter/jobs/{jobId}/edit', [JobController::class, 'editJob']);
-    Route::post('/jobposter/jobs/close/{jobId}', [JobController::class, 'closeJob']);
+    Route::get('/job-categories', [GigController::class, 'getJobCategories']);
+    Route::post('/jobposter/jobs/create', [GigController::class, 'createJob']);
+    Route::post('/jobposter/jobs', [PosterGigController::class, 'getJobs']);
+    Route::get('/jobposter/jobs/{jobId}', [GigController::class, 'getJob']);
+    Route::put('/jobposter/jobs/{jobId}/edit', [GigController::class, 'editJob']);
+    Route::post('/jobposter/jobs/close/{jobId}', [GigController::class, 'closeJob']);
 
     //Applications
-    Route::post('/job-applications', [JobApplicationController::class, 'getApplications']);
-    Route::get('/job-applications/{id}', [JobApplicationController::class, 'getApplication']);
-    Route::post('/job-appplication/accept/{applicationId}', [JobApplicationController::class, 'acceptApplication']);
-    Route::post('/job-appplication/deny/{applicationId}', [JobApplicationController::class, 'denyApplication']);
+    Route::post('/job-applications', [GigApplicationController::class, 'getApplications']);
+    Route::get('/job-applications/{id}', [GigApplicationController::class, 'getApplication']);
+    Route::post('/job-appplication/accept/{applicationId}', [GigApplicationController::class, 'acceptApplication']);
+    Route::post('/job-appplication/deny/{applicationId}', [GigApplicationController::class, 'denyApplication']);
 
     // Notifications
     Route::post('/notification-preference', [NotificationController::class, 'updateNotificationPreference']);

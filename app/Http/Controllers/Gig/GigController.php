@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Gig;
 
 use App\Http\Controllers\Controller;
 use App\Mail\JobPostMail;
@@ -11,26 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
-class JobController extends Controller
+class GigController extends Controller
 {
-    public function getJobs(Request $request)
-    {
-        $search = $request->search;
-        $page = $request->input('page');
-
-        $query = Gig::with('applications', 'status')->where('gig_poster_id', Auth::user()->id);
-        if ($search) {
-            $query->where('title', 'LIKE', "%{$search}%")
-                ->orWhereHas('status', function ($query) use ($search) {
-                    $query->where('name', 'LIKE', "%{$search}%");
-                });
-
-        }
-        $jobs = $query->orderBy('created_at', 'desc')->paginate(12);
-
-        return response()->json(['success' => true, 'jobs' => $jobs]);
-    }
-
     public function getJob($jobId)
     {
         $job = Gig::where('id', $jobId)->with('applications', 'applications.seeker', 'applications.status', 'status')->first();

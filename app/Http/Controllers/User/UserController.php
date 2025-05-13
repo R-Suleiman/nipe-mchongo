@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\JobPoster;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -8,10 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Storage;
 
-class ProfileController extends Controller
+class UserController extends Controller
 {
     public function updateProfile(Request $request, $userId) {
         $updatedProfile = $request->validate([
+            'username' => ['required', 'min:3', 'max:25'],
             'firstname' => ['required', 'min:3', 'max:25'],
             'lastname' => ['required', 'min:3', 'max:25'],
             'email' => ['required', 'email'],

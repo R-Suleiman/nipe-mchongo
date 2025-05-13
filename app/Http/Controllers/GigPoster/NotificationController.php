@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\JobPoster;
+namespace App\Http\Controllers\GigPoster;
 
 use App\Http\Controllers\Controller;
 use App\Models\NotificationPreference;

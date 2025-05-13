@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import axiosClient from "../../../assets/js/axios-client";
 import { useNavigate } from "react-router-dom";
-import { showTopErrorAlert, showTopSuccessAlert } from "../../../utils/sweetAlert";
+import {
+    showTopErrorAlert,
+    showTopSuccessAlert,
+} from "../../../utils/sweetAlert";
 import { useAuth } from "../../../context/AuthProvider";
 
 function AccountForm() {
-     const { user: userData } = useAuth();
-    const navigate = useNavigate()
+    const { user: userData } = useAuth();
+    const navigate = useNavigate();
     const [updateData, setupdateData] = useState({
+        username: userData?.username || "",
         firstname: userData?.firstname || "",
         lastname: userData?.lastname || "",
         email: userData?.email || "",
@@ -26,9 +30,9 @@ function AccountForm() {
         axiosClient
             .post(`/jobposter/update-profile/${userData.id}`, updateData)
             .then(({ data }) => {
-                localStorage.setItem('user', JSON.stringify(data.user));
-                showTopSuccessAlert(data.message)
-                navigate('/jobposter/account')
+                localStorage.setItem("user", JSON.stringify(data.user));
+                showTopSuccessAlert(data.message);
+                navigate("/jobposter/account");
             })
             .catch((err) => {
                 const response = err.response;
@@ -81,6 +85,21 @@ function AccountForm() {
                     <div className="flex flex-col md:flex-row my-2">
                         <div className="w-full md:w-1/2 flex flex-col space-y-2 my-2">
                             <label
+                                htmlFor="username"
+                                className="text-gray-600 text-lg font-semibold"
+                            >
+                                Username:
+                            </label>
+                            <input
+                                type="text"
+                                name="username"
+                                value={updateData.username}
+                                onChange={handleInputChange}
+                                className="w-10/12 p-2 outline-0 border border-blue-300 rounded-sm"
+                            />
+                        </div>
+                        <div className="w-full md:w-1/2 flex flex-col space-y-2 my-2">
+                            <label
                                 htmlFor="email"
                                 className="text-gray-600 text-lg font-semibold"
                             >
@@ -94,6 +113,8 @@ function AccountForm() {
                                 className="w-10/12 p-2 outline-0 border border-blue-300 rounded-sm"
                             />
                         </div>
+                    </div>
+                    <div className="flex flex-col md:flex-row my-2">
                         <div className="w-full md:w-1/2 flex flex-col space-y-2 my-2">
                             <label
                                 htmlFor="phone"
@@ -109,8 +130,6 @@ function AccountForm() {
                                 className="w-10/12 p-2 outline-0 border border-blue-300 rounded-sm"
                             />
                         </div>
-                    </div>
-                    <div className="flex flex-col md:flex-row my-2">
                         <div className="w-full md:w-1/2 flex flex-col space-y-2 my-2">
                             <label
                                 htmlFor="dob"
@@ -126,6 +145,8 @@ function AccountForm() {
                                 className="w-10/12 p-2 outline-0 border border-blue-300 rounded-sm"
                             />
                         </div>
+                    </div>
+                    <div className="flex flex-col md:flex-row my-2">
                         <div className="w-full md:w-1/2 flex flex-col space-y-2 my-2">
                             <label
                                 htmlFor="gender"
@@ -143,22 +164,21 @@ function AccountForm() {
                                 <option value="Female">Female</option>
                             </select>
                         </div>
-                    </div>
-                    <div className="w-full md:w-1/2 flex flex-col space-y-2 my-2">
-                        <label
-                            htmlFor="address"
-                            className="text-gray-600 text-lg font-semibold"
-                        >
-                            Address:
-                        </label>
-                        <input
-                            name="address"
-                            value={updateData.address}
+                        <div className="w-full md:w-1/2 flex flex-col space-y-2 my-2">
+                            <label
+                                htmlFor="address"
+                                className="text-gray-600 text-lg font-semibold"
+                            >
+                                Address:
+                            </label>
+                            <input
+                                name="address"
+                                value={updateData.address}
                                 onChange={handleInputChange}
-                            className="w-10/12 p-2 outline-0 border border-blue-300 rounded-sm"
-                        />
+                                className="w-10/12 p-2 outline-0 border border-blue-300 rounded-sm"
+                            />
+                        </div>
                     </div>
-
                     <div className="my-4">
                         <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer">
                             Save

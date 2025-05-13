@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\GigPoster;
 
 use App\Http\Controllers\Controller;
 use App\Mail\JobAcceptedMail;
@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
-class JobApplicationController extends Controller
+class GigApplicationController extends Controller
 {
     public function getApplications(Request $request)
     {
