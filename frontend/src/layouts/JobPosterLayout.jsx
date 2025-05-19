@@ -11,8 +11,8 @@ import {
     FaTasks,
     FaTimes,
     FaUser,
+    // FaHouse
 } from "react-icons/fa";
-import { FaHouse } from "react-icons/fa6";
 import { useAuth } from "../context/AuthProvider";
 import axiosClient from "../assets/js/axios-client";
 import { showSuccessAlert } from "../utils/sweetAlert";
@@ -59,9 +59,8 @@ function JobPosterLayout() {
     return (
         <section className="w-full">
             <aside
-                className={`w-10/12 md:w-[20%] p-2 bg-blue-900 h-full fixed left-0 top-0 shadow-md shadow-orange-100 transform transition-transform duration-300 ease-in-out z-50 ${
-                    hidden ? "-translate-x-full" : "translate-x-0"
-                } md:translate-x-0 md:block`}
+                className={`w-10/12 md:w-[20%] p-2 bg-blue-900 h-full fixed left-0 top-0 shadow-md shadow-orange-100 transform transition-transform duration-300 ease-in-out z-50 ${hidden ? "-translate-x-full" : "translate-x-0"
+                    } md:translate-x-0 md:block`}
             >
                 <div
                     className="m-4 cursor-pointer w-fit ml-auto text-white block md:hidden"

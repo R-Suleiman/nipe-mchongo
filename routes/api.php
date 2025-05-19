@@ -46,6 +46,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notification-preference', [NotificationController::class, 'getNotificationPreference']);
 });
 
+Route::get('/gigs', [GigController::class, 'getGigs']);
+
 // Payment test routes
 Route::post('/buy-points', [PaymentController::class, 'buyMchongoPoints']);
 Route::post('/azampay/callback', [PaymentController::class, 'azampayCallback'])->name('azampay.callback');

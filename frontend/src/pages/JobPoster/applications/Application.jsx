@@ -9,7 +9,7 @@ import userImg from "../../../assets/images/user.avif";
 import { showConfirmAlert, showTopErrorAlert } from "../../../utils/sweetAlert";
 import Spinner from "../../../components/Spinner";
 import { useModal } from "../../../context/ModalContext";
-import ApplicationConfirmMessage from "./applicationConfirmMessage";
+import ApplicationConfirmMessage from "./ApplicationConfirmMessage";
 import ApplicationDenialMessage from "./ApplicationDenialMessage";
 
 function Application() {
@@ -266,8 +266,8 @@ function Application() {
                             </span>
                         </button>
                         <button className="bg-red-500 py-2 px-4 rounded-md hover:bg-red-600 text-white cursor-pointer flex items-center space-x-2 font-semibold"
-                        onClick={denyApplication}
-                        disabled={loading}
+                            onClick={denyApplication}
+                            disabled={loading}
                         >
                             <FaTimes />  <span>
                                 {" "}

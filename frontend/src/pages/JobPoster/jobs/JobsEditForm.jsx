@@ -11,7 +11,7 @@ import { useAuth } from "../../../context/AuthProvider";
 
 function JobsEditForm() {
     const { id } = useParams();
-   const { user: userData } = useAuth();
+    const { user: userData } = useAuth();
     const navigate = useNavigate();
     const [jobCategories, setJobCategories] = useState();
     const [loading, setLoading] = useState();
