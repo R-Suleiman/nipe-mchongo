@@ -90,19 +90,14 @@ AND gig_applications.gig_seeker_id = ?
         $application->delete();
         return response()->json(['message' => 'Controller says, Application cancelled successfully'], 200);
     }
-    public function gigSeekerApplications($gigSeekerId)
+    public function gigSeekerApplications($id)
     {
         $gigApplications = DB::table('gig_applications')
-            ->where('gig_seeker_id', '=', $gigSeekerId)
+            ->where('gig_seeker_id', '=', $id)
             ->leftJoin('gigs', 'gig_applications.gig_id', '=', 'gigs.id')
             ->leftJoin('users', 'gigs.gig_poster_id', '=', 'users.id')
             ->leftJoin('gig_categories', 'gigs.gig_category_id', '=', 'gig_categories.id')
-            ->leftJoin(
-                'gig_application_statuses',
-                'gig_applications.application_status_id',
-                '=',
-                'gig_application_statuses.id'
-            )
+            ->leftJoin('gig_application_statuses', 'gig_applications.application_status_id', '=', 'gig_application_statuses.id')
             ->select(
                 'users.id as user_id',
                 'gig_applications.id',
@@ -121,8 +116,10 @@ AND gig_applications.gig_seeker_id = ?
             )
             ->orderBy('gig_applications.created_at', 'desc')
             ->get();
+
         return response()->json($gigApplications);
     }
+
     public function popularGigs()
     {
         $gigs = DB::table('gigs')

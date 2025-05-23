@@ -19,19 +19,23 @@ class Gig extends Model
         'status_id'
     ];
 
-    public function category() {
+    public function category()
+    {
         return $this->belongsTo(GigCategory::class);
     }
 
-    public function poster() {
+    public function poster()
+    {
         return $this->belongsTo(User::class, 'gig_poster_id');
     }
 
-    public function applications() {
+    public function applications()
+    {
         return $this->hasMany(GigApplication::class, 'gig_id');
     }
 
-    public function status() {
+    public function status()
+    {
         return $this->belongsTo(ApplicationStatus::class);
     }
 }

@@ -1,28 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
 import axios from "axios";
 
 export default function MyApplications() {
-    const [loading, setLoading] = React.useState(false);
-    const [applications, setApplications] = React.useState([]);
+    const [applications, setApplications] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const userId = 10;
 
-    const fetchApplications = () => {
+    useEffect(() => {
         setLoading(true);
-        const gigSeekerId = 10;
 
-        axios.get(`/api/applications/${gigSeekerId}`)
+        axios.get(`/api/gig-seeker/gig/applications/${userId}`)
             .then(response => {
-                setApplications(response.data);
+                const applications = Array.isArray(response.data)
+                    ? response.data
+                    : response.data.data || [];
+
+                setApplications(applications);
             })
             .catch(error => {
-                console.error("Error fetching applications:", error);
+                console.error("Error fetching gig applications:", error.response || error.message);
+                setApplications([]);
             })
             .finally(() => {
                 setLoading(false);
             });
-    };
-    React.useEffect(() => {
-        fetchApplications();
     }, []);
 
     return (
