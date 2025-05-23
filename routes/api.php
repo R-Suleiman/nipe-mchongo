@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Gig\GigSeekerController;
 use App\Http\Controllers\GigPoster\PosterGigController;
 use App\Http\Controllers\GigPoster\GigApplicationController;
 use App\Http\Controllers\Gig\GigController;
@@ -45,6 +46,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/notification-preference', [NotificationController::class, 'updateNotificationPreference']);
     Route::get('/notification-preference', [NotificationController::class, 'getNotificationPreference']);
 });
+
+Route::get('/applications/{gigSeekerId}', [GigSeekerController::class, 'gigSeekerApplications']);
 
 Route::get('/gigs', [GigController::class, 'getGigs']);
 

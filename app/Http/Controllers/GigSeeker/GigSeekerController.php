@@ -90,10 +90,10 @@ AND gig_applications.gig_seeker_id = ?
         $application->delete();
         return response()->json(['message' => 'Controller says, Application cancelled successfully'], 200);
     }
-    public function gigSeekerApplications($id)
+    public function gigSeekerApplications($gigSeekerId)
     {
         $gigApplications = DB::table('gig_applications')
-            ->where('gig_seeker_id', '=', $id)
+            ->where('gig_seeker_id', '=', $gigSeekerId)
             ->leftJoin('gigs', 'gig_applications.gig_id', '=', 'gigs.id')
             ->leftJoin('users', 'gigs.gig_poster_id', '=', 'users.id')
             ->leftJoin('gig_categories', 'gigs.gig_category_id', '=', 'gig_categories.id')
