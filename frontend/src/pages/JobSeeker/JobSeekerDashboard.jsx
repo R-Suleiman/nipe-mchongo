@@ -20,14 +20,13 @@ export default function JobSeekerDashboard() {
 
     const [loading, setLoading] = useState(true);
     const [popularGigs, setPopularGigs] = useState([]);
+    const [recentApplications, setRecentApplications] = useState([]);
+    const userId = 30; // Hardcoded user ID for demonstration
 
     useEffect(() => {
         const fetchPopularGigs = async () => {
             try {
                 const response = await axios.get('/api/popular-gigs');
-                // Log the response data for debugging
-                console.log("Popular gigs response:", response.data);
-
                 // Correctly set the popularGigs state
                 setPopularGigs(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
@@ -40,9 +39,21 @@ export default function JobSeekerDashboard() {
         fetchPopularGigs();
     }, []);
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    useEffect(() => {
+        const recentApplication = async () => {
+            try {
+                const response = await axios.get(`/api/gig-seeker/gig/recent-applications?seeker_id=${userId}`);
+                // Correctly set the recentApplications state
+                setRecentApplications(Array.isArray(response.data) ? response.data : []);
+            } catch (error) {
+                console.error("Error fetching recent applications:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        recentApplication();
+    }, [userId]);
+
     return (
         <JobSeekerLayout>
             <div className="space-y-6">
@@ -100,34 +111,40 @@ export default function JobSeekerDashboard() {
                     </div>
                 </div>
 
-                {/* popular gigs */}
+                {/* Popular Gigs */}
                 <div className="w-full bg-white p-6 rounded-2xl shadow border border-orange-100">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
+                        <h2 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent">
                             Popular Gigs
                         </h2>
                         <span className="text-sm text-gray-500">{popularGigs.length} Total</span>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4">
-                        {popularGigs.map((gig) => (
-                            <div
-                                key={gig.id}
-                                className="flex justify-between items-center p-4 rounded-lg shadow bg-gradient-to-r from-orange-600 via-orange-500 to-orange-300 text-white hover:shadow-md transition"
-                            >
-                                <h3 className="font-semibold text-base truncate">{gig.title}</h3>
-                                <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
-                                    {gig.totalApplied} Applied
-                                </span>
-                            </div>
-                        ))}
+                    {loading ? (
+                        <div className="flex justify-center items-center h-32">
+                            <Rocket className="animate-spin h-10 w-10 text-orange-500" />
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-4">
+                            {popularGigs.map((gig) => (
+                                <div
+                                    key={gig.id}
+                                    className="flex justify-between items-center p-4 rounded-lg shadow bg-gradient-to-r from-orange-600 via-orange-500 to-orange-300 text-white hover:shadow-md transition"
+                                >
+                                    <h3 className="font-semibold text-base truncate">{gig.title}</h3>
+                                    <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
+                                        {gig.application_count}
+                                    </span>
+                                </div>
+                            ))}
 
-                        {popularGigs.length === 0 && (
-                            <div className="col-span-full text-center text-gray-500 py-4">
-                                No popular gigs available.
-                            </div>
-                        )}
-                    </div>
+                            {popularGigs.length === 0 && (
+                                <div className="col-span-full text-center text-gray-500 py-4">
+                                    No popular gigs available.
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* Premium Features */}
@@ -144,38 +161,46 @@ export default function JobSeekerDashboard() {
                 {/* Recent Applications */}
                 <div className="bg-white p-6 rounded-2xl shadow">
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Applications</h2>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full table-auto text-sm text-left text-gray-600">
-                            <thead className="bg-orange-100 text-orange-600 text-xs uppercase font-semibold">
-                                <tr>
-                                    <th className="px-4 py-3">Gig Title</th>
-                                    <th className="px-4 py-3">Location</th>
-                                    <th className="px-4 py-3">Date Applied</th>
-                                    <th className="px-4 py-3">Amount Deducted</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {appliedGigs.map((gig) => (
-                                    <tr key={gig.id} className="border-b border-gray-300 hover:border-transparent hover:bg-orange-50 transition transform ease-out duration-700">
-                                        <td className="px-4 py-3">{gig.title}</td>
-                                        <td className="px-4 py-3">{gig.location}</td>
-                                        <td className="px-4 py-3">{gig.dateApplied}</td>
-                                        <td className="px-4 py-3 text-red-600 font-semibold">
-                                            TSh {costPerApplication.toLocaleString()}
-                                        </td>
-                                    </tr>
-                                ))}
-                                {appliedGigs.length === 0 && (
+                    {loading ? (
+                        <div className="flex justify-center items-center h-32">
+                            <Rocket className="animate-spin h-10 w-10 text-orange-500" />
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full table-auto text-sm text-left text-gray-600">
+                                <thead className="bg-orange-100 text-orange-600 text-xs uppercase font-semibold">
                                     <tr>
-                                        <td className="px-4 py-4 text-center text-gray-500" colSpan="4">
-                                            No gigs applied yet.
-                                        </td>
+                                        <th className="px-4 py-3">Gig Title</th>
+                                        <th className="px-4 py-3">Location</th>
+                                        <th className="px-4 py-3">Date Applied</th>
+                                        <th className="px-4 py-3">Amount Deducted</th>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    {recentApplications.map((application) => (
+                                        <tr key={application.id} className="border-b border-gray-300 hover:border-transparent hover:bg-orange-50 transition transform ease-out duration-700">
+                                            <td className="px-4 py-3">{application.gig_title}</td>
+                                            <td className="px-4 py-3">{application.location}</td>
+                                            <td className="px-4 py-3">{new Date(application.created_at).toLocaleDateString()}</td>
+                                            <td className="px-4 py-3 text-red-600 font-semibold">
+                                                TSh {application.gig_payment.toLocaleString()}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {recentApplications.length === 0 && (
+                                        <tr>
+                                            <td className="px-4 py-4 text-center text-gray-500" colSpan="4">
+                                                No gigs applied yet.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
+
+
             </div>
         </JobSeekerLayout>
     );

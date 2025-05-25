@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Gig;
+namespace App\Http\Controllers\GigSeeker;
 use App\Helpers\ErrorHandler;
 use App\Http\Controllers\Controller;
 use App\Models\Gig;
@@ -135,6 +135,36 @@ AND gig_applications.gig_seeker_id = ?
             ->get();
         return response()->json($gigs);
     }
+    public function recentGigApplications(Request $request)
+    {
+        $seekerId = $request->query('seeker_id'); // Ensure seeker_id is passed correctly
+        $applications = DB::table('gig_applications')
+            ->where('gig_seeker_id', '=', $seekerId)
+            ->leftJoin('gigs', 'gig_applications.gig_id', '=', 'gigs.id')
+            ->leftJoin('users', 'gigs.gig_poster_id', '=', 'users.id')
+            ->leftJoin('gig_categories', 'gigs.gig_category_id', '=', 'gig_categories.id')
+            ->leftJoin('gig_application_statuses', 'gig_applications.application_status_id', '=', 'gig_application_statuses.id')
+            ->select(
+                'gig_applications.id',
+                'gig_applications.gig_id',
+                'gig_applications.gig_seeker_id',
+                'gig_applications.gig_poster_id',
+                'gig_applications.created_at',
+                'gig_application_statuses.name as application_status',
+                'gig_categories.name as gig_category_name',
+                'gigs.title as gig_title',
+                'gigs.description as gig_description',
+                'gigs.payment as gig_payment',
+                'gigs.location as location',
+                'users.firstname as gig_poster_first_name',
+                'users.lastname as gig_poster_last_name'
+            )
+            ->orderBy('gig_applications.created_at', 'desc')
+            ->get();
+
+        return response()->json($applications);
+    }
+
     // gig categories
     public function gigCategories()
     {

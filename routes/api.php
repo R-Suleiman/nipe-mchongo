@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Gig\GigSeekerController;
+use App\Http\Controllers\GigSeeker\GigSeekerController;
 use App\Http\Controllers\GigPoster\PosterGigController;
 use App\Http\Controllers\GigPoster\GigApplicationController;
 use App\Http\Controllers\Gig\GigController;
@@ -48,8 +48,10 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/gig-seeker/gig/applications/{id}', [GigSeekerController::class, 'gigSeekerApplications']);
+Route::get('/gig-seeker/gig/recent-applications', [GigSeekerController::class, 'recentGigApplications']);
+
 // getting popular gigs
-Route::get('/popular-gigs', [GigApplicationController::class, 'popularGigs']);
+Route::get('/popular-gigs', [GigSeekerController::class, 'popularGigs']);
 Route::get('/gigs', [GigController::class, 'getGigs']);
 
 // Payment test routes
