@@ -7,6 +7,7 @@ use Symfony\Component\Console\Descriptor\ApplicationDescription;
 
 class GigApplication extends Model
 {
+    protected $table = 'gig_applications';
     protected $fillable = [
         'gig_poster_id',
         'gig_seeker_id',

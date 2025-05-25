@@ -48,7 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/gig-seeker/gig/applications/{id}', [GigSeekerController::class, 'gigSeekerApplications']);
-
+// getting popular gigs
+Route::get('/popular-gigs', [GigApplicationController::class, 'popularGigs']);
 Route::get('/gigs', [GigController::class, 'getGigs']);
 
 // Payment test routes

@@ -1,6 +1,8 @@
-import React from "react";
+// import React from "react";
+import React, { react, useEffect, useState } from 'react';
 import { Briefcase, Rocket, UserCheck, ShieldCheck } from 'lucide-react';
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
+import axios from 'axios';
 
 export default function JobSeekerDashboard() {
     // Hardcoded data
@@ -16,13 +18,31 @@ export default function JobSeekerDashboard() {
         { id: 3, title: "UI/UX Designer", location: "Ilala-Dar es Salaam", dateApplied: "2025-04-05", status: "Rejected" },
     ];
 
-    const popularGigs = [
-        { id: 1, title: "Mobile Money Agent Assistant", totalApplied: 120 },
-        { id: 2, title: "Tailoring Gig for School Uniforms", totalApplied: 80 },
-        { id: 3, title: "House Painting Gig - 2 Rooms", totalApplied: 60 },
-        { id: 4, title: "Private Kiswahili Tutor for Standard 7", totalApplied: 50 },
-        { id: 5, title: "Event DJ for Birthday Party", totalApplied: 30 },
-    ]
+    const [loading, setLoading] = useState(true);
+    const [popularGigs, setPopularGigs] = useState([]);
+
+    useEffect(() => {
+        const fetchPopularGigs = async () => {
+            try {
+                const response = await axios.get('/api/popular-gigs');
+                // Log the response data for debugging
+                console.log("Popular gigs response:", response.data);
+
+                // Correctly set the popularGigs state
+                setPopularGigs(Array.isArray(response.data) ? response.data : []);
+            } catch (error) {
+                console.error("Error fetching popular gigs:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPopularGigs();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
     return (
         <JobSeekerLayout>
             <div className="space-y-6">
