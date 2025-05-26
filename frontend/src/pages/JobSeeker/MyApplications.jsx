@@ -60,9 +60,9 @@ export default function MyApplications() {
                                             </td>
                                             <td className="px-4 py-3">
                                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold
-                                ${app.application_status === "Accepted"
+                                ${app.application_status === "approved"
                                                         ? "bg-green-100 text-green-700"
-                                                        : app.application_status === "Pending"
+                                                        : app.application_status === "pending"
                                                             ? "bg-yellow-100 text-yellow-700"
                                                             : "bg-red-100 text-red-700"
                                                     }`}>

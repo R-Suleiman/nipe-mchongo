@@ -51,8 +51,9 @@ Route::get('/gig-seeker/gig/applications/{id}', [GigSeekerController::class, 'gi
 Route::get('/gig-seeker/gig/recent-applications', [GigSeekerController::class, 'recentGigApplications']);
 
 // getting popular gigs
-Route::get('/popular-gigs', [GigSeekerController::class, 'popularGigs']);
-Route::get('/gigs', [GigController::class, 'getGigs']);
+Route::get('/popular-gigs', [GigController::class, 'popularGigs']);
+Route::get('/gig-categories', [GigController::class, 'getGigCategories']);
+Route::get('/gig-seeker-gigs', [GigSeekerController::class, 'getGigs']);
 
 // Payment test routes
 Route::post('/buy-points', [PaymentController::class, 'buyMchongoPoints']);

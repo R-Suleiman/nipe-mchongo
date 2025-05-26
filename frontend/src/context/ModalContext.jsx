@@ -60,16 +60,16 @@ const Modal = () => {
                 <div className="w-full p-6">
                     {modalContent}
                 </div>
-                    <div className="w-full p-2 bg-blue-800">
-                        <div className="w-fit mx-auto">
-                            <button
-                                onClick={closeModal}
-                                className="mt-4 w-full py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-md hover:cursor-pointer"
-                            >
-                                Close
-                            </button>
-                        </div>
+                <div className="w-full p-2 bg-blue-800">
+                    <div className="w-fit mx-auto">
+                        <button
+                            onClick={closeModal}
+                            className="mt-4 w-full py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-md hover:cursor-pointer"
+                        >
+                            Close
+                        </button>
                     </div>
+                </div>
             </div>
         </div>
     );

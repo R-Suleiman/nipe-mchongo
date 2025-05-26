@@ -16,10 +16,12 @@ class GigSeekerController extends Controller
         $gigApplications = GigApplication::where('gig_seeker_id', '=', 1);
         return response()->json(data: $gigApplications);
     }
-    public function gigs(Request $request)
+    public function getGigs(Request $request)
     {
         $seekerId = $request->query('seeker_id');
         $category = $request->query('category');
+        $title = $request->query('title');
+
         $query = Gig::select(
             'gigs.id',
             'gigs.gig_poster_id as poster_id',
@@ -30,22 +32,27 @@ class GigSeekerController extends Controller
             'users.firstname as gig_poster_first_name',
             'users.lastname as gig_poster_last_name',
             'gig_categories.name as gig_category_name',
-            DB::raw('EXISTS (
-SELECT 1 FROM gig_applications
-WHERE gig_applications.gig_id = gigs.id
-AND gig_applications.gig_seeker_id = ?
-) as has_applied')
+            DB::raw("EXISTS (
+            SELECT 1 FROM gig_applications
+            WHERE gig_applications.gig_id = gigs.id
+            AND gig_applications.gig_seeker_id = {$seekerId}
+        ) as has_applied")
         )
-            ->addBinding($seekerId)
             ->join('users', 'gigs.gig_poster_id', '=', 'users.id')
             ->join('gig_categories', 'gigs.gig_category_id', '=', 'gig_categories.id')
             ->orderBy('gigs.created_at', 'desc');
+
         if ($category) {
-            $query->whereHas('category', fn($q) => $q->where('name', $category));
+            $query->where('gig_categories.name', $category);
         }
-        $gigs = $query->get();
-        return response()->json($gigs);
+
+        if ($title) {
+            $query->where('gigs.title', 'like', '%' . $title . '%');
+        }
+
+        return $query->get();
     }
+
     public function storeGigApplication(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -120,21 +127,6 @@ AND gig_applications.gig_seeker_id = ?
         return response()->json($gigApplications);
     }
 
-    public function popularGigs()
-    {
-        $gigs = DB::table('gigs')
-            ->select(
-                'gigs.id',
-                'gigs.title',
-                DB::raw('COUNT(gig_applications.id) as application_count')
-            )
-            ->leftJoin('gig_applications', 'gigs.id', '=', 'gig_applications.gig_id')
-            ->groupBy('gigs.id', 'gigs.title')
-            ->orderByDesc('application_count')
-            ->limit(6)
-            ->get();
-        return response()->json($gigs);
-    }
     public function recentGigApplications(Request $request)
     {
         $seekerId = $request->query('seeker_id'); // Ensure seeker_id is passed correctly
@@ -166,18 +158,6 @@ AND gig_applications.gig_seeker_id = ?
     }
 
     // gig categories
-    public function gigCategories()
-    {
-        $gigCategories = DB::table('gig_categories')
-            ->select(
-                DB::raw('MIN(id) as id'),
-                'name',
-            )
-            ->groupBy('name')
-            ->orderBy('name', 'desc')
-            ->get();
-        return response()->json($gigCategories);
-    }
     public function searchGigs(Request $request)
     {
         $query = DB::table('gigs')
