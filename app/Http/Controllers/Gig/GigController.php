@@ -9,6 +9,7 @@ use App\Models\GigCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class GigController extends Controller
@@ -81,11 +82,33 @@ class GigController extends Controller
         return response()->json(['success' => true, 'message' => 'Job Updated Successfully!']);
     }
 
-    public function getJobCategories()
+    public function getGigCategories()
     {
-        $categories = GigCategory::all();
+        $gigCategories = DB::table('gig_categories')
+            ->select(
+                DB::raw('MIN(id) as id'),
+                'name',
+            )
+            ->groupBy('name')
+            ->orderBy('name', 'desc')
+            ->get();
+        return response()->json($gigCategories);
+    }
 
-        return response()->json(['success' => true, 'categories' => $categories]);
+    public function popularGigs()
+    {
+        $gigs = DB::table('gigs')
+            ->select(
+                'gigs.id',
+                'gigs.title',
+                DB::raw('COUNT(gig_applications.id) as application_count')
+            )
+            ->leftJoin('gig_applications', 'gigs.id', '=', 'gig_applications.gig_id')
+            ->groupBy('gigs.id', 'gigs.title')
+            ->orderByDesc('application_count')
+            ->limit(6)
+            ->get();
+        return response()->json($gigs);
     }
 
     public function closeJob($jobId)

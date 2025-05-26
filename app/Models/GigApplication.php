@@ -7,26 +7,31 @@ use Symfony\Component\Console\Descriptor\ApplicationDescription;
 
 class GigApplication extends Model
 {
+    protected $table = 'gig_applications';
     protected $fillable = [
         'gig_poster_id',
         'gig_seeker_id',
         'gig_id',
-        'status_id',
+        'application_status_id',
     ];
 
-    public function poster() {
+    public function poster()
+    {
         return $this->belongsTo(User::class, 'gig_poster_id');
     }
 
-    public function seeker() {
+    public function seeker()
+    {
         return $this->belongsTo(User::class, 'gig_seeker_id');
     }
 
-    public function job() {
+    public function job()
+    {
         return $this->hasOne(Gig::class, 'id', 'gig_id');
     }
 
-    public function status() {
+    public function status()
+    {
         return $this->belongsTo(ApplicationStatus::class);
     }
 }

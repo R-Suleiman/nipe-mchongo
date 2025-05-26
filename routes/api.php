@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GigSeeker\GigSeekerController;
 use App\Http\Controllers\GigPoster\PosterGigController;
 use App\Http\Controllers\GigPoster\GigApplicationController;
 use App\Http\Controllers\Gig\GigController;
@@ -45,6 +46,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/notification-preference', [NotificationController::class, 'updateNotificationPreference']);
     Route::get('/notification-preference', [NotificationController::class, 'getNotificationPreference']);
 });
+
+Route::get('/gig-seeker/gig/applications/{id}', [GigSeekerController::class, 'gigSeekerApplications']);
+Route::get('/gig-seeker/gig/recent-applications', [GigSeekerController::class, 'recentGigApplications']);
+
+// getting popular gigs
+Route::get('/popular-gigs', [GigController::class, 'popularGigs']);
+Route::get('/gig-categories', [GigController::class, 'getGigCategories']);
+Route::get('/gig-seeker-gigs', [GigSeekerController::class, 'getGigs']);
+Route::post('/gig-seeker/gig/apply', [GigSeekerController::class, 'storeGigApplication']);
+Route::delete('/gig-seeker/cancel/gig/application/{id}', [GigSeekerController::class, 'cancelGigApplication']);
+
 
 // Payment test routes
 Route::post('/buy-points', [PaymentController::class, 'buyMchongoPoints']);

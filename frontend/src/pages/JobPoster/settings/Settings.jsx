@@ -94,12 +94,12 @@ function Settings() {
                             {
                                 user?.email ? (
                                     <input
-                                    type="checkbox"
-                                    name="email"
-                                    value={notificationType?.email}
-                                    onChange={handleNotificationInput}
-                                    checked={notificationType?.email}
-                                />
+                                        type="checkbox"
+                                        name="email"
+                                        value={notificationType?.email}
+                                        onChange={handleNotificationInput}
+                                        checked={notificationType?.email}
+                                    />
                                 ) : (
                                     <span className="text-gray-600">Please set up your email in profile to enable email notification.</span>
                                 )

@@ -15,7 +15,7 @@ function Dashboard() {
     const [loading, setLoading] = useState(false);
     const [stats, setStats] = useState();
     const [user, setUser] = useState(null);
-    const {openModal} = useModal()
+    const { openModal } = useModal()
     const navigate = useNavigate()
     const status = {
         Accepted: "text-green-600",
@@ -262,12 +262,11 @@ function Dashboard() {
                                                         )}
                                                     </td>
                                                     <td
-                                                        className={`p-2 text-left border border-gray-300 font-semibold ${
-                                                            status[
-                                                                application
-                                                                    .status.name
+                                                        className={`p-2 text-left border border-gray-300 font-semibold ${status[
+                                                            application
+                                                                .status.name
                                                             ]
-                                                        }`}
+                                                            }`}
                                                     >
                                                         {
                                                             application.status
