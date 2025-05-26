@@ -6,7 +6,7 @@ import { Rocket } from 'lucide-react';
 import axiosClient from "../../assets/js/axios-client";
 
 export default function SearchJobs() {
-    const { openModal, closeModal } = useModal();
+    const { openModal } = useModal();
 
     const [loading, setLoading] = React.useState(false);
     const [gigs, setGigs] = React.useState([]);
