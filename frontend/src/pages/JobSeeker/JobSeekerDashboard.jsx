@@ -1,8 +1,8 @@
 // import React from "react";
-import React, { react, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Briefcase, Rocket, UserCheck, ShieldCheck } from 'lucide-react';
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
-import axios from 'axios';
+import axiosClient from '../../assets/js/axios-client';
 
 export default function JobSeekerDashboard() {
     // Hardcoded data
@@ -10,23 +10,16 @@ export default function JobSeekerDashboard() {
     const totalOpportunities = 45;
     const profileCompletion = 85;
     const hasPremium = true;
-    const costPerApplication = 500; // TSh
-
-    const appliedGigs = [
-        { id: 1, title: "Frontend Developer", location: "Moshi-Kilimanjaro", dateApplied: "2025-04-03", status: "Pending" },
-        { id: 2, title: "Backend Engineer", location: "Mpwapwa-Dodoma", dateApplied: "2025-04-04", status: "Interviewing" },
-        { id: 3, title: "UI/UX Designer", location: "Ilala-Dar es Salaam", dateApplied: "2025-04-05", status: "Rejected" },
-    ];
 
     const [loading, setLoading] = useState(true);
     const [popularGigs, setPopularGigs] = useState([]);
     const [recentApplications, setRecentApplications] = useState([]);
-    const userId = 30; // Hardcoded user ID for demonstration
+    const userId = 10; // Hardcoded user ID for demonstration
 
     useEffect(() => {
         const fetchPopularGigs = async () => {
             try {
-                const response = await axios.get('/api/popular-gigs');
+                const response = await axiosClient.get('/popular-gigs');
                 // Correctly set the popularGigs state
                 setPopularGigs(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
@@ -42,7 +35,7 @@ export default function JobSeekerDashboard() {
     useEffect(() => {
         const recentApplication = async () => {
             try {
-                const response = await axios.get(`/api/gig-seeker/gig/recent-applications?seeker_id=${userId}`);
+                const response = await axiosClient.get(`/gig-seeker/gig/recent-applications?seeker_id=${userId}`);
                 // Correctly set the recentApplications state
                 setRecentApplications(Array.isArray(response.data) ? response.data : []);
             } catch (error) {

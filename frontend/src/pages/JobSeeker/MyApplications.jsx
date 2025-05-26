@@ -1,8 +1,8 @@
 import { useModal } from "../../context/ModalContext";
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
-import axios from "axios";
 import ApplicationDetails from "./ApplicationDetails";
 import { useEffect, useState } from "react";
+import axiosClient from "../../assets/js/axios-client";
 
 
 export default function MyApplications() {
@@ -14,7 +14,7 @@ export default function MyApplications() {
     useEffect(() => {
         setLoading(true);
 
-        axios.get(`/api/gig-seeker/gig/applications/${userId}`)
+        axiosClient.get(`/gig-seeker/gig/applications/${userId}`)
             .then(response => {
                 const applications = Array.isArray(response.data)
                     ? response.data
@@ -35,7 +35,7 @@ export default function MyApplications() {
         if (!window.confirm("Are you sure you want to cancel this application?")) return;
         try {
             setLoading(true);
-            const response = await axios.delete(`/api/gig-seeker/cancel/gig/application/${applicationId}`);
+            const response = await axiosClient.delete(`/api/gig-seeker/cancel/gig/application/${applicationId}`);
             if (response.status === 200) {
                 setApplications(prev => prev.filter(app => app.id !== applicationId));
                 alert("Application cancelled successfully.");

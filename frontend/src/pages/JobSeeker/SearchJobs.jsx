@@ -6,7 +6,7 @@ import ConfirmApplication from "./ConfirmApplication";
 import { Rocket } from 'lucide-react';
 
 export default function SearchJobs() {
-    const { openModal, closeModal } = useModal();
+    const { openModal } = useModal();
 
     const [loading, setLoading] = React.useState(false);
     const [gigs, setGigs] = React.useState([]);
@@ -20,7 +20,7 @@ export default function SearchJobs() {
 
     const fetchGigs = () => {
         setLoading(true);
-        let url = `/api/gig-seeker-gigs`;
+        let url = `/gig-seeker-gigs`;
         const params = [];
 
         if (filters.user_id) params.push(`seeker_id=${filters.user_id}`);
@@ -36,7 +36,7 @@ export default function SearchJobs() {
     };
 
     const fetchCategories = () => {
-        axios.get('/api/gig-categories')
+        axios.get('/gig-categories')
             .then(res => setCategories(res.data))
             .catch(err => console.error("Error fetching categories:", err));
     };
