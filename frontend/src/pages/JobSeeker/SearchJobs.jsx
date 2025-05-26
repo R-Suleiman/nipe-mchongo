@@ -1,9 +1,9 @@
 import React from "react";
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
-import axios from "axios";
 import { useModal } from "../../context/ModalContext";
 import ConfirmApplication from "./ConfirmApplication";
 import { Rocket } from 'lucide-react';
+import axiosClient from "../../assets/js/axios-client";
 
 export default function SearchJobs() {
     const { openModal, closeModal } = useModal();
@@ -20,7 +20,7 @@ export default function SearchJobs() {
 
     const fetchGigs = () => {
         setLoading(true);
-        let url = `/api/gig-seeker-gigs`;
+        let url = `/gig-seeker-gigs`;
         const params = [];
 
         if (filters.user_id) params.push(`seeker_id=${filters.user_id}`);
@@ -29,14 +29,14 @@ export default function SearchJobs() {
 
         if (params.length) url += '?' + params.join('&');
 
-        axios.get(url)
+        axiosClient.get(url)
             .then(response => setGigs(response.data))
             .catch(err => console.error("Error fetching gigs:", err))
             .finally(() => setLoading(false));
     };
 
     const fetchCategories = () => {
-        axios.get('/api/gig-categories')
+        axiosClient.get('/gig-categories')
             .then(res => setCategories(res.data))
             .catch(err => console.error("Error fetching categories:", err));
     };

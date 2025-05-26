@@ -6,6 +6,7 @@ import {
     FaAlignRight,
     FaCogs,
     FaEnvelopeOpen,
+    FaHome,
     FaMoneyBillWave,
     FaSignOutAlt,
     FaTasks,
@@ -85,7 +86,7 @@ function JobPosterLayout() {
                     <ul className="w-full text-white">
                         <Link to="/jobposter/dashboard">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
-                                <FaHouse className="mr-3" />{" "}
+                                <FaHome className="mr-3" />{" "}
                                 <span>Dashboard</span>
                             </li>
                         </Link>

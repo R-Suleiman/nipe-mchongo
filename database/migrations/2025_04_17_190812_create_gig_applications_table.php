@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('gig_poster_id')->constrained('users');
             $table->foreignId('gig_seeker_id')->constrained('users');
             $table->foreignId('gig_id')->constrained('gigs');
-            $table->foreignId('status_id')->constrained('application_statuses');
+            $table->foreignId('status_id')->constrained('statuses');
             $table->timestamps();
         });
     }

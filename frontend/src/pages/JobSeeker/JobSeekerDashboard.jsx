@@ -2,7 +2,7 @@
 import React, { react, useEffect, useState } from 'react';
 import { Briefcase, Rocket, UserCheck, ShieldCheck } from 'lucide-react';
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
-import axios from 'axios';
+import axiosClient from '../../assets/js/axios-client';
 
 export default function JobSeekerDashboard() {
     // Hardcoded data
@@ -26,7 +26,7 @@ export default function JobSeekerDashboard() {
     useEffect(() => {
         const fetchPopularGigs = async () => {
             try {
-                const response = await axios.get('/api/popular-gigs');
+                const response = await axiosClient.get('/popular-gigs');
                 // Correctly set the popularGigs state
                 setPopularGigs(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
@@ -42,7 +42,7 @@ export default function JobSeekerDashboard() {
     useEffect(() => {
         const recentApplication = async () => {
             try {
-                const response = await axios.get(`/api/gig-seeker/gig/recent-applications?seeker_id=${userId}`);
+                const response = await axiosClient.get(`/gig-seeker/gig/recent-applications?seeker_id=${userId}`);
                 // Correctly set the recentApplications state
                 setRecentApplications(Array.isArray(response.data) ? response.data : []);
             } catch (error) {

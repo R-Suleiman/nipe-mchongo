@@ -78,7 +78,7 @@ class GigSeekerController extends Controller
                 'gig_id' => $validated['gig_id'],
                 'gig_seeker_id' => $validated['seeker_id'],
                 'gig_poster_id' => $validated['poster_id'],
-                'application_status_id' => 3,
+                'status_id' => 3,
             ]);
             return response()->json([
                 'message' => 'Application submitted successfully',
@@ -108,7 +108,7 @@ class GigSeekerController extends Controller
             ->leftJoin('gigs', 'gig_applications.gig_id', '=', 'gigs.id')
             ->leftJoin('users', 'gigs.gig_poster_id', '=', 'users.id')
             ->leftJoin('gig_categories', 'gigs.gig_category_id', '=', 'gig_categories.id')
-            ->leftJoin('gig_application_statuses', 'gig_applications.application_status_id', '=', 'gig_application_statuses.id')
+            ->leftJoin('statuses', 'gig_applications.status_id', '=', 'statuses.id')
             ->select(
                 'users.id as user_id',
                 'gig_applications.id',
@@ -116,7 +116,7 @@ class GigSeekerController extends Controller
                 'gig_applications.gig_seeker_id',
                 'gig_applications.gig_poster_id',
                 'gig_applications.created_at',
-                'gig_application_statuses.name as application_status',
+                'statuses.name as application_status',
                 'gig_categories.name as gig_category_name',
                 'gigs.title as gig_title',
                 'gigs.description as gig_description',
@@ -139,14 +139,14 @@ class GigSeekerController extends Controller
             ->leftJoin('gigs', 'gig_applications.gig_id', '=', 'gigs.id')
             ->leftJoin('users', 'gigs.gig_poster_id', '=', 'users.id')
             ->leftJoin('gig_categories', 'gigs.gig_category_id', '=', 'gig_categories.id')
-            ->leftJoin('gig_application_statuses', 'gig_applications.application_status_id', '=', 'gig_application_statuses.id')
+            ->leftJoin('statuses', 'gig_applications.status_id', '=', 'statuses.id')
             ->select(
                 'gig_applications.id',
                 'gig_applications.gig_id',
                 'gig_applications.gig_seeker_id',
                 'gig_applications.gig_poster_id',
                 'gig_applications.created_at',
-                'gig_application_statuses.name as application_status',
+                'statuses.name as application_status',
                 'gig_categories.name as gig_category_name',
                 'gigs.title as gig_title',
                 'gigs.description as gig_description',

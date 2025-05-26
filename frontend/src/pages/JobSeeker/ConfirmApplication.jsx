@@ -1,8 +1,8 @@
 import React from "react";
 import { useModal } from "../../context/ModalContext";
-import axios from "axios";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosClient from "../../assets/js/axios-client";
 
 
 export default function ConfirmApplication({ gig }) {
@@ -13,7 +13,7 @@ export default function ConfirmApplication({ gig }) {
     const handleConfirm = async () => {
         setLoading(true);
         try {
-            const response = await axios.post('/api/gig-seeker/gig/apply', {
+            const response = await axiosClient.post('/gig-seeker/gig/apply', {
                 gig_id: gig.id,
                 poster_id: gig.poster_id,
                 seeker_id: user_id
