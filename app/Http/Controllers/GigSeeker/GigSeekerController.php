@@ -146,7 +146,7 @@ class GigSeekerController extends Controller
                 'gig_applications.gig_seeker_id',
                 'gig_applications.gig_poster_id',
                 'gig_applications.created_at',
-                'gig_application_statuses.name as application_status',
+                'statuses.name as application_status',
                 'gig_categories.name as gig_category_name',
                 'gigs.title as gig_title',
                 'gigs.description as gig_description',

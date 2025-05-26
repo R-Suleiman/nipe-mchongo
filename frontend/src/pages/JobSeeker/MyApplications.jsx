@@ -4,7 +4,6 @@ import ApplicationDetails from "./ApplicationDetails";
 import { useEffect, useState } from "react";
 import axiosClient from "../../assets/js/axios-client";
 
-
 export default function MyApplications() {
     const { openModal } = useModal();
     const [applications, setApplications] = useState([]);
@@ -35,7 +34,7 @@ export default function MyApplications() {
         if (!window.confirm("Are you sure you want to cancel this application?")) return;
         try {
             setLoading(true);
-            const response = await axiosClient.delete(`/api/gig-seeker/cancel/gig/application/${applicationId}`);
+            const response = await axiosClient.delete(`/gig-seeker/cancel/gig/application/${applicationId}`);
             if (response.status === 200) {
                 setApplications(prev => prev.filter(app => app.id !== applicationId));
                 alert("Application cancelled successfully.");
