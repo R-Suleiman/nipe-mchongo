@@ -55,16 +55,18 @@ class GigSeekerController extends Controller
 
     public function storeGigApplication(Request $request)
     {
+        // Validate the request
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'gig_id' => 'required|exists:gigs,id',
-            'user_id' => 'required|exists:users,id',
+            'seeker_id' => 'required|exists:users,id',
             'poster_id' => 'required|exists:users,id',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
         if (
-            GigApplication::where('gig_seeker_id', $request->user_id)
+            GigApplication::where('gig_seeker_id', $request->seeker_id)
                 ->where('gig_id', $request->gig_id)
                 ->exists()
         ) {
@@ -74,7 +76,7 @@ class GigSeekerController extends Controller
         try {
             $application = GigApplication::create([
                 'gig_id' => $validated['gig_id'],
-                'gig_seeker_id' => $validated['user_id'],
+                'gig_seeker_id' => $validated['seeker_id'],
                 'gig_poster_id' => $validated['poster_id'],
                 'application_status_id' => 3,
             ]);
@@ -88,15 +90,17 @@ class GigSeekerController extends Controller
     }
     public function cancelGigApplication($id)
     {
-        // Find the application
-        $application = GigApplication::find($id);// Check if application exists
+        $application = GigApplication::find($id);
+
         if (!$application) {
             return response()->json(['error' => 'Application not found'], 404);
         }
-        // Delete the application
+
         $application->delete();
+
         return response()->json(['message' => 'Controller says, Application cancelled successfully'], 200);
     }
+
     public function gigSeekerApplications($id)
     {
         $gigApplications = DB::table('gig_applications')

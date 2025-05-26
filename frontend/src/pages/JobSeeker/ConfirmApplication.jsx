@@ -1,11 +1,34 @@
 import React from "react";
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
 import { useModal } from "../../context/ModalContext";
+import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function ConfirmApplication({ gig }) {
     const [loading, setLoading] = React.useState(false);
     const { openModal, closeModal } = useModal();
     const user_id = 10;
+
+    const handleConfirm = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.post('/api/gig-seeker/gig/apply', {
+                gig_id: gig.id,
+                poster_id: gig.poster_id,
+                seeker_id: user_id
+            });
+
+            toast.success('Application submitted successfully!');
+            closeModal();
+        } catch (error) {
+            toast.error('Error submitting application!');
+            console.error("Error submitting application:", error.response?.data || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="max-w-2xl mx-auto px-4 py-10">
@@ -23,15 +46,7 @@ export default function ConfirmApplication({ gig }) {
                         Cancel
                     </button>
                     <button
-                        onClick={() => {
-                            setLoading(true);
-                            // Simulate application submission
-                            setTimeout(() => {
-                                setLoading(false);
-                                closeModal();
-                                alert("Application submitted successfully!");
-                            }, 2000);
-                        }}
+                        onClick={handleConfirm}
                         disabled={loading}
                         className={`px-4 py-2 ${loading ? "bg-orange-300" : "bg-orange-500"} text-white rounded-lg hover:bg-orange-600 transition`}
                     >

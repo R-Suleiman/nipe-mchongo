@@ -1,8 +1,11 @@
 import React from "react";
+import { useModal } from "../../context/ModalContext";
 import { FiUser, FiLock, FiBell, FiLogOut, FiMail, FiMapPin } from "react-icons/fi";
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
+import MyProfile from "./MyProfile";
 
 export default function JobSeekerSettings() {
+    const { openModal, closeModal } = useModal();
     const settings = [
         {
             title: "Profile Information",
@@ -44,7 +47,11 @@ export default function JobSeekerSettings() {
                                 <h4 className="text-lg font-semibold text-gray-800">{setting.title}</h4>
                                 <p className="text-sm text-gray-600 mt-1">{setting.description}</p>
                             </div>
-                            <button className="text-sm text-orange-600 hover:text-orange-700 font-medium ml-4">Edit</button>
+                            <button
+                                onClick={() =>
+                                    openModal(<MyProfile />, "xl7")
+                                }
+                                className="text-sm text-orange-600 hover:text-orange-700 font-medium ml-4">Edit</button>
                         </div>
                     ))}
                 </div>

@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useModal } from "../../context/ModalContext";
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
 import axios from "axios";
+import ApplicationDetails from "./ApplicationDetails";
+
 
 export default function MyApplications() {
+    const { openModal, closeModal } = useModal();
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(false);
     const userId = 10;
@@ -26,6 +30,23 @@ export default function MyApplications() {
                 setLoading(false);
             });
     }, []);
+
+    const handleCancelApplication = async (applicationId) => {
+        if (!window.confirm("Are you sure you want to cancel this application?")) return;
+        try {
+            setLoading(true);
+            const response = await axios.delete(`/api/gig-seeker/cancel/gig/application/${applicationId}`);
+            if (response.status === 200) {
+                setApplications(prev => prev.filter(app => app.id !== applicationId));
+                alert("Application cancelled successfully.");
+            }
+        } catch (error) {
+            console.error("Error cancelling application:", error.response || error.message);
+            alert("Failed to cancel application. Please try again later.");
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <JobSeekerLayout>
@@ -70,11 +91,23 @@ export default function MyApplications() {
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 space-x-2">
-                                                <button className="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md text-white text-xs font-medium">
+
+                                                <button
+                                                    onClick={() =>
+                                                        openModal(<ApplicationDetails application={app} />, "xl7")
+                                                    }
+                                                    className="inline-block bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg font-semibold transition"
+                                                >
                                                     Preview
                                                 </button>
-                                                {app.application_status === "Pending" && (
-                                                    <button className="py-2 px-4 bg-red-600 hover:bg-red-500 text-white rounded-md text-xs font-medium">
+
+
+
+                                                {(app.application_status === "pending" || app.application_status === "denied") && (
+                                                    <button
+                                                        onClick={() => handleCancelApplication(app.id)}
+                                                        className="py-2 px-4 bg-red-600 hover:bg-red-500 text-white rounded-md text-xs font-medium"
+                                                    >
                                                         Cancel
                                                     </button>
                                                 )}
