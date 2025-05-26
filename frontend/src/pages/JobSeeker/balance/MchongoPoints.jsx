@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosClient from "../../assets/js/axios-client";
-import Loading from "../../components/Loading";
+import { useAuth } from "../../../context/AuthProvider";
+import axiosClient from "../../../assets/js/axios-client";
+import Loading from "../../../components/Loading";
 
 export default function MchongoPoints() {
     const [quantity, setQuantity] = useState(1);

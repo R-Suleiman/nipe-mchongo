@@ -1,37 +1,48 @@
-import React from "react";
+import {
+    FiUser, FiLock, FiBell, FiLogOut
+} from "react-icons/fi";
 import { useModal } from "../../context/ModalContext";
-import { FiUser, FiLock, FiBell, FiLogOut, FiMail, FiMapPin } from "react-icons/fi";
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
 import MyProfile from "./MyProfile";
+import ChangePassword from "./ChangePassword";
+import NotificationSettings from "./NotificationSettings";
+// import EmailPreferences from "./EmailPreferences";
+// import LocationPreferences from "./LocationPreferences";
 
 export default function JobSeekerSettings() {
-    const { openModal, closeModal } = useModal();
+    const { openModal } = useModal();
+
     const settings = [
         {
             title: "Profile Information",
             description: "Update your name, email, and other personal details.",
             icon: <FiUser className="text-orange-500 w-5 h-5" />,
+            component: <MyProfile />
         },
         {
             title: "Change Password",
             description: "Secure your account by changing your password regularly.",
             icon: <FiLock className="text-orange-500 w-5 h-5" />,
+            component: <ChangePassword />
         },
         {
             title: "Notification Settings",
             description: "Manage how and when you receive job alerts.",
             icon: <FiBell className="text-orange-500 w-5 h-5" />,
+            component: <NotificationSettings />
         },
-        {
-            title: "Email Preferences",
-            description: "Control the types of emails you receive from us.",
-            icon: <FiMail className="text-orange-500 w-5 h-5" />,
-        },
-        {
-            title: "Location Preferences",
-            description: "Update your preferred job location.",
-            icon: <FiMapPin className="text-orange-500 w-5 h-5" />,
-        },
+        // {
+        //     title: "Email Preferences",
+        //     description: "Control the types of emails you receive from us.",
+        //     icon: <FiMail className="text-orange-500 w-5 h-5" />,
+        //     component: <EmailPreferences />
+        // },
+        // {
+        //     title: "Location Preferences",
+        //     description: "Update your preferred job location.",
+        //     icon: <FiMapPin className="text-orange-500 w-5 h-5" />,
+        //     component: <LocationPreferences />
+        // },
     ];
 
     return (
@@ -47,11 +58,18 @@ export default function JobSeekerSettings() {
                                 <h4 className="text-lg font-semibold text-gray-800">{setting.title}</h4>
                                 <p className="text-sm text-gray-600 mt-1">{setting.description}</p>
                             </div>
+
                             <button
                                 onClick={() =>
-                                    openModal(<MyProfile />, "xl7")
+                                    openModal(setting.component, {
+                                        size: "xl2",
+                                        title: setting.title,
+                                    })
                                 }
-                                className="text-sm text-orange-600 hover:text-orange-700 font-medium ml-4">Edit</button>
+                                className="inline-block bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg font-semibold transition"
+                            >
+                                Edit
+                            </button>
                         </div>
                     ))}
                 </div>

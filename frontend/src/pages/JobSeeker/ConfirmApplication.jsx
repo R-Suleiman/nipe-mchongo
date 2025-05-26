@@ -1,5 +1,4 @@
 import React from "react";
-import JobSeekerLayout from "../../layouts/JobSeekerLayout";
 import { useModal } from "../../context/ModalContext";
 import axios from "axios";
 import { toast } from 'react-toastify';
@@ -8,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function ConfirmApplication({ gig }) {
     const [loading, setLoading] = React.useState(false);
-    const { openModal, closeModal } = useModal();
+    const { closeModal } = useModal();
     const user_id = 10;
 
     const handleConfirm = async () => {

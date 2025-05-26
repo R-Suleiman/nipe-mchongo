@@ -1,6 +1,9 @@
-import React from "react";
+import PropTypes from 'prop-types';
 
 export default function ApplicationDetails({ application }) {
+    // shape of props
+
+
     if (!application) return <p>No application data provided.</p>;
 
     return (

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
 import { useModal } from "../../context/ModalContext";
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
 import axios from "axios";
 import ApplicationDetails from "./ApplicationDetails";
+import { useEffect, useState } from "react";
 
 
 export default function MyApplications() {
-    const { openModal, closeModal } = useModal();
+    const { openModal } = useModal();
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(false);
     const userId = 10;

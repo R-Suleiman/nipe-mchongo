@@ -17,7 +17,6 @@ import PurchasePoints from '../pages/JobPoster/balance/PurchasePoints'
 import JobSeekerDashboard from '../pages/JobSeeker/JobSeekerDashboard'
 import MyApplications from '../pages/JobSeeker/MyApplications'
 import SearchJobs from '../pages/JobSeeker/SearchJobs'
-import MyAccount from '../pages/JobSeeker/MyAccount'
 import UpdateProfile from '../pages/JobSeeker/UpdateProfile'
 import JobSeekerSettings from '../pages/JobSeeker/JobSeekerSettings'
 
@@ -100,7 +99,7 @@ const Router = createBrowserRouter([
     },
     {
         path: '/job/seeker/my-balance',
-        element: <MyAccount />
+        element: <MchongoPoints />
     },
     {
         path: '/job/seeker/update-profile',
