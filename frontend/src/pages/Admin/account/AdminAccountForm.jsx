@@ -7,7 +7,7 @@ import {
 } from "../../../utils/sweetAlert";
 import { useAuth } from "../../../context/AuthProvider";
 
-function AccountForm() {
+function AdminAccountForm() {
     const { user: userData } = useAuth();
     const navigate = useNavigate();
     const [updateData, setupdateData] = useState({
@@ -32,7 +32,7 @@ function AccountForm() {
             .then(({ data }) => {
                 localStorage.setItem("user", JSON.stringify(data.user));
                 showTopSuccessAlert(data.message);
-                navigate("/jobposter/account");
+                navigate("/admin/account");
             })
             .catch((err) => {
                 const response = err.response;
@@ -190,4 +190,4 @@ function AccountForm() {
     );
 }
 
-export default AccountForm;
+export default AdminAccountForm;

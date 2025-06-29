@@ -1,20 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axiosClient from "../../../assets/js/axios-client";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Spinner from "../../../components/Spinner";
-import {
-    showTopErrorAlert,
-    showTopSuccessAlert,
-} from "../../../utils/sweetAlert";
-import { FaArrowLeft } from "react-icons/fa";
+import { showTopErrorAlert, showTopSuccessAlert } from "../../../utils/sweetAlert";
 import { useAuth } from "../../../context/AuthProvider";
 
-function JobsEditForm() {
-    const { id } = useParams();
+function AdminJobsForm() {
     const { user: userData } = useAuth();
     const navigate = useNavigate();
     const [jobCategories, setJobCategories] = useState();
-    const [loading, setLoading] = useState();
+    const [loading, setLoading] = useState(false);
     const [job, setJob] = useState({
         gig_poster_id: userData.id,
         title: "",
@@ -31,69 +26,51 @@ function JobsEditForm() {
         setJob({ ...job, [e.target.name]: e.target.value });
     };
 
-    const getJob = () => {
-        axiosClient
-            .get(`/jobposter/jobs/${id}`)
-            .then(({ data }) => {
-                setJob(data.job);
-            })
-            .catch((err) => {
-                const response = err.response;
-                if (response && response.status == 422) {
-                    console.error(response.data.errors);
-                }
-            })
-    };
-
-    const getJobCategories = () => {
-        axiosClient
-            .get("/job-categories")
-            .then(({ data }) => {
-                setJobCategories(data);
-            })
-            .catch((err) => {
-                const response = err.response;
-                if (response && response.status == 422) {
-                    console.error(response.data.errors);
-                }
-            });
-    };
-
-    useEffect(() => {
-        getJobCategories();
-        getJob();
-    }, []);
-
-    const updateJob = (e) => {
+    const createJob = (e) => {
         e.preventDefault();
-        setLoading(true);
+        setLoading(true)
         axiosClient
-            .put(`/jobs/${id}/edit`, job)
+            .post(`/jobs/create`, job)
             .then(({ data }) => {
                 showTopSuccessAlert(data.message);
-                navigate("/jobposter/jobs");
+                setLoading(false)
+                navigate("/admin/jobs");
             })
             .catch((err) => {
                 const response = err.response;
                 if (response && response.status == 422) {
                     showTopErrorAlert(response.data.errors);
                 }
+                setLoading(false)
             })
-            .finally(setLoading(false));
     };
+
+    useEffect(() => {
+        const getJobCategories = () => {
+            axiosClient
+                .get("/job-categories")
+                .then(({ data }) => {
+                    setJobCategories(data);
+                })
+                .catch((err) => {
+                    const response = err.response;
+                    if (response && response.status == 422) {
+                        console.error(response.data.errors);
+                    }
+                });
+        };
+
+        getJobCategories();
+    }, []);
 
     return (
         <div className="w-full p-2">
             <h2 className="border-l-4 border-blue-900 text-blue-900 font-semibold text-lg p-2 italic bg-blue-50">
-                Jobs Management
+                Create a new Job
             </h2>
-            <div className="w-full my-3 flex items-center justify-between">
-                <Link to={`/jobposter/jobs/${job.id}`}>
-                    <FaArrowLeft className="text-lg text-blue-900" />
-                </Link>
-            </div>
+
             <div className="w-full p-4 my-4">
-                <form onSubmit={updateJob}>
+                <form onSubmit={createJob}>
                     <div className="flex flex-col md:flex-row my-2">
                         <div className="w-full md:w-1/2 flex flex-col space-y-2 my-2">
                             <label
@@ -243,10 +220,10 @@ function JobsEditForm() {
                             {loading ? (
                                 <div className="flex items-center">
                                     <Spinner />
-                                    <span>Updating...</span>{" "}
+                                    <span>Posting...</span>{" "}
                                 </div>
                             ) : (
-                                "Update Job"
+                                "Post Job"
                             )}
                         </button>
                     </div>
@@ -256,4 +233,4 @@ function JobsEditForm() {
     );
 }
 
-export default JobsEditForm;
+export default AdminJobsForm;

@@ -24,6 +24,8 @@ class AuthController extends Controller
         $user = Auth::user();
         $token = $user->createToken('main')->plainTextToken;
 
+        $user['profile_photo'] = asset('storage/' . $user['profile_photo']);
+
         return response()->json(['success' => true, 'message' => 'Login successfully!', 'user' => $user, 'token' => $token], 200);
     }
 
@@ -46,7 +48,7 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        if (!Hash::check($attributes['old_password'], $user->password)) {
+        if (!Hash::check($attributes['old_password'], $user['password'])) {
             return response()->json(['success' => false, 'message' => 'Invalid old password'], 422);
         }
 

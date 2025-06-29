@@ -28,7 +28,7 @@ function Home() {
                     console.error("User data is missing");
                     return;
                 }
-
+ 
                 setUser(data.user);
                 setToken(data.token);
 
@@ -36,7 +36,9 @@ function Home() {
                 if (data.user.usertype === "poster") {
                     navigate("/jobposter/dashboard");
                 } else if (data.user.usertype === "seeker") {
-                    navigate("/jobseeker/dashboard");
+                    navigate("/job/seeker/dashboard");
+                } else if (data.user.usertype === "admin") {
+                    navigate("/admin/dashboard");
                 }
             })
             .catch((err) => {

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('payment_frequency')->nullable();
             $table->string('duration')->nullable();
             $table->string('slots');
-            $table->foreignId('status_id')->constrained('application_statuses');
+            $table->foreignId('status_id')->constrained('statuses');
             $table->timestamps();
         });
     }

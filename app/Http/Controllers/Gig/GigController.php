@@ -8,7 +8,6 @@ use App\Models\Gig;
 use App\Models\GigCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -84,14 +83,17 @@ class GigController extends Controller
 
     public function getGigCategories()
     {
-        $gigCategories = DB::table('gig_categories')
-            ->select(
-                DB::raw('MIN(id) as id'),
-                'name',
-            )
-            ->groupBy('name')
-            ->orderBy('name', 'desc')
-            ->get();
+        // $gigCategories = DB::table('gig_categories')
+        //     ->select(
+        //         DB::raw('MIN(id) as id'),
+        //         'name',
+        //     )
+        //     ->groupBy('name')
+        //     ->orderBy('name', 'desc')
+        //     ->get();
+
+        $gigCategories = GigCategory::select(['id', 'name'])->orderBy('name', 'asc')->get();
+
         return response()->json($gigCategories);
     }
 

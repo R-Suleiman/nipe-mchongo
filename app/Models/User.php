@@ -57,12 +57,16 @@ class User extends Authenticatable
 
     public function gigs()
     {
-        return $this->hasMany(Gig::class);
+        return $this->hasMany(Gig::class, 'gig_poster_id');
     }
 
-    public function applications()
+    public function posterApplications() {
+        return $this->hasMany(GigApplication::class, 'gig_poster_id');
+    }
+
+    public function seekerApplications()
     {
-        return $this->hasMany(GigApplication::class);
+        return $this->hasMany(GigApplication::class, 'gig_seeker_id');
     }
 
     public function subscriptions()

@@ -30,7 +30,7 @@ function JobsForm() {
         e.preventDefault();
         setLoading(true)
         axiosClient
-            .post(`/jobposter/jobs/create`, job)
+            .post(`/jobs/create`, job)
             .then(({ data }) => {
                 showTopSuccessAlert(data.message);
                 setLoading(false)
@@ -50,7 +50,7 @@ function JobsForm() {
             axiosClient
                 .get("/job-categories")
                 .then(({ data }) => {
-                    setJobCategories(data.categories);
+                    setJobCategories(data);
                 })
                 .catch((err) => {
                     const response = err.response;

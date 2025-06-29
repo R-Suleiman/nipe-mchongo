@@ -4,6 +4,7 @@ import logo from "../assets/images/logo.png";
 import userImg from "../assets/images/user.avif";
 import {
     FaAlignRight,
+    FaCaretRight,
     FaCogs,
     FaEnvelopeOpen,
     FaHome,
@@ -12,13 +13,14 @@ import {
     FaTasks,
     FaTimes,
     FaUser,
+    FaUsers,
     // FaHouse
 } from "react-icons/fa";
 import { useAuth } from "../context/AuthProvider";
 import axiosClient from "../assets/js/axios-client";
 import { showSuccessAlert } from "../utils/sweetAlert";
 
-function JobPosterLayout() {
+function AdminLayout() {
     const navigate = useNavigate();
     const { token, user, setUser, setToken } = useAuth();
     const [newUser, setNewUser] = useState();
@@ -30,7 +32,7 @@ function JobPosterLayout() {
             navigate("/login");
         }
     }, []);
- 
+
     const location = useLocation();
 
     useEffect(() => {
@@ -60,8 +62,9 @@ function JobPosterLayout() {
     return (
         <section className="w-full">
             <aside
-                className={`w-10/12 md:w-[20%] p-2 bg-blue-900 h-full fixed left-0 top-0 shadow-md shadow-orange-100 transform transition-transform duration-300 ease-in-out z-50 ${hidden ? "-translate-x-full" : "translate-x-0"
-                    } md:translate-x-0 md:block`}
+                className={`w-10/12 md:w-[20%] p-2 bg-blue-900 h-full fixed left-0 top-0 shadow-md shadow-orange-100 transform transition-transform duration-300 ease-in-out z-50 ${
+                    hidden ? "-translate-x-full" : "translate-x-0"
+                } md:translate-x-0 md:block`}
             >
                 <div
                     className="m-4 cursor-pointer w-fit ml-auto text-white block md:hidden"
@@ -84,44 +87,61 @@ function JobPosterLayout() {
                 </div>
                 <div className="w-full p-2">
                     <ul className="w-full text-white">
-                        <Link to="/jobposter/dashboard">
+                        <Link to="/admin/dashboard">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaHome className="mr-3" />{" "}
                                 <span>Dashboard</span>
                             </li>
                         </Link>
-                        <Link to="/jobposter/account">
+                        <Link to="/admin/account">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaUser className="mr-3" />{" "}
                                 <span>My Account</span>
                             </li>
                         </Link>
-                        <Link to="/jobposter/jobs">
+                        <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
+                            <FaUsers className="mr-3" /> <span>Users</span>
+                            <FaCaretRight className="ml-auto" />
+                        </li>
+                        <ul className="ml-5">
+                            <Link to="/admin/users/gig-posters">
+                                <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer hover:border-l-4 hover:border-white">
+                                    <span>Gig Posters</span>
+                                </li>
+                            </Link>
+                             <Link to="/admin/users/gig-seekers">
+                                <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer hover:border-l-4 hover:border-white">
+                                    <span>Gig Seekers</span>
+                                </li>
+                            </Link>
+                        </ul>
+
+                        <Link to="/admin/jobs">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaTasks className="mr-3" />{" "}
                                 <span>Jobs Management</span>
                             </li>
                         </Link>
-                        <Link to="/jobposter/applications">
+                        <Link to="/admin/applications">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaEnvelopeOpen className="mr-3" />{" "}
                                 <span>Job Applications</span>
                             </li>
                         </Link>
-                        <Link to="/jobposter/points">
+                        <Link to="/admin/points">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaMoneyBillWave className="mr-3" />{" "}
                                 <span>Mchongo Points</span>
                             </li>
                         </Link>
-                        <Link to="/jobposter/settings">
+                        <Link to="/admin/settings">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaCogs className="mr-3" />{" "}
                                 <span>Settings</span>
                             </li>
                         </Link>
                         <button
-                            className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
+                            className="w-full p-2 font-semibold flex items-center bg-blue-600 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
                             onClick={logout}
                         >
                             <FaSignOutAlt className="mr-3" />{" "}
@@ -143,7 +163,7 @@ function JobPosterLayout() {
                             <span className="text-orange-500">
                                 NIPE MCHONGO
                             </span>{" "}
-                            | DASHBOARD
+                            | ADMIN DASHBOARD
                         </h1>
                         <div className="w-32">
                             <img src={logo} alt="" className="w-full" />
@@ -165,4 +185,4 @@ function JobPosterLayout() {
     );
 }
 
-export default JobPosterLayout;
+export default AdminLayout;

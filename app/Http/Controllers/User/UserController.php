@@ -10,6 +10,15 @@ use Storage;
 
 class UserController extends Controller
 {
+     public function getUser()
+    {
+        $user = Auth::user();
+
+        $user['profile_photo'] = asset('storage/' . $user['profile_photo']);
+
+        return response()->json(['success' => true, 'user' => $user]);
+    }
+    
     public function updateProfile(Request $request, $userId) {
         $updatedProfile = $request->validate([
             'username' => ['required', 'min:3', 'max:25'],

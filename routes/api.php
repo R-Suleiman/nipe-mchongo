@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminGigController;
+use App\Http\Controllers\Admin\AdminUsersController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GigSeeker\GigSeekerController;
 use App\Http\Controllers\GigPoster\PosterGigController;
@@ -11,17 +13,25 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
-
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Profile
-    Route::get('/get-user', [DashboardController::class, 'getUser']);
-    Route::post('/jobposter/profile/update-photo', [UserController::class, 'updatePhoto']);
-    Route::post('/jobposter/update-profile/{userId}', [UserController::class, 'updateProfile']);
+    Route::get('/get-user', [UserController::class, 'getUser']);
+    Route::post('/user/profile/update-photo', [UserController::class, 'updatePhoto']);
+    Route::post('/user/update-profile/{userId}', [UserController::class, 'updateProfile']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
+
+    // Admin
+    Route::post('/admin/jobs', [AdminGigController::class, 'getJobs']);
+    Route::get('/admin/jobs/{jobId}', [AdminGigController::class, 'getJob']);
+    Route::post('/admin/job-applications', [AdminGigController::class, 'getApplications']);
+    Route::get('/admin/job-applications/{id}', [AdminGigController::class, 'getApplication']);
+    Route::post('/admin/users/gig-posters', [AdminUsersController::class, 'getGigPosters']);
+    Route::post('/admin/users/gig-posters/{id}', [AdminUsersController::class, 'getGigPoster']);
+    Route::post('/admin/users/gig-seekers', [AdminUsersController::class, 'getGigSeekers']);
 
     // Job Poster Dashboard
     Route::get('/jobposter/dashboard', [DashboardController::class, 'getStats']);
@@ -29,12 +39,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/jobposter/applications-per-month', [DashboardController::class, 'applicationsPerMonthsChart']);
 
     // Jobs
-    Route::get('/job-categories', [GigController::class, 'getJobCategories']);
-    Route::post('/jobposter/jobs/create', [GigController::class, 'createJob']);
+    Route::get('/job-categories', [GigController::class, 'getGigCategories']);
+    Route::post('/jobs/create', [GigController::class, 'createJob']);
     Route::post('/jobposter/jobs', [PosterGigController::class, 'getJobs']);
     Route::get('/jobposter/jobs/{jobId}', [GigController::class, 'getJob']);
-    Route::put('/jobposter/jobs/{jobId}/edit', [GigController::class, 'editJob']);
-    Route::post('/jobposter/jobs/close/{jobId}', [GigController::class, 'closeJob']);
+    Route::put('/jobs/{jobId}/edit', [GigController::class, 'editJob']);
+    Route::post('/jobs/close/{jobId}', [GigController::class, 'closeJob']);
 
     //Applications
     Route::post('/job-applications', [GigApplicationController::class, 'getApplications']);

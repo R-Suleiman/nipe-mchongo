@@ -52,7 +52,7 @@ function Job() {
         setLoading(true);
 
         axiosClient
-            .post(`/jobposter/jobs/close/${job.id}`)
+            .post(`/jobs/close/${job.id}`)
             .then(({ data }) => {
                 if (data) {
                     showTopSuccessAlert(data.message);

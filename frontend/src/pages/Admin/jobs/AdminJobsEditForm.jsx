@@ -9,7 +9,7 @@ import {
 import { FaArrowLeft } from "react-icons/fa";
 import { useAuth } from "../../../context/AuthProvider";
 
-function JobsEditForm() {
+function AdminJobsEditForm() {
     const { id } = useParams();
     const { user: userData } = useAuth();
     const navigate = useNavigate();
@@ -71,7 +71,7 @@ function JobsEditForm() {
             .put(`/jobs/${id}/edit`, job)
             .then(({ data }) => {
                 showTopSuccessAlert(data.message);
-                navigate("/jobposter/jobs");
+                navigate("/admin/jobs");
             })
             .catch((err) => {
                 const response = err.response;
@@ -88,7 +88,7 @@ function JobsEditForm() {
                 Jobs Management
             </h2>
             <div className="w-full my-3 flex items-center justify-between">
-                <Link to={`/jobposter/jobs/${job.id}`}>
+                <Link to={`/admin/jobs/${job.id}`}>
                     <FaArrowLeft className="text-lg text-blue-900" />
                 </Link>
             </div>
@@ -256,4 +256,4 @@ function JobsEditForm() {
     );
 }
 
-export default JobsEditForm;
+export default AdminJobsEditForm;

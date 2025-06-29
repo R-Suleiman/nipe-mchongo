@@ -44,13 +44,4 @@ class DashboardController extends Controller
 
         return response()->json(['success' => true, 'applicationsGraph' => $applicationsGraph]);
     }
-
-    public function getUser()
-    {
-        $user = Auth::user();
-
-        $user['profile_photo'] = asset('storage/' . $user['profile_photo']);
-
-        return response()->json(['success' => true, 'user' => $user]);
-    }
 }
