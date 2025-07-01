@@ -67,7 +67,7 @@ class AdminGigController extends Controller
 
      public function getApplication($id)
     {
-        $application = GigApplication::where('id', $id)->with('poster', 'seeker', 'job', 'status')->first();
+        $application = GigApplication::where('id', $id)->with('poster', 'seeker', 'job', 'job.status','status')->first();
 
         if (!$application) {
             return response()->json(['success' => false, 'message' => 'Application not found!'], 404);

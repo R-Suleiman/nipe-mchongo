@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-    FaPlus,
-} from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../../assets/js/axios-client";
 import { showTopErrorAlert } from "../../utils/sweetAlert";
@@ -15,8 +13,10 @@ function Dashboard() {
     const [loading, setLoading] = useState(false);
     const [stats, setStats] = useState();
     const [user, setUser] = useState(null);
-    const { openModal } = useModal()
-    const navigate = useNavigate()
+    const [jobsGraph, setJobsGraph] = useState([]);
+    const [applicationsGraph, setApplicationsGraph] = useState([]);
+    const { openModal } = useModal();
+    const navigate = useNavigate();
     const status = {
         Accepted: "text-green-600",
         Denied: "text-red-600",
@@ -30,6 +30,27 @@ function Dashboard() {
             .get("/jobposter/dashboard")
             .then(({ data }) => {
                 setStats(data);
+
+                setJobsGraph(
+                    data.jobsGraph.map((item) => ({
+                        ...item,
+                        month: new Date(item.month + "-01").toLocaleString(
+                            "default",
+                            { month: "short", year: "numeric" }
+                        ),
+                    }))
+                );
+
+                setApplicationsGraph(
+                    data.applicationsGraph.map((item) => ({
+                        ...item,
+                        month: new Date(item.month + "-01").toLocaleString(
+                            "default",
+                            { month: "short", year: "numeric" }
+                        ),
+                    }))
+                );
+
                 setLoading(false);
             })
             .catch((err) => {
@@ -262,11 +283,12 @@ function Dashboard() {
                                                         )}
                                                     </td>
                                                     <td
-                                                        className={`p-2 text-left border border-gray-300 font-semibold ${status[
-                                                            application
-                                                                .status.name
+                                                        className={`p-2 text-left border border-gray-300 font-semibold ${
+                                                            status[
+                                                                application
+                                                                    .status.name
                                                             ]
-                                                            }`}
+                                                        }`}
                                                     >
                                                         {
                                                             application.status
@@ -297,8 +319,8 @@ function Dashboard() {
                         Graph Analytics
                     </h3>
                     <div className="w-full flex flex-col md:flex-row lg:gap-4">
-                        <JobsPerMonthChart />
-                        <ApplicationsPerMonthChart />
+                        <JobsPerMonthChart data={jobsGraph} />
+                        <ApplicationsPerMonthChart data={applicationsGraph} />
                     </div>
                 </div>
             </div>

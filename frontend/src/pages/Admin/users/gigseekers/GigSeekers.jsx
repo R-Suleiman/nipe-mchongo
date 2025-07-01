@@ -134,7 +134,7 @@ function GigSeekers() {
                                             </td>
                                             <td className="p-2 text-left border border-gray-300">
                                                 <Link
-                                                    to={`/admin/users/${user.id}`}
+                                                    to={`/admin/users/gig-seekers/${user.id}`}
                                                 >
                                                     <button className="w-full bg-blue-500 py-1 px-2 rounded-sm hover:bg-blue-600 text-white cursor-pointer">
                                                         view

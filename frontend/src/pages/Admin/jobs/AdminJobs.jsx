@@ -40,8 +40,6 @@ function AdminJobs() {
             });
     };
 
-    console.log(jobs)
-
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
             getJobs();
@@ -65,7 +63,7 @@ function AdminJobs() {
    { return loading ? (<Loading />) : (
         <div className="w-full p-2">
             <div className="border-l-4 border-blue-900 text-blue-900 font-semibold text-lg p-2 bg-blue-50 flex items-center justify-between">
-                <h2 className="italic">Your Jobs List</h2>{" "}
+                <h2 className="italic">All Available Jobs</h2>{" "}
                 <button
                     onClick={newJob}
                     className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm"

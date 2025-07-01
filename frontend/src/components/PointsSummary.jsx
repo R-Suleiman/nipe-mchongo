@@ -6,13 +6,14 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
+    Legend,
 } from "recharts";
 
-const ApplicationsPerMonthChart = ({ data }) => {
+const PointsSummary = ({ data }) => {
     return (
-        <div className="w-full lg:w-1/2 h-96 bg-blue-50 my-4 p-2 rounded-lg shadow">
+        <div className="w-full h-96 bg-blue-50 my-4 p-2 rounded-lg shadow">
             <h2 className="text-lg font-semibold mb-4">
-                Jobs Applications Per Month
+                Points Purchased Per Month
             </h2>
             <ResponsiveContainer width="100%" height="80%">
                 <LineChart data={data}>
@@ -20,11 +21,20 @@ const ApplicationsPerMonthChart = ({ data }) => {
                     <XAxis dataKey="month" />
                     <YAxis allowDecimals={false} />
                     <Tooltip />
+                    <Legend />
                     <Line
                         type="monotone"
-                        dataKey="count"
+                        dataKey="posting"
                         stroke="#6366f1"
                         strokeWidth={3}
+                        name="Posting Points"
+                    />
+                    <Line
+                        type="monotone"
+                        dataKey="application"
+                        stroke="#10b981"
+                        strokeWidth={3}
+                        name="Application Points"
                     />
                 </LineChart>
             </ResponsiveContainer>
@@ -32,4 +42,4 @@ const ApplicationsPerMonthChart = ({ data }) => {
     );
 };
 
-export default ApplicationsPerMonthChart;
+export default PointsSummary;

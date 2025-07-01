@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-    FaPlus,
-} from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../../assets/js/axios-client";
 import { showTopErrorAlert } from "../../utils/sweetAlert";
@@ -15,8 +13,10 @@ function AdminDashboard() {
     const [loading, setLoading] = useState(false);
     const [stats, setStats] = useState();
     const [user, setUser] = useState(null);
-    const { openModal } = useModal()
-    const navigate = useNavigate()
+    const [jobsGraph, setJobsGraph] = useState([]);
+    const [applicationsGraph, setApplicationsGraph] = useState([]);
+    const { openModal } = useModal();
+    const navigate = useNavigate();
     const status = {
         Accepted: "text-green-600",
         Denied: "text-red-600",
@@ -27,9 +27,30 @@ function AdminDashboard() {
         setLoading(true);
 
         axiosClient
-            .get("/jobposter/dashboard")
+            .get("/admin/dashboard")
             .then(({ data }) => {
                 setStats(data);
+
+                setJobsGraph(
+                    data.jobsGraph.map((item) => ({
+                        ...item,
+                        month: new Date(item.month + "-01").toLocaleString(
+                            "default",
+                            { month: "short", year: "numeric" }
+                        ),
+                    }))
+                );
+
+                setApplicationsGraph(
+                    data.applicationsGraph.map((item) => ({
+                        ...item,
+                        month: new Date(item.month + "-01").toLocaleString(
+                            "default",
+                            { month: "short", year: "numeric" }
+                        ),
+                    }))
+                );
+
                 setLoading(false);
             })
             .catch((err) => {
@@ -66,11 +87,8 @@ function AdminDashboard() {
     };
 
     const newJob = () => {
-        // if (user.mchongo_points < 1) {
-        //     openModal(<NoPointsModal />, "xl4", "Insufficient Mchongo Points");
-        // }
         if (user.mchongo_points > 0) {
-            navigate("/jobposter/jobs/create");
+            navigate("/admin/jobs/create");
         }
     };
 
@@ -87,13 +105,13 @@ function AdminDashboard() {
                 </div>
 
                 <div className="w-full flex flex-col md:flex-row">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 my-5">
+                    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 my-5">
                         <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
                             <h2 className="text-xl font-semibold text-blue-600 mb-4">
                                 Jobs Posted
                             </h2>
                             <div className="text-5xl font-bold text-blue-700">
-                                {/* {stats?.jobs_count} */}
+                                {stats?.jobs_count}
                             </div>
                             <Link to="/admin/jobs">
                                 <p className="text-gray-500 mt-2 text-lg hover:text-blue-900">
@@ -106,7 +124,7 @@ function AdminDashboard() {
                                 Job Applications
                             </h2>
                             <div className="text-5xl font-bold text-blue-700">
-                                {/* {stats?.applications_count} */}
+                                {stats?.applications_count}
                             </div>
                             <Link to="/admin/applications">
                                 <p className="text-gray-500 mt-2 text-lg hover:text-blue-900">
@@ -119,21 +137,22 @@ function AdminDashboard() {
                                 Employments Created
                             </h2>
                             <div className="text-5xl font-bold text-blue-700">
-                                {/* {stats?.employments} */}
+                                {stats?.employments}
                             </div>
                             <p className="text-gray-500 mt-2">
-                                Keep creating more opportunities
+                                Accepted Applications
                             </p>
                         </div>
                         <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
                             <h2 className="text-xl font-semibold text-blue-600 mb-4">
-                                Mchongo Points
+                                Total Users
                             </h2>
                             <div className="text-5xl font-bold text-blue-700">
-                                {/* {user?.mchongo_points} */}
+                                {stats?.posters + stats?.seekers}
                             </div>
                             <p className="text-gray-500 mt-2">
-                                Total posting points
+                                {stats?.posters} - posters, {stats?.seekers} -
+                                seekers
                             </p>
                         </div>
                     </div>
@@ -262,11 +281,12 @@ function AdminDashboard() {
                                                         )}
                                                     </td>
                                                     <td
-                                                        className={`p-2 text-left border border-gray-300 font-semibold ${status[
-                                                            application
-                                                                .status.name
+                                                        className={`p-2 text-left border border-gray-300 font-semibold ${
+                                                            status[
+                                                                application
+                                                                    .status.name
                                                             ]
-                                                            }`}
+                                                        }`}
                                                     >
                                                         {
                                                             application.status
@@ -297,8 +317,8 @@ function AdminDashboard() {
                         Graph Analytics
                     </h3>
                     <div className="w-full flex flex-col md:flex-row lg:gap-4">
-                        <JobsPerMonthChart />
-                        <ApplicationsPerMonthChart />
+                        <JobsPerMonthChart data={jobsGraph} />
+                        <ApplicationsPerMonthChart data={applicationsGraph} />
                     </div>
                 </div>
             </div>

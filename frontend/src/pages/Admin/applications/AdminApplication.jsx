@@ -202,7 +202,9 @@ function AdminApplication() {
                                         </tr>
                                     </tbody>
                                 </table>
-                                <Link to={`/admin/users/gig-posters/${application.poster.id}`}>
+                                <Link
+                                    to={`/admin/users/gig-posters/${application.poster.id}`}
+                                >
                                     <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm my-4">
                                         <span>view poster</span>
                                     </button>
@@ -231,25 +233,43 @@ function AdminApplication() {
                                     {application?.job.description}
                                 </td>
                             </tr>
+                            <tr>
+                                <th className="p-2 border border-gray-300 text-left w-1/6">
+                                    Gig Status:
+                                </th>
+                                <td className="p-2 border border-gray-300 w-5/6">
+                                    {application?.job.status.name}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th className="p-2 border border-gray-300 text-left w-1/6 font-semibold">
+                                    Application Status:
+                                </th>
+                                <td className="p-2 border border-gray-300 w-5/6">
+                                    {application?.status.id === 2 ? (
+                                        <p className="text-lg font-semibold my-4">
+                                            <span className="text-green-600">
+                                                Accepted
+                                            </span>
+                                        </p>
+                                    ) : application?.status.id === 3 ? (
+                                        <p className="text-lg font-semibold my-4">
+                                            <span className="text-red-600">
+                                                Denied
+                                            </span>
+                                        </p>
+                                    ) : (
+                                        <p className="text-lg font-semibold my-4">
+                                            <span className="text-gray-600">
+                                                Pending{" "}
+                                            </span>
+                                        </p>
+                                    )}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-
-                {application?.status.id === 2 ? (
-                    <p className="text-lg font-semibold my-4">
-                        Application{" "}
-                        <span className="text-green-600">Accepted</span>
-                    </p>
-                ) : application?.status.id === 3 ? (
-                    <p className="text-lg font-semibold my-4">
-                        Application <span className="text-red-600">Denied</span>
-                    </p>
-                ) : (
-                    <p className="text-lg font-semibold my-4">
-                        <span className="text-gray-600">Status: Pending </span>
-                        Application{" "}
-                    </p>
-                )}
             </div>
         );
     }

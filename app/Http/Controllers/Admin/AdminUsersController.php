@@ -52,4 +52,15 @@ class AdminUsersController extends Controller
 
         return response()->json(['success' => true, 'users' => $users]);
     }
+
+     public function getGigSeeker(Request $request, $id)
+    {
+        $gigSeeker = User::find($id);
+
+        $applications = $gigSeeker->seekerApplications()->with('poster', 'job', 'job.status', 'status')->paginate(10);
+
+        $gigSeeker['profile_photo'] = asset('storage/' . $gigSeeker['profile_photo']);
+
+        return response()->json(['success' => true, 'gigSeeker' => $gigSeeker, 'applications' => $applications]);
+    }
 }

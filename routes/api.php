@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminGigController;
 use App\Http\Controllers\Admin\AdminUsersController;
 use App\Http\Controllers\AuthController;
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/change-password', [AuthController::class, 'changePassword']);
 
     // Admin
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'getStats']);
     Route::post('/admin/jobs', [AdminGigController::class, 'getJobs']);
     Route::get('/admin/jobs/{jobId}', [AdminGigController::class, 'getJob']);
     Route::post('/admin/job-applications', [AdminGigController::class, 'getApplications']);
@@ -32,11 +34,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/users/gig-posters', [AdminUsersController::class, 'getGigPosters']);
     Route::post('/admin/users/gig-posters/{id}', [AdminUsersController::class, 'getGigPoster']);
     Route::post('/admin/users/gig-seekers', [AdminUsersController::class, 'getGigSeekers']);
+    Route::post('/admin/users/gig-seeker/{id}', [AdminUsersController::class, 'getGigSeeker']);
+    Route::get('/admin/mchongo-points-stats', [AdminDashboardController::class, 'mchongoPoints']);
+    Route::get('/admin/transactions', [AdminDashboardController::class, 'getTransactions']);
 
     // Job Poster Dashboard
     Route::get('/jobposter/dashboard', [DashboardController::class, 'getStats']);
-    Route::get('/jobposter/jobs-per-month', [DashboardController::class, 'jobsPerMonthsChart']);
-    Route::get('/jobposter/applications-per-month', [DashboardController::class, 'applicationsPerMonthsChart']);
 
     // Jobs
     Route::get('/job-categories', [GigController::class, 'getGigCategories']);

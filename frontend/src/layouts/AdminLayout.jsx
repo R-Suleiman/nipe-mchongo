@@ -128,7 +128,7 @@ function AdminLayout() {
                                 <span>Job Applications</span>
                             </li>
                         </Link>
-                        <Link to="/admin/points">
+                        <Link to="/admin/mchongo-points">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaMoneyBillWave className="mr-3" />{" "}
                                 <span>Mchongo Points</span>
