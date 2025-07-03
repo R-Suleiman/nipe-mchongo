@@ -51,31 +51,40 @@ class GigSeekerController extends Controller
         return response()->json($gigs);
     }
 
-    public function gigSeekerDashboard(Request $request)
+    public function getAllApplications(Request $request)
     {
         $request->validate([
             'gig_seeker_id' => 'required|exists:users,id',
         ]);
 
-        $gigSeekerId = $request->input('gig_seeker_id');
+        $user = User::with([
+            'seekerApplications.gig.category',
+            'seekerApplications.gig.poster',
+            'seekerApplications.status'
+        ])->findOrFail($request->gig_seeker_id);
+
+        $applications = $user->seekerApplications->sortByDesc('created_at')->values();
+
+        return response()->json($applications);
+    }
+
+    public function getRecentApplications(Request $request)
+    {
+        $request->validate([
+            'gig_seeker_id' => 'required|exists:users,id',
+        ]);
 
         $user = User::with([
             'seekerApplications.gig.category',
             'seekerApplications.gig.poster',
             'seekerApplications.status'
-        ])->findOrFail($gigSeekerId);
+        ])->findOrFail($request->gig_seeker_id);
 
-        $allApplications = $user->seekerApplications
-            ->sortByDesc('created_at')
-            ->values();
+        $recent = $user->seekerApplications->sortByDesc('created_at')->take(5)->values();
 
-        $recentApplications = $allApplications->take(5);
-
-        return response()->json([
-            'applications' => $allApplications,
-            'recent_applications' => $recentApplications
-        ]);
+        return response()->json($recent);
     }
+
 
     public function storeGigApplication(Request $request)
     {
