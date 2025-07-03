@@ -37,6 +37,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/users/gig-seeker/{id}', [AdminUsersController::class, 'getGigSeeker']);
     Route::get('/admin/mchongo-points-stats', [AdminDashboardController::class, 'mchongoPoints']);
     Route::get('/admin/transactions', [AdminDashboardController::class, 'getTransactions']);
+    Route::post('/user/blocked-users', [AdminUsersController::class, 'getBlockedUsers']);
+    Route::post('/user/block-user/{userId}', [AdminUsersController::class, 'blockUser']);
+    Route::post('/user/unblock-user/{userId}', [AdminUsersController::class, 'unblockUser']);
+    Route::post('/user/create-user', [AdminUsersController::class, 'createUser']);
+    Route::post('/user/update-user/{userId}', [AdminUsersController::class, 'updateUser']);
 
     // Job Poster Dashboard
     Route::get('/jobposter/dashboard', [DashboardController::class, 'getStats']);

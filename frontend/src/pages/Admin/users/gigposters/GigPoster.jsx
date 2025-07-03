@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaExclamationCircle } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
 import axiosClient from "../../../../assets/js/axios-client";
 import Loading from "../../../../components/Loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import userImg from "../../../../assets/images/user.avif";
-import { showTopErrorAlert } from "../../../../utils/sweetAlert";
+import { showTopErrorAlert, showTopSuccessAlert } from "../../../../utils/sweetAlert";
 import Pagination from "../../../../components/Pagination";
+import { useModal } from "../../../../context/ModalContext";
+import CreateUser from "../CreateUser";
+import BlockUser from "../blocked/BlockUser";
 
 function GigPoster() {
     dayjs.extend(relativeTime);
@@ -17,6 +20,7 @@ function GigPoster() {
     const [loading, setLoading] = useState(true);
     const [meta, setMeta] = useState({});
     const [page, setPage] = useState(1);
+    const { openModal } = useModal();
 
     const getGigPoster = () => {
         axiosClient
@@ -66,6 +70,41 @@ function GigPoster() {
             month: "2-digit",
             day: "2-digit",
         });
+    };
+
+    const updateUser = () => {
+        openModal(
+            <CreateUser
+                userData={gigPoster}
+                type="poster"
+                reload={getGigPoster}
+            />,
+            "xl5",
+            "Update gig poster details"
+        );
+    };
+
+    const blockUser = () => {
+        openModal(
+            <BlockUser userId={gigPoster.id} reload={getGigPoster} />,
+            "xl5",
+            "Block Gig Poster"
+        );
+    };
+
+    const unblockUser = () => {
+        axiosClient
+            .post(`/user/unblock-user/${gigPoster.id}`)
+            .then(({ data }) => {
+                showTopSuccessAlert(data.message);
+                getGigPoster()
+            })
+            .catch((err) => {
+                const response = err.response;
+                if (response && response.status == 422) {
+                    showTopErrorAlert(response.data.errors);
+                }
+            });
     };
 
     {
@@ -207,6 +246,43 @@ function GigPoster() {
                                 </tbody>
                             </table>
                         </div>
+                        <div className="mt-4 flex items-center space-x-3">
+                            <button
+                                className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm"
+                                onClick={updateUser}
+                            >
+                                <span>update user details</span>
+                            </button>
+
+                            {gigPoster?.blocked ? (
+                                <button
+                                    className="bg-red-500 py-2 px-4 rounded-md hover:bg-red-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm"
+                                    onClick={unblockUser}
+                                >
+                                    <span>Unblock user</span>
+                                </button>
+                            ) : (
+                                <button
+                                    className="bg-red-500 py-2 px-4 rounded-md hover:bg-red-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm"
+                                    onClick={blockUser}
+                                >
+                                    <span>Block user</span>
+                                </button>
+                            )}
+                        </div>
+                        {gigPoster?.blocked && (
+                            <div className="w-full border border-red-500 rounded-lg p-2 my-2">
+                                <div className="flex items-center space-x-1">
+                                    <FaExclamationCircle className="text-red-500 text-sm" />
+                                    <span className="text-sm text-gray-500">
+                                        Reason for block
+                                    </span>
+                                </div>
+                                <p className="text-gray-600">
+                                    {gigPoster?.blocked.reason}
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
                 {/*  */}

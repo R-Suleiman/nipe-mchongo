@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Briefcase, Rocket, UserCheck, ShieldCheck } from 'lucide-react';
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
 import axiosClient from '../../assets/js/axios-client';
+import { useAuth } from '../../context/AuthProvider';
 
 export default function JobSeekerDashboard() {
     // Hardcoded data
@@ -15,6 +16,7 @@ export default function JobSeekerDashboard() {
     const [popularGigs, setPopularGigs] = useState([]);
     const [recentApplications, setRecentApplications] = useState([]);
     const userId = 10; // Hardcoded user ID for demonstration
+        const { user } = useAuth();
 
     useEffect(() => {
         const fetchPopularGigs = async () => {
@@ -52,7 +54,7 @@ export default function JobSeekerDashboard() {
             <div className="space-y-6">
                 <div className="bg-orange-50 p-6 rounded-2xl shadow-md">
                     <h1 className="text-3xl font-extrabold text-orange-600 mb-2">
-                        Hi Erick, welcome to your Dashboard!
+                        Hi {user.firstname}, welcome to your Dashboard!
                     </h1>
                     <p className="text-orange-800 text-lg">
                         Manage your account, track applications, and explore job opportunities.

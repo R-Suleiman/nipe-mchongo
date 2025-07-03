@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\BlockedUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,13 +18,23 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if(!Auth::attempt($credentials)) {
+        if (!Auth::attempt($credentials)) {
             return response()->json(['success' => false, 'message' => 'Invalid Credentials'], 422);
         }
 
         $user = Auth::user();
-        $token = $user->createToken('main')->plainTextToken;
 
+        // Check if the user is blocked
+        $isBlocked = BlockedUser::where('user_id', $user->id)->exists();
+        if ($isBlocked) {
+            Auth::logout();
+            return response()->json([
+                'success' => false,
+                'message' => 'Your account has been blocked. Contact support.'
+            ], 403);
+        }
+
+        $token = $user->createToken('main')->plainTextToken;
         $user['profile_photo'] = asset('storage/' . $user['profile_photo']);
 
         return response()->json(['success' => true, 'message' => 'Login successfully!', 'user' => $user, 'token' => $token], 200);
@@ -40,7 +51,8 @@ class AuthController extends Controller
         return response()->json(['success' => true, 'message' => 'Successfully logged out'], 200);
     }
 
-    public function changePassword(Request $request) {
+    public function changePassword(Request $request)
+    {
         $attributes = request()->validate([
             'old_password' => 'required',
             'new_password' => ['required', Password::min(8)->letters()->symbols(), 'confirmed']

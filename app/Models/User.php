@@ -27,6 +27,7 @@ class User extends Authenticatable
         'dob',
         'address',
         'gender',
+        'usertype',
         'password',
         'mchongo_points',
         'profile_photo',
@@ -77,5 +78,9 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function blocked() {
+        return $this->hasOne(BlockedUser::class);
     }
 }

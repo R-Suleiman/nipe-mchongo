@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useModal } from "../../../../context/ModalContext";
 import Pagination from "../../../../components/Pagination";
+import CreateUser from "../CreateUser";
 
 function GigSeekers() {
     dayjs.extend(relativeTime);
@@ -47,6 +48,10 @@ function GigSeekers() {
         return () => clearTimeout(delayDebounce);
     }, [search, page]);
 
+     const createUser = () => {
+        openModal(<CreateUser type='seeker' reload={getusers}/>, 'xl5', 'Create new gig seeker');
+    };
+
     {
         return loading ? (
             <Loading />
@@ -54,7 +59,9 @@ function GigSeekers() {
             <div className="w-full p-2">
                 <div className="border-l-4 border-blue-900 text-blue-900 font-semibold text-lg p-2 bg-blue-50 flex items-center justify-between">
                     <h2 className="italic">Gig Seekers List</h2>{" "}
-                    <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm">
+                    <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm"
+                     onClick={createUser}
+                    >
                         <FaPlus /> <span>Register user</span>
                     </button>
                 </div>

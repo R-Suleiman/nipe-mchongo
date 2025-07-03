@@ -9,7 +9,7 @@ import Pagination from "../../../../components/Pagination";
 import CreateUser from "../CreateUser";
 import { useModal } from "../../../../context/ModalContext";
 
-function GigPosters() {
+function BlockedUsers() {
     dayjs.extend(relativeTime);
     const [users, setusers] = useState();
     const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ function GigPosters() {
     const getusers = () => {
         setLoading(true);
         axiosClient
-            .post("/admin/users/gig-posters", { search, page })
+            .post("/user/blocked-users", { search, page })
             .then(({ data }) => {
                 setusers(data.users.data);
                 setMeta({
@@ -48,23 +48,13 @@ function GigPosters() {
         return () => clearTimeout(delayDebounce);
     }, [search, page]);
 
-    const createUser = () => {
-        openModal(<CreateUser type='poster' reload={getusers}/>, 'xl5', 'Create new gig poster');
-    };
-
     {
         return loading ? (
             <Loading />
         ) : (
             <div className="w-full p-2">
                 <div className="border-l-4 border-blue-900 text-blue-900 font-semibold text-lg p-2 bg-blue-50 flex items-center justify-between">
-                    <h2 className="italic">gig posters list</h2>{" "}
-                    <button
-                        className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm"
-                        onClick={createUser}
-                    >
-                        <FaPlus /> <span>Register user</span>
-                    </button>
+                    <h2 className="italic">List of Blocked Users</h2>{" "}
                 </div>
 
                 <div className="w-full my-2">
@@ -107,7 +97,7 @@ function GigPosters() {
                                     Phone
                                 </th>
                                 <th className="p-2 text-left border border-gray-300">
-                                    Gigs Posted
+                                    User Type
                                 </th>
                                 <th className="p-2 text-left border border-gray-300">
                                     Action
@@ -116,9 +106,10 @@ function GigPosters() {
                         </thead>
                         <tbody>
                             {users?.length > 0 ? (
-                                users?.map((user, index) => {
+                                users?.map((us, index) => {
+                                    const { user } = us;
                                     return (
-                                        <tr key={user.id}>
+                                        <tr key={us.id}>
                                             <td className="p-2 text-left border border-gray-300">
                                                 {index + 1}
                                             </td>
@@ -138,11 +129,11 @@ function GigPosters() {
                                                 {user.phone}
                                             </td>
                                             <td className="p-2 text-left border border-gray-300">
-                                                {user.gigs.length}
+                                                {user.usertype}
                                             </td>
                                             <td className="p-2 text-left border border-gray-300">
                                                 <Link
-                                                    to={`/admin/users/gig-posters/${user.id}`}
+                                                    to={`/admin/users/gig-${user.usertype}s/${user.id}`}
                                                 >
                                                     <button className="w-full bg-blue-500 py-1 px-2 rounded-sm hover:bg-blue-600 text-white cursor-pointer">
                                                         view
@@ -176,4 +167,4 @@ function GigPosters() {
     }
 }
 
-export default GigPosters;
+export default BlockedUsers;

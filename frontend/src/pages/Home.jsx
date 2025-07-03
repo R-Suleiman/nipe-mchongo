@@ -28,7 +28,7 @@ function Home() {
                     console.error("User data is missing");
                     return;
                 }
- 
+
                 setUser(data.user);
                 setToken(data.token);
 
@@ -43,15 +43,30 @@ function Home() {
             })
             .catch((err) => {
                 const response = err.response;
-                if (response && response.status === 422) {
-                    setErrors(
-                        response.data.errors || {
-                            email: [response.data.message],
-                        }
-                    );
+                if (response) {
+                    if (response.status === 422) {
+                        setErrors(
+                            response.data.errors || {
+                                email: [response.data.message],
+                            }
+                        );
+                    } else if (response.status === 403) {
+                        setErrors({
+                            general: [
+                                response.data.message || "Access denied.",
+                            ],
+                        });
+                    } else {
+                        setErrors({
+                            general: [
+                                "An unexpected error occurred. Please try again.",
+                            ],
+                        });
+                    }
                 }
             });
     };
+
     return (
         <div>
             <form

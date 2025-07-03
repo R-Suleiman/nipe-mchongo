@@ -34,6 +34,8 @@ import GigSeekers from "../pages/Admin/users/gigseekers/GigSeekers";
 import GigPoster from "../pages/Admin/users/gigposters/GigPoster";
 import GigSeeker from "../pages/Admin/users/gigseekers/GigSeeker";
 import AdminMchongoPoints from "../pages/Admin/mchongoPoints/AdminMchongoPoints";
+import CreateUser from "../pages/Admin/users/CreateUser";
+import BlockedUsers from "../pages/Admin/users/blocked/BlockedUsers";
 
 const Router = createBrowserRouter([
     {
@@ -167,6 +169,10 @@ const Router = createBrowserRouter([
                 element: <AdminApplication />,
             },
              {
+                path: "/admin/users/create",
+                element: <CreateUser />,
+            },
+             {
                 path: "/admin/users/gig-posters",
                 element: <GigPosters />,
             },
@@ -185,6 +191,10 @@ const Router = createBrowserRouter([
              {
                 path: "/admin/mchongo-points",
                 element: <AdminMchongoPoints />,
+            },
+             {
+                path: "/admin/users/blocked-users",
+                element: <BlockedUsers />,
             },
         ],
     },

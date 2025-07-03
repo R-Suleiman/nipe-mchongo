@@ -43,6 +43,7 @@ function AdminLayout() {
         axiosClient.post("/logout").then(() => {
             setUser(null);
             setToken(null);
+            navigate("/login");
             showSuccessAlert("Successfully Logged out!");
         });
     };
@@ -114,6 +115,11 @@ function AdminLayout() {
                                     <span>Gig Seekers</span>
                                 </li>
                             </Link>
+                             <Link to="/admin/users/blocked-users">
+                                <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer hover:border-l-4 hover:border-white">
+                                    <span>Blocked Users</span>
+                                </li>
+                            </Link>
                         </ul>
 
                         <Link to="/admin/jobs">
@@ -134,12 +140,12 @@ function AdminLayout() {
                                 <span>Mchongo Points</span>
                             </li>
                         </Link>
-                        <Link to="/admin/settings">
+                        {/* <Link to="/admin/settings">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaCogs className="mr-3" />{" "}
                                 <span>Settings</span>
                             </li>
-                        </Link>
+                        </Link> */}
                         <button
                             className="w-full p-2 font-semibold flex items-center bg-blue-600 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
                             onClick={logout}

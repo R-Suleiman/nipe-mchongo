@@ -10,7 +10,7 @@ use Storage;
 
 class UserController extends Controller
 {
-     public function getUser()
+    public function getUser()
     {
         $user = Auth::user();
 
@@ -18,8 +18,9 @@ class UserController extends Controller
 
         return response()->json(['success' => true, 'user' => $user]);
     }
-    
-    public function updateProfile(Request $request, $userId) {
+
+    public function updateProfile(Request $request, $userId)
+    {
         $updatedProfile = $request->validate([
             'username' => ['required', 'min:3', 'max:25'],
             'firstname' => ['required', 'min:3', 'max:25'],
@@ -42,7 +43,8 @@ class UserController extends Controller
         return response()->json(['success' => true, 'message' => 'Profile Updated Successfully!', 'user' => $user]);
     }
 
-    public function updatePhoto(Request $request) {
+    public function updatePhoto(Request $request)
+    {
         $request->validate([
             'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);

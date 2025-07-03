@@ -30,7 +30,7 @@ function JobPosterLayout() {
             navigate("/login");
         }
     }, []);
- 
+
     const location = useLocation();
 
     useEffect(() => {
@@ -41,6 +41,7 @@ function JobPosterLayout() {
         axiosClient.post("/logout").then(() => {
             setUser(null);
             setToken(null);
+            navigate("/login");
             showSuccessAlert("Successfully Logged out!");
         });
     };
