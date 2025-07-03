@@ -181,7 +181,7 @@ export default function JobSeekerDashboard() {
                                             <td className="px-4 py-3">{application.location}</td>
                                             <td className="px-4 py-3">{new Date(application.created_at).toLocaleDateString()}</td>
                                             <td className="px-4 py-3 text-red-600 font-semibold">
-                                                TSh {application.gig_payment.toLocaleString()}
+                                                {/* TSh {application.gig_payment.toLocaleString()} */}
                                             </td>
                                         </tr>
                                     ))}
