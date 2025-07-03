@@ -26,25 +26,25 @@ export default function JobSeekerDashboard() {
                     params: { user_id: userId }
                 });
                 setApplications(applicationsResponse.data);
+                console.log("Applications fetched:", applicationsResponse.data);
             } catch (error) {
                 console.error("Error fetching applications:", error);
             }
-            try {
-                const recentApplicationsResponse = await axiosClient.get(`/gig-seeker/recent-applications`, {
-                    params: { user_id: userId }
-                });
-                // Ensure recentApplications is an array
-                setRecentApplications(Array.isArray(recentApplicationsResponse.data) ? recentApplicationsResponse.data : []);
-            } catch (error) {
-                console.error("Error fetching applications:", error);
-            }
-            try {
-                const response = await axiosClient.get('/popular-gigs');
-                // Correctly set the popularGigs state
-                setPopularGigs(Array.isArray(response.data) ? response.data : []);
-            } catch (error) {
-                console.error("Error fetching popular gigs:", error);
-            }
+            // try {
+            //     const recentApplicationsResponse = await axiosClient.get(`/gig-seeker/recent-applications`, {
+            //         params: { user_id: userId }
+            //     });
+            //     // Ensure recentApplications is an array
+            //     setRecentApplications(Array.isArray(recentApplicationsResponse.data) ? recentApplicationsResponse.data : []);
+            // } catch (error) {
+            //     console.error("Error fetching recent applications:", error);
+            // }
+            // try {
+            //     const response = await axiosClient.get('/popular-gigs');
+            //     setPopularGigs(Array.isArray(response.data) ? response.data : []);
+            // } catch (error) {
+            //     console.error("Error fetching popular gigs:", error);
+            // }
             finally {
                 setLoading(false);
             }
