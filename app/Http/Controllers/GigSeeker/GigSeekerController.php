@@ -64,8 +64,12 @@ class GigSeekerController extends Controller
         ])->findOrFail($request->gig_seeker_id);
 
         $applications = $user->seekerApplications->sortByDesc('created_at')->values();
+        $total = $applications->count();
 
-        return response()->json($applications);
+        return response()->json([
+            'total' => $total,
+            'applications' => $applications
+        ]);
     }
 
     public function getRecentApplications(Request $request)

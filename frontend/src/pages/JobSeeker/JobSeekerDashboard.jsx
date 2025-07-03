@@ -7,7 +7,6 @@ import { useAuth } from '../../context/AuthProvider';
 
 export default function JobSeekerDashboard() {
     // Hardcoded data
-    const totalApplications = 12;
     const totalOpportunities = 45;
     const profileCompletion = 85;
     const hasPremium = true;
@@ -15,7 +14,9 @@ export default function JobSeekerDashboard() {
     const [loading, setLoading] = useState(true);
     const [popularGigs, setPopularGigs] = useState([]);
     const [recentApplications, setRecentApplications] = useState([]);
-    const { applications, setApplications } = useState([]);
+    const [applications, setApplications] = useState([]);
+    const [totalApplicationsCount, setTotalApplicationsCount] = useState(0);
+    const [totalPopularGigs, setTotalPopularGigs] = useState(0);
     const { user } = useAuth();
     const userId = user?.id;
 
@@ -26,13 +27,14 @@ export default function JobSeekerDashboard() {
                     params: { gig_seeker_id: userId }
                 });
                 setApplications(applicationsResponse.data);
-                console.log("Applications fetched:", applicationsResponse.data);
+                setTotalApplicationsCount(applicationsResponse.data.total);
             } catch (error) {
                 console.error("Error fetching applications:", error);
             }
             try {
                 const popularGigsResponse = await axiosClient.get('/popular-gigs');
                 setPopularGigs(popularGigsResponse.data);
+                setTotalPopularGigs(popularGigsResponse.data.total);
                 console.log("Popular gigs fetched:", popularGigsResponse.data);
             } catch (error) {
                 console.error("Error fetching popular gigs:", error);
@@ -42,7 +44,6 @@ export default function JobSeekerDashboard() {
                     params: { gig_seeker_id: userId }
                 });
                 setRecentApplications(recentApplicationsResponseResponse.data);
-                console.log("Recent applications fetched:", recentApplicationsResponseResponse.data);
             } catch (error) {
                 console.error("Error fetching recent gigs applications:", error);
             }
@@ -71,7 +72,7 @@ export default function JobSeekerDashboard() {
                         <Briefcase className="text-blue-500 w-6 h-6" />
                         <div>
                             <h2 className="text-sm font-medium text-blue-500">Total Applications</h2>
-                            <p className="text-3xl font-extrabold text-gray-800 mt-1">{totalApplications}</p>
+                            <p className="text-3xl font-extrabold text-gray-800 mt-1">{totalApplicationsCount}</p>
                         </div>
                     </div>
 
@@ -79,7 +80,7 @@ export default function JobSeekerDashboard() {
                         <Rocket className="text-blue-500 w-6 h-6" />
                         <div>
                             <h2 className="text-sm font-medium text-blue-500">Opportunities Available</h2>
-                            <p className="text-3xl font-extrabold text-gray-800 mt-1">{totalOpportunities}</p>
+                            <p className="text-3xl font-extrabold text-gray-800 mt-1">{totalPopularGigs}</p>
                         </div>
                     </div>
 
@@ -177,11 +178,11 @@ export default function JobSeekerDashboard() {
                                 <tbody>
                                     {recentApplications.map((application) => (
                                         <tr key={application.id} className="border-b border-gray-300 hover:border-transparent hover:bg-blue-50 transition transform ease-out duration-700">
-                                            <td className="px-4 py-3">{application.gig_title}</td>
-                                            <td className="px-4 py-3">{application.location}</td>
+                                            <td className="px-4 py-3">{application.gig?.title || "—"}</td>
+                                            <td className="px-4 py-3">{application.gig?.location || "—"}</td>
                                             <td className="px-4 py-3">{new Date(application.created_at).toLocaleDateString()}</td>
                                             <td className="px-4 py-3 text-red-600 font-semibold">
-                                                {/* TSh {application.gig_payment.toLocaleString()} */}
+                                                TSh {application.gig?.payment?.toLocaleString() || "0"}
                                             </td>
                                         </tr>
                                     ))}
@@ -193,11 +194,11 @@ export default function JobSeekerDashboard() {
                                         </tr>
                                     )}
                                 </tbody>
+
                             </table>
                         </div>
                     )}
                 </div>
-
 
             </div>
         </JobSeekerLayout>
