@@ -41,7 +41,7 @@ export default function JobSeekerDashboard() {
                 const recentApplicationsResponseResponse = await axiosClient.get(`/gig-seeker/recent-applications`, {
                     params: { gig_seeker_id: userId }
                 });
-                setPopularGigs(recentApplicationsResponseResponse.data);
+                setRecentApplications(recentApplicationsResponseResponse.data);
                 console.log("Recent applications fetched:", recentApplicationsResponseResponse.data);
             } catch (error) {
                 console.error("Error fetching recent gigs applications:", error);
