@@ -85,7 +85,6 @@ class GigSeekerController extends Controller
         return response()->json($recent);
     }
 
-
     public function storeGigApplication(Request $request)
     {
         // Validate the request
@@ -132,76 +131,5 @@ class GigSeekerController extends Controller
         $application->delete();
 
         return response()->json(['message' => 'Controller says, Application cancelled successfully'], 200);
-    }
-
-    public function gigSeekerApplications($id)
-    {
-        $gigApplications = DB::table('gig_applications')
-            ->where('gig_seeker_id', '=', $id)
-            ->leftJoin('gigs', 'gig_applications.gig_id', '=', 'gigs.id')
-            ->leftJoin('users', 'gigs.gig_poster_id', '=', 'users.id')
-            ->leftJoin('gig_categories', 'gigs.gig_category_id', '=', 'gig_categories.id')
-            ->leftJoin('statuses', 'gig_applications.status_id', '=', 'statuses.id')
-            ->select(
-                'users.id as user_id',
-                'gig_applications.id',
-                'gig_applications.gig_id',
-                'gig_applications.gig_seeker_id',
-                'gig_applications.gig_poster_id',
-                'gig_applications.created_at',
-                'statuses.name as application_status',
-                'gig_categories.name as gig_category_name',
-                'gigs.title as gig_title',
-                'gigs.description as gig_description',
-                'gigs.payment as gig_payment',
-                'gigs.location as location',
-                'users.firstname as gig_poster_first_name',
-                'users.lastname as gig_poster_last_name'
-            )
-            ->orderBy('gig_applications.created_at', 'desc')
-            ->get();
-
-        return response()->json($gigApplications);
-    }
-
-    // public function recentGigApplications(Request $request)
-    // {
-    //     $seekerId = $request->query('seeker_id'); // Ensure seeker_id is passed correctly
-    //     $applications = DB::table('gig_applications')
-    //         ->where('gig_seeker_id', '=', $seekerId)
-    //         ->leftJoin('gigs', 'gig_applications.gig_id', '=', 'gigs.id')
-    //         ->leftJoin('users', 'gigs.gig_poster_id', '=', 'users.id')
-    //         ->leftJoin('gig_categories', 'gigs.gig_category_id', '=', 'gig_categories.id')
-    //         ->leftJoin('statuses', 'gig_applications.status_id', '=', 'statuses.id')
-    //         ->select(
-    //             'gig_applications.id',
-    //             'gig_applications.gig_id',
-    //             'gig_applications.gig_seeker_id',
-    //             'gig_applications.gig_poster_id',
-    //             'gig_applications.created_at',
-    //             'statuses.name as application_status',
-    //             'gig_categories.name as gig_category_name',
-    //             'gigs.title as gig_title',
-    //             'gigs.description as gig_description',
-    //             'gigs.payment as gig_payment',
-    //             'gigs.location as location',
-    //             'users.firstname as gig_poster_first_name',
-    //             'users.lastname as gig_poster_last_name'
-    //         )
-    //         ->orderBy('gig_applications.created_at', 'desc')
-    //         ->get();
-
-    //     return response()->json($applications);
-    // }
-
-    // gig categories
-    public function searchGigs(Request $request)
-    {
-        $query = DB::table('gigs')
-            ->select('gigs.id', 'gigs.title');
-        if ($request->has('title') && $request->title !== '') {
-            $query->where('gigs.title', 'LIKE', '%' . $request->title . '%');
-        }
-        return response()->json($query->orderBy('gigs.created_at', 'desc')->get());
     }
 }
