@@ -90,16 +90,10 @@ const JobSeekerLayout = ({ children }) => {
                             if (url) window.location.href = url;
                         }}
                     >
-                        <option value="" className="bg-indigo-800">Menu</option>
-                        <option value="/job/seeker/dashboard" className="bg-indigo-800">
-                            <FaUserCircle className="inline mr-2" /> My Account
-                        </option>
-                        <option value="/job/seeker/my-applications" className="bg-indigo-800">
-                            <FaFileAlt className="inline mr-2" /> My Applications
-                        </option>
-                        <option value="/job/seeker/search-jobs" className="bg-indigo-800">
-                            <FaSearch className="inline mr-2" /> Search Jobs
-                        </option>
+                        <option value="">Menu</option>
+                        <option value="/job/seeker/dashboard">My Account</option>
+                        <option value="/job/seeker/my-applications">My Applications</option>
+                        <option value="/job/seeker/search-jobs">Search Jobs</option>
                     </select>
                     <FaChevronDown className="absolute right-3 top-3.5 text-blue-200 pointer-events-none" />
                 </div>
