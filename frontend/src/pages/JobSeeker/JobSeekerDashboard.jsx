@@ -125,7 +125,7 @@ export default function JobSeekerDashboard() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 gap-4">
-                            {popularGigs.map((gig) => (
+                            {popularGigs?.gigs.map((gig) => (
                                 <div
                                     key={gig.id}
                                     className="flex justify-between items-center p-4 rounded-lg shadow bg-gradient-to-r from-blue-600 via-blue-500 to-blue-300 text-white hover:shadow-md transition"
