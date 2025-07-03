@@ -62,37 +62,26 @@ export default function MyApplications() {
                 <div className="bg-white p-6 rounded-2xl shadow">
                     <h2 className="text-lg font-semibold text-gray-800 mb-4">Applications Overview</h2>
                     <div className="overflow-x-auto">
-                        {loading ? (
-                            <p className="text-center py-4">Loading...</p>
+                        {applications.length === 0 ? (
+                            <p className="text-center py-4 text-gray-500">No applications found.</p>
                         ) : (
-                            <table className="w-full text-sm text-left text-gray-700 divide-y divide-gray-200">
-                                <thead className="bg-orange-100 text-orange-600 text-xs uppercase font-semibold">
+                            <table className="w-full table-auto text-sm text-left text-gray-600">
+                                <thead className="bg-gray-100 text-gray-600 uppercase text-xs font-semibold">
                                     <tr>
-                                        <th className="px-4 py-3">Gig</th>
-                                        <th className="px-4 py-3">Status</th>
-                                        <th className="px-4 py-3">Actions</th>
+                                        <th className="px-4 py-2">Title</th>
+                                        <th className="px-4 py-2">Location</th>
+                                        <th className="px-4 py-2">Status</th>
+                                        <th className="px-4 py-2">Applied On</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {Array.isArray(applications) && applications.map(app => (
-                                        <tr
-                                            key={app.id}
-                                            className="hover:bg-orange-50 transition transform ease-out duration-700"
-                                        >
-                                            <td className="px-4 py-3 font-medium text-gray-800">
-                                                {app.gig_title}
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold
-                                ${app.application_status === "approved"
-                                                        ? "bg-green-100 text-green-700"
-                                                        : app.application_status === "pending"
-                                                            ? "bg-yellow-100 text-yellow-700"
-                                                            : "bg-red-100 text-red-700"
-                                                    }`}>
-                                                    {app.application_status}
-                                                </span>
-                                            </td>
+                                <tbody>
+                                    {applications.map((app) => (
+                                        <tr key={app.id} className="border-b">
+                                            <td className="px-4 py-2">{app.gig?.title || '—'}</td>
+                                            <td className="px-4 py-2">{app.gig?.location || '—'}</td>
+                                            <td className="px-4 py-2">{app.status?.name || '—'}</td>
+                                            <td className="px-4 py-2">{new Date(app.created_at).toLocaleDateString()}</td>
+
                                             <td className="px-4 py-3 space-x-2">
 
                                                 <button
