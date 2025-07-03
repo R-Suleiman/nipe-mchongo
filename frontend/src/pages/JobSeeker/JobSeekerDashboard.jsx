@@ -13,8 +13,8 @@ export default function JobSeekerDashboard() {
     const hasPremium = true;
 
     const [loading, setLoading] = useState(true);
-    const [popularGigs, setPopularGigs] = useState([]);
-    const [recentApplications, setRecentApplications] = useState([]);
+    // const [popularGigs, setPopularGigs] = useState([]);
+    // const [recentApplications, setRecentApplications] = useState([]);
     const { applications, setApplications } = useState([]);
     const { user } = useAuth();
     const userId = user?.id;
@@ -30,26 +30,10 @@ export default function JobSeekerDashboard() {
             } catch (error) {
                 console.error("Error fetching applications:", error);
             }
-            // try {
-            //     const recentApplicationsResponse = await axiosClient.get(`/gig-seeker/recent-applications`, {
-            //         params: { user_id: userId }
-            //     });
-            //     // Ensure recentApplications is an array
-            //     setRecentApplications(Array.isArray(recentApplicationsResponse.data) ? recentApplicationsResponse.data : []);
-            // } catch (error) {
-            //     console.error("Error fetching recent applications:", error);
-            // }
-            // try {
-            //     const response = await axiosClient.get('/popular-gigs');
-            //     setPopularGigs(Array.isArray(response.data) ? response.data : []);
-            // } catch (error) {
-            //     console.error("Error fetching popular gigs:", error);
-            // }
             finally {
                 setLoading(false);
             }
         };
-
         fetchGigs();
     }, []);
 
