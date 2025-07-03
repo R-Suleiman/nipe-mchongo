@@ -66,8 +66,9 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/gig-seeker/dashboard', [GigSeekerController::class, 'gigSeekerDashboard']);
-Route::get('/gig-seeker/gig/applications/{id}', [GigSeekerController::class, 'gigSeekerApplications']);
-Route::get('/gig-seeker/gig/recent-applications', [GigSeekerController::class, 'recentGigApplications']);
+Route::get('/gig-seeker/applications', [GigSeekerController::class, 'getAllApplications']);
+Route::get('/gig-seeker/recent-applications', [GigSeekerController::class, 'getRecentApplications']);
+
 // getting popular gigs
 Route::get('/popular-gigs', [GigController::class, 'popularGigs']);
 Route::get('/gig-categories', [GigController::class, 'getGigCategories']);
