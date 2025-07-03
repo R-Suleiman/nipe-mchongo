@@ -40,13 +40,13 @@ export default function JobSeekerDashboard() {
                 console.error("Error fetching popular gigs:", error);
             }
             try {
-                const popularGigsResponse = await axiosClient.get(`/gig-seeker/applications`, {
+                const recentApplicationsResponseResponse = await axiosClient.get(`/gig-seeker/recent-applications`, {
                     params: { gig_seeker_id: userId }
                 });
-                setPopularGigs(popularGigsResponse.data);
-                console.log("Popular gigs fetched:", popularGigsResponse.data);
+                setPopularGigs(recentApplicationsResponseResponse.data);
+                console.log("Recent applications fetched:", recentApplicationsResponseResponse.data);
             } catch (error) {
-                console.error("Error fetching popular gigs:", error);
+                console.error("Error fetching recent gigs applications:", error);
             }
             finally {
                 setLoading(false);
