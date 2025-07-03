@@ -65,9 +65,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notification-preference', [NotificationController::class, 'getNotificationPreference']);
 });
 
+Route::get('/gig-seeker/dashboard', [GigSeekerController::class, 'gigSeekerDashboard']);
 Route::get('/gig-seeker/gig/applications/{id}', [GigSeekerController::class, 'gigSeekerApplications']);
 Route::get('/gig-seeker/gig/recent-applications', [GigSeekerController::class, 'recentGigApplications']);
-
 // getting popular gigs
 Route::get('/popular-gigs', [GigController::class, 'popularGigs']);
 Route::get('/gig-categories', [GigController::class, 'getGigCategories']);
@@ -79,5 +79,3 @@ Route::delete('/gig-seeker/cancel/gig/application/{id}', [GigSeekerController::c
 // Payment test routes
 Route::post('/buy-points', [PaymentController::class, 'buyMchongoPoints']);
 Route::post('/azampay/callback', [PaymentController::class, 'azampayCallback'])->name('azampay.callback');
-
-

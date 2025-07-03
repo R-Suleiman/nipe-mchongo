@@ -15,8 +15,8 @@ export default function JobSeekerDashboard() {
     const [loading, setLoading] = useState(true);
     const [popularGigs, setPopularGigs] = useState([]);
     const [recentApplications, setRecentApplications] = useState([]);
-    const userId = 10; // Hardcoded user ID for demonstration
-        const { user } = useAuth();
+    const { user } = useAuth();
+    const userId = user?.id;
 
     useEffect(() => {
         const fetchPopularGigs = async () => {
@@ -35,60 +35,62 @@ export default function JobSeekerDashboard() {
     }, []);
 
     useEffect(() => {
-        const recentApplication = async () => {
+        const gigSeekerDetails = async () => {
             try {
-                const response = await axiosClient.get(`/gig-seeker/gig/recent-applications?seeker_id=${userId}`);
+                const response = await axiosClient.get('/gig-seeker/dashboard', {
+                    params: { gig_seeker_id: userId }
+                });
                 // Correctly set the recentApplications state
                 setRecentApplications(Array.isArray(response.data) ? response.data : []);
+                console.log("Recent Applications:", response.data);
             } catch (error) {
                 console.error("Error fetching recent applications:", error);
             } finally {
                 setLoading(false);
             }
         };
-        recentApplication();
+        gigSeekerDetails();
     }, [userId]);
 
     return (
         <JobSeekerLayout>
-            <div className="space-y-6">
-                <div className="bg-orange-50 p-6 rounded-2xl shadow-md">
-                    <h1 className="text-3xl font-extrabold text-orange-600 mb-2">
+            <div className="">
+                <div className="bg-blue-50 rounded-2xl shadow-md">
+                    <h1 className="text-3xl font-extrabold text-blue-600 mb-2">
                         Hi {user.firstname}, welcome to your Dashboard!
                     </h1>
-                    <p className="text-orange-800 text-lg">
+                    <p className="text-blue-800 text-lg">
                         Manage your account, track applications, and explore job opportunities.
                     </p>
                 </div>
 
-
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div className="bg-white p-6 rounded-2xl shadow border border-orange-100 flex items-center gap-4">
-                        <Briefcase className="text-orange-500 w-6 h-6" />
+                    <div className="bg-white p-6 rounded-2xl shadow border border-blue-100 flex items-center gap-4">
+                        <Briefcase className="text-blue-500 w-6 h-6" />
                         <div>
-                            <h2 className="text-sm font-medium text-orange-500">Total Applications</h2>
+                            <h2 className="text-sm font-medium text-blue-500">Total Applications</h2>
                             <p className="text-3xl font-extrabold text-gray-800 mt-1">{totalApplications}</p>
                         </div>
                     </div>
 
-                    <div className="bg-white p-6 rounded-2xl shadow border border-orange-100 flex items-center gap-4">
-                        <Rocket className="text-orange-500 w-6 h-6" />
+                    <div className="bg-white p-6 rounded-2xl shadow border border-blue-100 flex items-center gap-4">
+                        <Rocket className="text-blue-500 w-6 h-6" />
                         <div>
-                            <h2 className="text-sm font-medium text-orange-500">Opportunities Available</h2>
+                            <h2 className="text-sm font-medium text-blue-500">Opportunities Available</h2>
                             <p className="text-3xl font-extrabold text-gray-800 mt-1">{totalOpportunities}</p>
                         </div>
                     </div>
 
-                    <div className="bg-white p-6 rounded-2xl shadow border border-orange-100">
-                        <h2 className="text-sm font-medium text-orange-500 mb-1 flex items-center gap-2">
-                            <UserCheck className="w-5 h-5 text-orange-500" />
+                    <div className="bg-white p-6 rounded-2xl shadow border border-blue-100">
+                        <h2 className="text-sm font-medium text-blue-500 mb-1 flex items-center gap-2">
+                            <UserCheck className="w-5 h-5 text-blue-500" />
                             Profile Completion
                         </h2>
                         <p className="text-3xl font-extrabold text-gray-800">{profileCompletion}%</p>
                         <div className="mt-3 w-full bg-gray-200 rounded-full h-2.5">
                             <div
-                                className="bg-orange-500 h-2.5 rounded-full transition-all duration-500"
+                                className="bg-blue-500 h-2.5 rounded-full transition-all duration-500"
                                 style={{ width: `${profileCompletion}%` }}
                             ></div>
                         </div>
@@ -107,9 +109,9 @@ export default function JobSeekerDashboard() {
                 </div>
 
                 {/* Popular Gigs */}
-                <div className="w-full bg-white p-6 rounded-2xl shadow border border-orange-100">
+                <div className="w-full bg-white p-6 rounded-2xl shadow border border-blue-100">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent">
+                        <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                             Popular Gigs
                         </h2>
                         <span className="text-sm text-gray-500">{popularGigs.length} Total</span>
@@ -117,14 +119,14 @@ export default function JobSeekerDashboard() {
 
                     {loading ? (
                         <div className="flex justify-center items-center h-32">
-                            <Rocket className="animate-spin h-10 w-10 text-orange-500" />
+                            <Rocket className="animate-spin h-10 w-10 text-blue-500" />
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 gap-4">
                             {popularGigs.map((gig) => (
                                 <div
                                     key={gig.id}
-                                    className="flex justify-between items-center p-4 rounded-lg shadow bg-gradient-to-r from-orange-600 via-orange-500 to-orange-300 text-white hover:shadow-md transition"
+                                    className="flex justify-between items-center p-4 rounded-lg shadow bg-gradient-to-r from-blue-600 via-blue-500 to-blue-300 text-white hover:shadow-md transition"
                                 >
                                     <h3 className="font-semibold text-base truncate">{gig.title}</h3>
                                     <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
@@ -158,12 +160,12 @@ export default function JobSeekerDashboard() {
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Applications</h2>
                     {loading ? (
                         <div className="flex justify-center items-center h-32">
-                            <Rocket className="animate-spin h-10 w-10 text-orange-500" />
+                            <Rocket className="animate-spin h-10 w-10 text-blue-500" />
                         </div>
                     ) : (
                         <div className="overflow-x-auto">
                             <table className="min-w-full table-auto text-sm text-left text-gray-600">
-                                <thead className="bg-orange-100 text-orange-600 text-xs uppercase font-semibold">
+                                <thead className="bg-blue-100 text-blue-600 text-xs uppercase font-semibold">
                                     <tr>
                                         <th className="px-4 py-3">Gig Title</th>
                                         <th className="px-4 py-3">Location</th>
@@ -173,7 +175,7 @@ export default function JobSeekerDashboard() {
                                 </thead>
                                 <tbody>
                                     {recentApplications.map((application) => (
-                                        <tr key={application.id} className="border-b border-gray-300 hover:border-transparent hover:bg-orange-50 transition transform ease-out duration-700">
+                                        <tr key={application.id} className="border-b border-gray-300 hover:border-transparent hover:bg-blue-50 transition transform ease-out duration-700">
                                             <td className="px-4 py-3">{application.gig_title}</td>
                                             <td className="px-4 py-3">{application.location}</td>
                                             <td className="px-4 py-3">{new Date(application.created_at).toLocaleDateString()}</td>

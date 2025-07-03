@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { showSuccessAlert } from "../utils/sweetAlert";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaBriefcase, FaChevronDown, FaCog, FaFileAlt, FaSearch, FaSignOutAlt, FaUserCircle, FaWallet } from "react-icons/fa";
 import axiosClient from "../assets/js/axios-client";
 
 const JobSeekerLayout = ({ children }) => {
@@ -25,72 +25,90 @@ const JobSeekerLayout = ({ children }) => {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
             {/* Sidebar */}
-            <aside className="w-64 bg-white shadow-md hidden md:block">
-                <div className="p-6 border-b">
-                    <h2 className="text-xl font-bold text-gray-800">
-                        JobSeeker
+            <aside className="w-64 bg-gradient-to-b from-blue-900 to-indigo-900 shadow-xl hidden md:block transition-all duration-300">
+                <div className="p-6 border-b border-indigo-700">
+                    <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-200">
+                        <FaBriefcase className="inline mr-2" />
+                        JobSeeker Pro
                     </h2>
                 </div>
-                <nav className="p-4 space-y-2">
+                <nav className="p-4 space-y-1">
                     <Link
                         to={"/job/seeker/dashboard"}
-                        className="block px-4 py-2 rounded hover:bg-gray-100 text-gray-700"
+                        className="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-800 text-blue-100 hover:text-white transition-all group"
                     >
-                        My Account
+                        <FaUserCircle className="mr-3 text-blue-200 group-hover:text-white" />
+                        <span>My Account</span>
                     </Link>
                     <Link
                         to={"/job/seeker/my-applications"}
-                        className="block px-4 py-2 rounded hover:bg-gray-100 text-gray-700"
+                        className="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-800 text-blue-100 hover:text-white transition-all group"
                     >
-                        My Applications
+                        <FaFileAlt className="mr-3 text-blue-200 group-hover:text-white" />
+                        <span>My Applications</span>
                     </Link>
                     <Link
                         to={"/job/seeker/search-jobs"}
-                        className="block px-4 py-2 rounded hover:bg-gray-100 text-gray-700"
+                        className="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-800 text-blue-100 hover:text-white transition-all group"
                     >
-                        Search Jobs
+                        <FaSearch className="mr-3 text-blue-200 group-hover:text-white" />
+                        <span>Search Jobs</span>
                     </Link>
                     <Link
                         to={"/job/seeker/my-balance"}
-                        className="block px-4 py-2 rounded hover:bg-gray-100 text-gray-700"
+                        className="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-800 text-blue-100 hover:text-white transition-all group"
                     >
-                        My Balance
+                        <FaWallet className="mr-3 text-blue-200 group-hover:text-white" />
+                        <span>My Balance</span>
                     </Link>
                     <Link
                         to={"/job/seeker/settings"}
-                        className="block px-4 py-2 rounded hover:bg-gray-100 text-gray-700"
+                        className="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-800 text-blue-100 hover:text-white transition-all group"
                     >
-                        Settings
+                        <FaCog className="mr-3 text-blue-200 group-hover:text-white" />
+                        <span>Settings</span>
                     </Link>
                     <button
-                        className="w-full flex items-center px-4 py-2 rounded-md bg-red-600 hover:bg-red-500 text-white font-semibold"
+                        className="w-full flex items-center px-4 py-3 rounded-lg bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold shadow-md mt-6 transition-all"
                         onClick={logout}
                     >
-                        <FaSignOutAlt className="mr-3" /> <span>Sign out</span>
+                        <FaSignOutAlt className="mr-3" />
+                        <span>Sign out</span>
                     </button>
                 </nav>
             </aside>
 
             {/* Mobile sidebar toggle */}
-            <div className="md:hidden w-full bg-white shadow p-4">
-                <select
-                    className="w-full px-4 py-2 border rounded-md text-gray-700"
-                    onChange={(e) => {
-                        const url = e.target.value;
-                        if (url) window.location.href = url;
-                    }}
-                >
-                    <option value="">Menu</option>
-                    <option value="#">My Account</option>
-                    <option value="#">My Applications</option>
-                    <option value="#">Search Jobs</option>
-                </select>
+            <div className="md:hidden w-full bg-gradient-to-r from-blue-800 to-indigo-800 shadow-lg p-4">
+                <div className="relative">
+                    <select
+                        className="w-full px-4 py-3 rounded-lg bg-indigo-700 text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+                        onChange={(e) => {
+                            const url = e.target.value;
+                            if (url) window.location.href = url;
+                        }}
+                    >
+                        <option value="" className="bg-indigo-800">Menu</option>
+                        <option value="/job/seeker/dashboard" className="bg-indigo-800">
+                            <FaUserCircle className="inline mr-2" /> My Account
+                        </option>
+                        <option value="/job/seeker/my-applications" className="bg-indigo-800">
+                            <FaFileAlt className="inline mr-2" /> My Applications
+                        </option>
+                        <option value="/job/seeker/search-jobs" className="bg-indigo-800">
+                            <FaSearch className="inline mr-2" /> Search Jobs
+                        </option>
+                    </select>
+                    <FaChevronDown className="absolute right-3 top-3.5 text-blue-200 pointer-events-none" />
+                </div>
             </div>
 
             {/* Main Content */}
-            <main className="flex-1 p-6">{children}</main>
+            <main className="flex-1 p-6 md:p-8 bg-white md:bg-transparent md:rounded-tl-3xl md:rounded-bl-3xl shadow-lg md:shadow-none">
+                {children}
+            </main>
         </div>
     );
 };

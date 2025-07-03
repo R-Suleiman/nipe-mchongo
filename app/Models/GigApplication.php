@@ -34,4 +34,8 @@ class GigApplication extends Model
     {
         return $this->belongsTo(Status::class);
     }
+    public function gig()
+    {
+        return $this->belongsTo(Gig::class);
+    }
 }
