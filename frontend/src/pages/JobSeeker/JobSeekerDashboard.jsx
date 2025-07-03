@@ -31,8 +31,7 @@ export default function JobSeekerDashboard() {
                 console.error("Error fetching applications:", error);
             }
             try {
-                const popularGigsResponse = await axiosClient.get(`/gig-seeker/applications`
-                );
+                const popularGigsResponse = await axiosClient.get('/popular-gigs');
                 setPopularGigs(popularGigsResponse.data);
                 console.log("Popular gigs fetched:", popularGigsResponse.data);
             } catch (error) {
