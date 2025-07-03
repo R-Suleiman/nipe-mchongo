@@ -59,36 +59,69 @@ export default function MyApplications() {
                     <p className="text-gray-600">Track all your applied gigs across Tanzania.</p>
                 </div>
 
-                <div className="mt-6">
-                    <h2 className="text-xl font-semibold">All Applications</h2>
-                    <p className="text-gray-500 mb-2">Total: {totalApplications}</p>
-
-                    {applications.length === 0 ? (
-                        <p className="text-gray-500">No applications found.</p>
-                    ) : (
-                        <table className="w-full table-auto text-sm text-left text-gray-600">
-                            <thead className="bg-gray-100 text-gray-600 uppercase text-xs font-semibold">
-                                <tr>
-                                    <th className="px-4 py-2">Title</th>
-                                    <th className="px-4 py-2">Location</th>
-                                    <th className="px-4 py-2">Status</th>
-                                    <th className="px-4 py-2">Applied On</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {applications.map((app) => (
-                                    <tr key={app.id} className="border-b">
-                                        <td className="px-4 py-2">{app.gig?.title || '—'}</td>
-                                        <td className="px-4 py-2">{app.gig?.location || '—'}</td>
-                                        <td className="px-4 py-2">{app.status?.name || '—'}</td>
-                                        <td className="px-4 py-2">{new Date(app.created_at).toLocaleDateString()}</td>
+                <div className="bg-white p-6 rounded-2xl shadow">
+                    <h2 className="text-lg font-semibold text-gray-800 mb-4">Applications Overview</h2>
+                    <div className="overflow-x-auto">
+                        {loading ? (
+                            <p className="text-center py-4">Loading...</p>
+                        ) : (
+                            <table className="w-full text-sm text-left text-gray-700 divide-y divide-gray-200">
+                                <thead className="bg-orange-100 text-orange-600 text-xs uppercase font-semibold">
+                                    <tr>
+                                        <th className="px-4 py-3">Gig</th>
+                                        <th className="px-4 py-3">Status</th>
+                                        <th className="px-4 py-3">Actions</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {Array.isArray(applications) && applications.map(app => (
+                                        <tr
+                                            key={app.id}
+                                            className="hover:bg-orange-50 transition transform ease-out duration-700"
+                                        >
+                                            <td className="px-4 py-3 font-medium text-gray-800">
+                                                {app.gig_title}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold
+                                ${app.application_status === "approved"
+                                                        ? "bg-green-100 text-green-700"
+                                                        : app.application_status === "pending"
+                                                            ? "bg-yellow-100 text-yellow-700"
+                                                            : "bg-red-100 text-red-700"
+                                                    }`}>
+                                                    {app.application_status}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 space-x-2">
 
+                                                <button
+                                                    onClick={() =>
+                                                        openModal(<ApplicationDetails application={app} />, "xl7")
+                                                    }
+                                                    className="inline-block bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg font-semibold transition"
+                                                >
+                                                    Preview
+                                                </button>
+
+
+
+                                                {(app.application_status === "pending" || app.application_status === "denied") && (
+                                                    <button
+                                                        onClick={() => handleCancelApplication(app.id)}
+                                                        className="py-2 px-4 bg-red-600 hover:bg-red-500 text-white rounded-md text-xs font-medium"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                </div>
             </div>
         </JobSeekerLayout>
     );
