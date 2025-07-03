@@ -13,8 +13,8 @@ export default function JobSeekerDashboard() {
     const hasPremium = true;
 
     const [loading, setLoading] = useState(true);
-    // const [popularGigs, setPopularGigs] = useState([]);
-    // const [recentApplications, setRecentApplications] = useState([]);
+    const [popularGigs, setPopularGigs] = useState([]);
+    const [recentApplications, setRecentApplications] = useState([]);
     const { applications, setApplications } = useState([]);
     const { user } = useAuth();
     const userId = user?.id;
@@ -23,7 +23,7 @@ export default function JobSeekerDashboard() {
         const fetchGigs = async () => {
             try {
                 const applicationsResponse = await axiosClient.get(`/gig-seeker/applications`, {
-                    params: { user_id: userId }
+                    params: { gig_seeker_id: userId }
                 });
                 setApplications(applicationsResponse.data);
                 console.log("Applications fetched:", applicationsResponse.data);
