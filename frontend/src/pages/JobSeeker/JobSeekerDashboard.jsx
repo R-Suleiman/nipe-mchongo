@@ -30,6 +30,15 @@ export default function JobSeekerDashboard() {
             } catch (error) {
                 console.error("Error fetching applications:", error);
             }
+            try {
+                const popularGigsResponse = await axiosClient.get(`/gig-seeker/applications`, {
+                    params: { gig_seeker_id: userId }
+                });
+                setApplications(popularGigsResponse.data);
+                console.log("Applications fetched:", popularGigsResponse.data);
+            } catch (error) {
+                console.error("Error fetching applications:", error);
+            }
             finally {
                 setLoading(false);
             }
