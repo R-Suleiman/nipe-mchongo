@@ -15,42 +15,34 @@ export default function JobSeekerDashboard() {
     const [loading, setLoading] = useState(true);
     const [popularGigs, setPopularGigs] = useState([]);
     const [recentApplications, setRecentApplications] = useState([]);
+    const { applications, setApplications } = useState([]);
     const { user } = useAuth();
     const userId = user?.id;
 
     useEffect(() => {
-        const fetchPopularGigs = async () => {
+        const fetchGigs = async () => {
+            try {
+                const applicationsResponse = await axiosClient.get(`/gig-seeker/applications`, {
+                    params: { user_id: userId }
+                });
+                setApplications(applicationsResponse.data);
+            } catch (error) {
+                console.error("Error fetching applications:", error);
+            }
             try {
                 const response = await axiosClient.get('/popular-gigs');
                 // Correctly set the popularGigs state
                 setPopularGigs(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
                 console.error("Error fetching popular gigs:", error);
-            } finally {
+            }
+            finally {
                 setLoading(false);
             }
         };
 
-        fetchPopularGigs();
+        fetchGigs();
     }, []);
-
-    useEffect(() => {
-        const gigSeekerDetails = async () => {
-            try {
-                const response = await axiosClient.get('/gig-seeker/dashboard', {
-                    params: { gig_seeker_id: userId }
-                });
-                // Correctly set the recentApplications state
-                setRecentApplications(Array.isArray(response.data) ? response.data : []);
-                console.log("Recent Applications:", response.data);
-            } catch (error) {
-                console.error("Error fetching recent applications:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        gigSeekerDetails();
-    }, [userId]);
 
     return (
         <JobSeekerLayout>
