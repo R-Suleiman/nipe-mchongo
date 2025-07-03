@@ -65,7 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notification-preference', [NotificationController::class, 'getNotificationPreference']);
 });
 
-Route::get('/gig-seeker/dashboard', [GigSeekerController::class, 'gigSeekerDashboard']);
+// Route::get('/gig-seeker/dashboard', [GigSeekerController::class, 'gigSeekerDashboard']);
 Route::get('/gig-seeker/applications', [GigSeekerController::class, 'getAllApplications']);
 Route::get('/gig-seeker/recent-applications', [GigSeekerController::class, 'getRecentApplications']);
 
