@@ -88,7 +88,7 @@ export default function SearchJobs() {
                     </select>
                     <button
                         onClick={handleSearch}
-                        className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded-lg"
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg"
                     >
                         Search
                     </button>
@@ -104,7 +104,7 @@ export default function SearchJobs() {
                         {gigs.map((gig) => (
                             <div
                                 key={gig.id}
-                                className="bg-orange-50 border border-orange-100 rounded-3xl shadow-md hover:shadow-xl p-6 transition-all"
+                                className="bg-blue-50 border border-orange-100 rounded-3xl shadow-md hover:shadow-xl p-6 transition-all"
                             >
                                 <h2 className="text-lg font-bold text-gray-800 mb-1">{gig.title}</h2>
                                 <p className="text-sm text-orange-500 font-medium mb-2">{gig.gig_category_name}</p>
@@ -115,7 +115,7 @@ export default function SearchJobs() {
                                 {gig.has_applied ? (
                                     <button
                                         disabled
-                                        className="inline-block bg-orange-100 text-orange-500 text-sm px-4 py-2 rounded-lg font-semibold cursor-not-allowed"
+                                        className="inline-block bg-blue-100 text-orange-500 text-sm px-4 py-2 rounded-lg font-semibold cursor-not-allowed"
                                     >
                                         ✓ Applied
                                     </button>
@@ -124,7 +124,7 @@ export default function SearchJobs() {
                                         onClick={() =>
                                             openModal(<ConfirmApplication gig={gig} />, "xl4", `${gig.title} - Confirm Application`)
                                         }
-                                        className="inline-block bg-orange-600 hover:bg-orange-700 text-white text-sm px-4 py-2 rounded-lg font-semibold transition"
+                                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg font-semibold transition"
                                     >
                                         Apply Now
                                     </button>
