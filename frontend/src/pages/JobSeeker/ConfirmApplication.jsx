@@ -3,12 +3,14 @@ import { useModal } from "../../context/ModalContext";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosClient from "../../assets/js/axios-client";
+import { useAuth } from "../../context/AuthProvider";
 
 
 export default function ConfirmApplication({ gig }) {
+    const { user } = useAuth();
     const [loading, setLoading] = React.useState(false);
     const { closeModal } = useModal();
-    const user_id = 10;
+    const user_id = user?.id;
 
     const handleConfirm = async () => {
         setLoading(true);
