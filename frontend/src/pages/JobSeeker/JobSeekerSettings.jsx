@@ -1,5 +1,7 @@
 import {
-    FiUser, FiLock, FiBell, FiLogOut
+    FiUser, FiLock, FiBell, FiLogOut,
+    FiEdit2,
+    FiTrash
 } from "react-icons/fi";
 import { useModal } from "../../context/ModalContext";
 import JobSeekerLayout from "../../layouts/JobSeekerLayout";
@@ -98,7 +100,7 @@ export default function JobSeekerSettings() {
                             <p className="text-sm text-blue-500 mt-1">Advanced settings and options</p>
                         </div>
                         <button className="inline-flex items-center px-4 py-2.5 bg-white text-red-600 border border-red-200 rounded-xl hover:bg-red-50 transition-all text-sm font-semibold shadow-sm hover:shadow-md">
-                            <FiTrash2 className="mr-2" />
+                            <FiTrash className="mr-2" />
                             Delete Account
                         </button>
                     </div>
