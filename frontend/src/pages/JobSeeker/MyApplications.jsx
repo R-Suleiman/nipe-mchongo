@@ -4,6 +4,7 @@ import ApplicationDetails from "./ApplicationDetails";
 import { useEffect, useState } from "react";
 import axiosClient from "../../assets/js/axios-client";
 import { useAuth } from "../../context/AuthProvider";
+import { Eye } from "lucide-react";
 
 export default function MyApplications() {
     const { openModal } = useModal();
@@ -63,9 +64,7 @@ export default function MyApplications() {
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-xl font-semibold text-blue-800">Applications Overview</h2>
                         <div className="flex items-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                            </svg>
+                            <Eye className="h-5 w-5 text-blue-400" />
                             <span className="text-sm text-blue-500">{applications.length} applications</span>
                         </div>
                     </div>
@@ -109,9 +108,9 @@ export default function MyApplications() {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${app.status?.name === 'Approved' ? 'bg-blue-100 text-blue-700' :
-                                                        app.status?.name === 'Pending' ? 'bg-amber-100 text-amber-700' :
-                                                            app.status?.name === 'Denied' ? 'bg-red-100 text-red-700' :
-                                                                'bg-gray-100 text-gray-700'
+                                                    app.status?.name === 'Pending' ? 'bg-amber-100 text-amber-700' :
+                                                        app.status?.name === 'Denied' ? 'bg-red-100 text-red-700' :
+                                                            'bg-gray-100 text-gray-700'
                                                     }`}>
                                                     {app.status?.name || '—'}
                                                 </span>
