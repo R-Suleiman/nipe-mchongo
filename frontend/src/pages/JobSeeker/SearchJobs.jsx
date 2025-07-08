@@ -104,31 +104,63 @@ export default function SearchJobs() {
                         {gigs.map((gig) => (
                             <div
                                 key={gig.id}
-                                className="bg-blue-50 border border-orange-100 rounded-3xl shadow-md hover:shadow-xl p-6 transition-all"
+                                className="bg-white border border-blue-100 rounded-2xl shadow-sm hover:shadow-lg p-6 transition-all duration-300 hover:border-blue-200 group"
                             >
-                                <h2 className="text-lg font-bold text-gray-800 mb-1">{gig.title}</h2>
-                                <p className="text-sm text-orange-500 font-medium mb-2">{gig.gig_category_name}</p>
-                                <p className="text-sm text-orange-500 font-medium mb-2">{gig.location}</p>
-                                <p className="text-gray-600 text-sm mb-3 line-clamp-3">{gig.description}</p>
-                                <p className="text-sm text-orange-700 font-semibold mb-4">TSh {gig.payment.toLocaleString()}</p>
+                                <div className="flex flex-col h-full">
+                                    <div className="flex-grow">
+                                        <h2 className="text-lg font-bold text-blue-900 mb-2 group-hover:text-blue-700 transition-colors">
+                                            {gig.title}
+                                        </h2>
 
-                                {gig.has_applied ? (
-                                    <button
-                                        disabled
-                                        className="inline-block bg-blue-100 text-orange-500 text-sm px-4 py-2 rounded-lg font-semibold cursor-not-allowed"
-                                    >
-                                        ✓ Applied
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={() =>
-                                            openModal(<ConfirmApplication gig={gig} />, "xl4", `${gig.title} - Confirm Application`)
-                                        }
-                                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg font-semibold transition"
-                                    >
-                                        Apply Now
-                                    </button>
-                                )}
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <span className="bg-blue-50 text-blue-600 text-xs px-2.5 py-1 rounded-full font-medium">
+                                                {gig.gig_category_name}
+                                            </span>
+                                            <span className="flex items-center text-blue-500 text-xs">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                {gig.location}
+                                            </span>
+                                        </div>
+
+                                        <p className="text-gray-600 text-sm mb-4 line-clamp-3">{gig.description}</p>
+
+                                        <div className="mb-4">
+                                            <p className="text-blue-700 font-bold">
+                                                TSh {gig.payment.toLocaleString()}
+                                            </p>
+                                            {gig.payment_type && (
+                                                <p className="text-blue-500 text-xs mt-0.5">{gig.payment_type}</p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-auto">
+                                        {gig.has_applied ? (
+                                            <button
+                                                disabled
+                                                className="w-full bg-blue-50 text-blue-600 text-sm px-4 py-2.5 rounded-lg font-semibold cursor-not-allowed flex items-center justify-center"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                Application Submitted
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => openModal(<ConfirmApplication gig={gig} />, "xl4", `${gig.title} - Confirm Application`)}
+                                                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm px-4 py-2.5 rounded-lg font-semibold transition-all shadow-sm hover:shadow-md flex items-center justify-center"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                </svg>
+                                                Apply Now
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
