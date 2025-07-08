@@ -97,7 +97,7 @@ export default function SearchJobs() {
                 {/* Gigs Grid */}
                 {loading ? (
                     <div className="flex justify-center items-center h-32">
-                        <Rocket className="animate-spin h-10 w-10 text-orange-500" />
+                        <Rocket className="animate-spin h-10 w-10 text-blue-500" />
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
