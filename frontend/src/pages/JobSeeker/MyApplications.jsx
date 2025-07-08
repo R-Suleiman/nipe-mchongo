@@ -4,7 +4,7 @@ import ApplicationDetails from "./ApplicationDetails";
 import { useEffect, useState } from "react";
 import axiosClient from "../../assets/js/axios-client";
 import { useAuth } from "../../context/AuthProvider";
-import { Eye } from "lucide-react";
+import { Clipboard, Eye, FileText, User, UserCheck } from "lucide-react";
 
 export default function MyApplications() {
     const { openModal } = useModal();
@@ -73,9 +73,7 @@ export default function MyApplications() {
                         {applications.length === 0 ? (
                             <div className="py-8 text-center">
                                 <div className="mx-auto w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
+                                    <FileText className="h-10 w-10 text-blue-300" />
                                 </div>
                                 <p className="text-blue-400 font-medium">No applications found</p>
                                 <p className="text-sm text-blue-300 mt-1">Your applications will appear here</p>
@@ -99,10 +97,7 @@ export default function MyApplications() {
                                             </td>
                                             <td className="px-6 py-4 text-blue-700">
                                                 <div className="flex items-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    </svg>
+                                                    <User className="h-4 w-4 mr-1 text-blue-400" />
                                                     {app.gig?.location || '—'}
                                                 </div>
                                             </td>
@@ -127,10 +122,7 @@ export default function MyApplications() {
                                                     onClick={() => openModal(<ApplicationDetails application={app} />, "xl7")}
                                                     className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg font-medium transition shadow-sm hover:shadow-md"
                                                 >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                    </svg>
+                                                    <UserCheck className="h-4 w-4 mr-1" />
                                                     Details
                                                 </button>
 
@@ -139,9 +131,7 @@ export default function MyApplications() {
                                                         onClick={() => handleCancelApplication(app.id)}
                                                         className="inline-flex items-center bg-white border border-red-200 hover:bg-red-50 text-red-600 text-sm px-4 py-2 rounded-lg font-medium transition shadow-sm hover:shadow-md"
                                                     >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                        </svg>
+                                                        <Clipboard className="h-4 w-4 mr-1" />
                                                         Cancel
                                                     </button>
                                                 )}
