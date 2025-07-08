@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { showSuccessAlert } from "../utils/sweetAlert";
 import { FaBriefcase, FaChevronDown, FaCog, FaFileAlt, FaSearch, FaSignOutAlt, FaUserCircle, FaWallet } from "react-icons/fa";
@@ -31,7 +31,7 @@ const JobSeekerLayout = ({ children }) => {
                 <div className="p-6 border-b border-indigo-700">
                     <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-200">
                         <FaBriefcase className="inline mr-2" />
-                        JobSeeker Pro
+                        JobSeeker
                     </h2>
                 </div>
                 <nav className="p-4 space-y-1">
@@ -101,7 +101,7 @@ const JobSeekerLayout = ({ children }) => {
 
             {/* Main Content */}
             <main className="flex-1 p-6 md:p-8 bg-white md:bg-transparent md:rounded-tl-3xl md:rounded-bl-3xl shadow-lg md:shadow-none">
-                {children}
+                <Outlet /> {/* This renders the child routes */}
             </main>
         </div>
     );

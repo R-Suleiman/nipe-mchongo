@@ -1,15 +1,8 @@
 import { Edit, Calendar, User, Mail, MapPin, Pencil } from 'lucide-react';
+import { useAuth } from '../../context/AuthProvider';
 
 export default function MyProfile() {
-    // Dummy user data
-    const user = {
-        firstname: "John",
-        lastname: "Doe",
-        dob: "1995-06-15",
-        gender: "Male",
-        email: "johndoe@example.com",
-        address: "123 Main Street, Nairobi, Kenya",
-    };
+    const { user: currentUser } = useAuth();
 
     const calculateAge = (birthdate) => {
         const today = new Date();
@@ -37,28 +30,28 @@ export default function MyProfile() {
                 </div>
 
                 <h3 className="text-2xl font-bold text-blue-900 mb-1">
-                    {user.firstname} <span className="text-blue-700">{user.lastname}</span>
+                    {currentUser.firstname} <span className="text-blue-700">{currentUser.lastname}</span>
                 </h3>
 
                 <div className="flex justify-center space-x-4 mb-4">
                     <span className="inline-flex items-center text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
                         <Calendar className="h-4 w-4 mr-1" />
-                        {calculateAge(user.dob)} years
+                        {calculateAge(currentUser.dob)} years
                     </span>
                     <span className="inline-flex items-center text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
                         <User className="h-4 w-4 mr-1" />
-                        {user.gender}
+                        {currentUser.gender}
                     </span>
                 </div>
 
                 <div className="space-y-3 mb-6 text-left bg-blue-50 rounded-xl p-4">
                     <div className="flex items-start">
                         <Mail className="h-5 w-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
-                        <span className="text-blue-800">{user.email}</span>
+                        <span className="text-blue-800">{currentUser.email}</span>
                     </div>
                     <div className="flex items-start">
                         <MapPin className="h-5 w-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
-                        <span className="text-blue-800">{user.address}</span>
+                        <span className="text-blue-800">{currentUser.address}</span>
                     </div>
                 </div>
 

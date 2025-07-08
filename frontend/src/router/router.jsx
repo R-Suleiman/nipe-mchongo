@@ -16,6 +16,7 @@ import MchongoPoints from "../pages/JobPoster/balance/MchongoPoints";
 import PurchasePoints from "../pages/JobPoster/balance/PurchasePoints";
 import JobSeekerDashboard from "../pages/JobSeeker/JobSeekerDashboard";
 import MyApplications from "../pages/JobSeeker/MyApplications";
+import SeekerMchongoPoints from "../pages/JobSeeker/SeekerMchongoPoints";
 import SearchJobs from "../pages/JobSeeker/SearchJobs";
 import UpdateProfile from "../pages/JobSeeker/UpdateProfile";
 import JobSeekerSettings from "../pages/JobSeeker/JobSeekerSettings";
@@ -36,6 +37,7 @@ import GigSeeker from "../pages/Admin/users/gigseekers/GigSeeker";
 import AdminMchongoPoints from "../pages/Admin/mchongoPoints/AdminMchongoPoints";
 import CreateUser from "../pages/Admin/users/CreateUser";
 import BlockedUsers from "../pages/Admin/users/blocked/BlockedUsers";
+import JobSeekerLayout from "../layouts/JobSeekerLayout";
 
 const Router = createBrowserRouter([
     {
@@ -97,35 +99,42 @@ const Router = createBrowserRouter([
             },
         ],
     },
-    // Job Seeker Routes
+
     {
-        path: "/job/seeker/dashboard",
-        element: <JobSeekerDashboard />,
+        path: "/job/seeker",
+        element: <JobSeekerLayout />,
+        children: [
+            {
+                path: "dashboard",
+                element: <JobSeekerDashboard />,
+            },
+            {
+                path: "my-applications",
+                element: <MyApplications />,
+            },
+            {
+                path: "search-jobs",
+                element: <SearchJobs />,
+            },
+            {
+                path: "my-balance",
+                element: <SeekerMchongoPoints />,
+            },
+            {
+                path: "update-profile",
+                element: <UpdateProfile />,
+            },
+            {
+                path: "settings",
+                element: <JobSeekerSettings />,
+            },
+            {
+                path: "*",
+                element: <PageNotFound />,
+            },
+        ],
     },
-    {
-        path: "*",
-        element: <PageNotFound />,
-    },
-    {
-        path: "/job/seeker/my-applications",
-        element: <MyApplications />,
-    },
-    {
-        path: "/job/seeker/search-jobs",
-        element: <SearchJobs />,
-    },
-    {
-        path: "/job/seeker/my-balance",
-        element: <MchongoPoints />,
-    },
-    {
-        path: "/job/seeker/update-profile",
-        element: <UpdateProfile />,
-    },
-    {
-        path: "/job/seeker/settings",
-        element: <JobSeekerSettings />,
-    },
+
 
     // admin
     {
@@ -168,31 +177,31 @@ const Router = createBrowserRouter([
                 path: "/admin/applications/:id",
                 element: <AdminApplication />,
             },
-             {
+            {
                 path: "/admin/users/create",
                 element: <CreateUser />,
             },
-             {
+            {
                 path: "/admin/users/gig-posters",
                 element: <GigPosters />,
             },
-             {
+            {
                 path: "/admin/users/gig-posters/:id",
                 element: <GigPoster />,
             },
-             {
+            {
                 path: "/admin/users/gig-seekers",
                 element: <GigSeekers />,
             },
-              {
+            {
                 path: "/admin/users/gig-seekers/:id",
                 element: <GigSeeker />,
             },
-             {
+            {
                 path: "/admin/mchongo-points",
                 element: <AdminMchongoPoints />,
             },
-             {
+            {
                 path: "/admin/users/blocked-users",
                 element: <BlockedUsers />,
             },
