@@ -3,12 +3,14 @@ import { useModal } from "../../context/ModalContext";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosClient from "../../assets/js/axios-client";
+import { useAuth } from "../../context/AuthProvider";
 
 
 export default function ConfirmApplication({ gig }) {
+    const { user } = useAuth();
     const [loading, setLoading] = React.useState(false);
     const { closeModal } = useModal();
-    const user_id = 10;
+    const user_id = user?.id;
 
     const handleConfirm = async () => {
         setLoading(true);
@@ -33,9 +35,9 @@ export default function ConfirmApplication({ gig }) {
         <div className="max-w-2xl mx-auto px-4 py-10">
             <div className="bg-white shadow-lg rounded-3xl p-6">
                 <p className="text-gray-600 mb-4">Are you sure you want to apply for this gig?</p>
-                gigId = {gig.id} <br />
+                {/* gigId = {gig.id} <br />
                 poster_id = {gig.poster_id} <br />
-                seeker_id = {user_id} <br />
+                seeker_id = {user_id} <br /> */}
 
                 <div className="flex justify-end space-x-4">
                     <button
@@ -47,7 +49,7 @@ export default function ConfirmApplication({ gig }) {
                     <button
                         onClick={handleConfirm}
                         disabled={loading}
-                        className={`px-4 py-2 ${loading ? "bg-orange-300" : "bg-orange-500"} text-white rounded-lg hover:bg-orange-600 transition`}
+                        className={`px-4 py-2 ${loading ? "bg-blue-300" : "bg-blue-500"} text-white rounded-lg hover:bg-blue-600 transition`}
                     >
                         {loading ? "Submitting..." : "Confirm Application"}
                     </button>
