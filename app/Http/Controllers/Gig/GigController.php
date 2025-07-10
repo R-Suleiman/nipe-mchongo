@@ -110,7 +110,13 @@ class GigController extends Controller
             ->orderByDesc('application_count')
             ->limit(6)
             ->get();
-        return response()->json($gigs);
+
+        $total = $gigs->count();
+
+        return response()->json([
+            'gigs' => $gigs,
+            'total' => $total
+        ]);
     }
 
     public function closeJob($jobId)

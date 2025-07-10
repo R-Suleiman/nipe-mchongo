@@ -1,14 +1,12 @@
-import PropTypes from 'prop-types';
-
-export default function ApplicationDetails({ application }) {
-    // shape of props
+import { useAuth } from "../../context/AuthProvider";
 
 
-    if (!application) return <p>No application data provided.</p>;
+export default function ApplicationDetails({ app }) {
+    const { user: currentUser } = useAuth();
 
     return (
         <div className="max-w-3xl mx-auto p-6 space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800 border-b pb-2">Gig Application Summary</h2>
+            <h2 className="text-2xl font-bold text-gray-800 border-b pb-2">{app?.gig_title} Gig Application Summary</h2>
 
             {/* Gig Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
