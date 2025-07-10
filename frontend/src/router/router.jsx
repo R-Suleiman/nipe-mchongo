@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "../pages/Home";
+import Login from "../pages/Login";
 import PageNotFound from "../pages/PageNotFound";
 import JobPosterLayout from "../layouts/JobPosterLayout";
 import Jobs from "../pages/JobPoster/jobs/Jobs";
@@ -36,11 +36,16 @@ import GigSeeker from "../pages/Admin/users/gigseekers/GigSeeker";
 import AdminMchongoPoints from "../pages/Admin/mchongoPoints/AdminMchongoPoints";
 import CreateUser from "../pages/Admin/users/CreateUser";
 import BlockedUsers from "../pages/Admin/users/blocked/BlockedUsers";
+import Home from "../pages/Home";
 
 const Router = createBrowserRouter([
+     {
+        path: "/",
+        element: <Home />,
+    },
     {
         path: "/login",
-        element: <Home />,
+        element: <Login />,
     },
     // Job Poster
     {
