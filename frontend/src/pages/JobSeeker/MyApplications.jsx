@@ -121,7 +121,7 @@ export default function MyApplications() {
                                                     content: <ApplicationDetails application={app} />,
                                                     size: "xl4",
                                                     title: "Application Details",
-                                                    variant: "info", // or any other variant you prefer
+                                                    variant: "default", // or any other variant you prefer
                                                 })}
                                                 className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg font-medium transition shadow-sm hover:shadow-md"
                                             >
