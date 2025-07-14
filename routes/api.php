@@ -76,7 +76,6 @@ Route::get('/gig-seeker-gigs', [GigSeekerController::class, 'getGigs']);
 Route::post('/gig-seeker/gig/apply', [GigSeekerController::class, 'storeGigApplication']);
 Route::delete('/gig-seeker/cancel/gig/application/{id}', [GigSeekerController::class, 'cancelGigApplication']);
 
-
 // Payment test routes
 Route::post('/buy-points', [PaymentController::class, 'buyMchongoPoints']);
 Route::post('/azampay/callback', [PaymentController::class, 'azampayCallback'])->name('azampay.callback');
