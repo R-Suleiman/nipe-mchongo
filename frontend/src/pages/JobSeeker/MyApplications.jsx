@@ -119,13 +119,15 @@ export default function MyApplications() {
                                             <button
                                                 onClick={() => openModal({
                                                     content: <ApplicationDetails application={app} />,
-                                                    size: "xl4",
+                                                    size: "xl7",
                                                     title: "Application Details",
-                                                    variant: "default", // or any other variant you prefer
+                                                    variant: "default",
                                                 })}
-                                                className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg font-medium transition shadow-sm hover:shadow-md"
+                                                className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg font-medium transition shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                             >
-                                                <UserCheck className="h-4 w-4 mr-1" />
+                                                <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
                                                 Details
                                             </button>
 
