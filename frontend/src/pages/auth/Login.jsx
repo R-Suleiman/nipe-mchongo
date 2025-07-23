@@ -1,0 +1,140 @@
+import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { showTopSuccessAlert } from "../../utils/sweetAlert";
+import axiosClient from "../../assets/js/axios-client";
+import { useAuth } from "../../context/AuthProvider";
+
+function Login() {
+    const navigate = useNavigate();
+    const { setUser, setToken } = useAuth();
+    const [errors, setErrors] = useState(null);
+    const [loginData, setLoginData] = useState({
+        email: "",
+        password: "",
+    });
+
+    const handleChange = (e) => {
+        setLoginData({ ...loginData, [e.target.name]: e.target.value });
+    };
+
+    const login = async (e) => {
+        e.preventDefault();
+
+        axiosClient
+            .post(`/login`, loginData)
+            .then(({ data }) => {
+                if (!data.user) {
+                    console.error("User data is missing");
+                    return;
+                }
+
+                setUser(data.user);
+                setToken(data.token);
+
+                showTopSuccessAlert("Login Successful", `Welcome back!`);
+                if (data.user.usertype === "poster") {
+                    navigate("/jobposter/dashboard");
+                } else if (data.user.usertype === "seeker") {
+                    navigate("/job/seeker/dashboard");
+                } else if (data.user.usertype === "admin") {
+                    navigate("/admin/dashboard");
+                }
+            })
+            .catch((err) => {
+                const response = err.response;
+                if (response) {
+                    if (response.status === 422) {
+                        setErrors(
+                            response.data.errors || {
+                                email: [response.data.message],
+                            }
+                        );
+                    } else if (response.status === 403) {
+                        setErrors({
+                            general: [
+                                response.data.message || "Access denied.",
+                            ],
+                        });
+                    } else {
+                        setErrors({
+                            general: [
+                                "An unexpected error occurred. Please try again.",
+                            ],
+                        });
+                    }
+                }
+            });
+    };
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-[url('/assets/images/register.png')] bg-cover bg-no-repeat bg-center">
+            <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
+                <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
+                    Sign In
+                </h2>
+                <form onSubmit={login} className="space-y-5">
+                    {errors && (
+                        <div className="p-2 text-red-500 font-semibold">
+                            {Object.keys(errors).map((key) => (
+                                <p key={key}>{errors[key][0]}</p>
+                            ))}
+                        </div>
+                    )}
+
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={loginData.email}
+                            onChange={handleChange}
+                            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="email"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={loginData.password}
+                            onChange={handleChange}
+                            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="password"
+                        />
+                    </div>
+                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl transition-all duration-300">
+                        Login
+                    </button>
+                </form>
+
+                   <p className="mt-4 text-sm text-center">
+                    <Link
+                        to="/forgot-password"
+                        className="text-blue-600 font-medium hover:underline"
+                    >
+                        Forgot Password?
+                    </Link>
+                </p>
+
+                <p className="mt-4 text-sm text-center">
+                    Don't have an account?{" "}
+                    <Link
+                        to="/register"
+                        className="text-blue-600 font-medium hover:underline"
+                    >
+                        Sign up
+                    </Link>
+                </p>
+            </div>
+        </div>
+    );
+}
+
+export default Login;

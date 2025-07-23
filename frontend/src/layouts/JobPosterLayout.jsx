@@ -16,19 +16,19 @@ import {
 } from "react-icons/fa";
 import { useAuth } from "../context/AuthProvider";
 import axiosClient from "../assets/js/axios-client";
-import { showSuccessAlert } from "../utils/sweetAlert";
+import { showSuccessAlert, showTopSuccessAlert } from "../utils/sweetAlert";
 
 function JobPosterLayout() {
     const navigate = useNavigate();
-    const { token, user, setUser, setToken } = useAuth();
+    const { user, setUser, setToken, isAuthenticated } = useAuth();
     const [newUser, setNewUser] = useState();
     const [loading, setLoading] = useState(false);
     const [hidden, setHidden] = useState(true);
 
     useEffect(() => {
-        if (!token) {
-            navigate("/login");
-        }
+      if (!isAuthenticated) {
+        navigate("/login");
+      }
     }, []);
 
     const location = useLocation();
@@ -42,7 +42,7 @@ function JobPosterLayout() {
             setUser(null);
             setToken(null);
             navigate("/login");
-            showSuccessAlert("Successfully Logged out!");
+            showTopSuccessAlert("Successfully Logged out!");
         });
     };
 

@@ -22,7 +22,7 @@ function BlockedUsers() {
     const getusers = () => {
         setLoading(true);
         axiosClient
-            .post("/user/blocked-users", { search, page })
+            .post("/admin/user/blocked-users", { search, page })
             .then(({ data }) => {
                 setusers(data.users.data);
                 setMeta({

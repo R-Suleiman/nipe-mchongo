@@ -13,7 +13,7 @@ function BlockUser({ userId, reload }) {
 
     const blockUser = () => {
         axiosClient
-            .post(`/user/block-user/${userId}`, { reason })
+            .post(`/admin/user/block-user/${userId}`, { reason })
             .then(({ data }) => {
                 showTopSuccessAlert(data.message);
                 closeModal();

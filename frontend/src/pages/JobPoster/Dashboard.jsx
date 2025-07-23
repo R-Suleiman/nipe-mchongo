@@ -15,6 +15,7 @@ function Dashboard() {
     const [user, setUser] = useState(null);
     const [jobsGraph, setJobsGraph] = useState([]);
     const [applicationsGraph, setApplicationsGraph] = useState([]);
+    const [isProfileComplete, setIsProfileComplete] = useState(true);
     const { openModal } = useModal();
     const navigate = useNavigate();
     const status = {
@@ -63,6 +64,18 @@ function Dashboard() {
         setLoading(true);
         axiosClient.get("/get-user").then(({ data }) => {
             setUser(data.user);
+
+            // check for complete profile
+            const user = data.user;
+            if (
+                !user.username ||
+                !user.gender ||
+                !user.dob ||
+                !user.phone ||
+                !user.address
+            )
+                setIsProfileComplete(false);
+
             setLoading(false);
         });
     }, []);
@@ -106,6 +119,20 @@ function Dashboard() {
                         {formatDate2(new Date())}
                     </span>
                 </div>
+
+                {!isProfileComplete && (
+                    <div className="w-full my-2 border-3 border-red-200 rounded-lg p-6 flex flex-col items-center space-y-3">
+                        <p className="text-center text-gray-600 font-semibold">
+                            Please complete your profile information to provide
+                            more details about yourself
+                        </p>
+                        <Link to="/jobposter/account">
+                            <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer font-semibold text-sm">
+                                <span>view profile</span>
+                            </button>
+                        </Link>
+                    </div>
+                )}
 
                 <div className="w-full flex flex-col md:flex-row">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 my-5">

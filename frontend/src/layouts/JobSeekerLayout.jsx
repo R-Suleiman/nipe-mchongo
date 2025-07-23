@@ -7,13 +7,13 @@ import axiosClient from "../assets/js/axios-client";
 
 const JobSeekerLayout = ({ children }) => {
     const navigate = useNavigate();
-    const { token, user, setUser, setToken } = useAuth();
+    const { setUser, setToken, isAuthenticated } = useAuth();
 
-    useEffect(() => {
-        if (!token) {
-            navigate("/login");
+   useEffect(() => {
+        if (!isAuthenticated) {
+          navigate("/login");
         }
-    }, []);
+      }, []);
 
     const logout = () => {
         axiosClient.post("/logout").then(() => {
