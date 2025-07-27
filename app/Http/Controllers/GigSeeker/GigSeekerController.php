@@ -6,10 +6,11 @@ use App\Helpers\ErrorHandler;
 use App\Http\Controllers\Controller;
 use App\Models\Gig;
 use App\Models\GigApplication;
+use App\Models\NotificationPreference;
 use App\Models\User;
-use DB;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Log;
 
@@ -58,7 +59,6 @@ class GigSeekerController extends Controller
         return response()->json($gigs);
     }
 
-
     public function AboutGig($gigId, $seekerId)
     {
         $gig = Gig::with(['poster:id,firstname,lastname', 'category', 'applications'])
@@ -81,7 +81,6 @@ class GigSeekerController extends Controller
 
         return response()->json($gig);
     }
-
 
     public function getAllApplications(Request $request)
     {
@@ -173,5 +172,114 @@ class GigSeekerController extends Controller
         $application->delete();
 
         return response()->json(['message' => 'Controller says, Application cancelled successfully'], 200);
+    }
+
+    public function updateSeekerProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'seeker_id'      => 'required|exists:users,id',
+            'firstname'      => 'required|string|max:255',
+            'lastname'       => 'required|string|max:255',
+            'email'          => 'required|email|unique:users,email,' . $request->seeker_id,
+            'phone'          => 'required|string|max:20',
+            'address'        => 'nullable|string|max:255',
+            'profile_photo'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = User::find($request->seeker_id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Handle image
+        if ($request->hasFile('profile_photo')) {
+            $path = $request->file('profile_photo')->store('profile_photos', 'public');
+            $user->profile_photo = $path;
+        }
+
+        $user->firstname = $request->firstname;
+        $user->lastname = $request->lastname;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $user,
+        ]);
+    }
+    //
+    public function getUserSubscriptions($userId)
+    {
+        $subscribed = NotificationPreference::where('user_id', $userId)
+            ->pluck('gig_category_id');
+
+        return response()->json($subscribed);
+    }
+
+    //subscribe to notification
+    public function subscribeNotification(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'gig_category_id' => 'required|exists:gig_categories,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $subscription = NotificationPreference::where('user_id', $request->user_id)
+            ->where('gig_category_id', $request->gig_category_id)
+            ->first();
+
+        if (!$subscription) {
+            $subscription = NotificationPreference::create([
+                'user_id' => $request->user_id,
+                'gig_category_id' => $request->gig_category_id,
+                'email' => 1,
+            ]);
+        } else {
+            $subscription->email = 1;
+            $subscription->save();
+        }
+
+        return response()->json([
+            'message' => 'Subscription created successfully',
+            'subscription' => $subscription,
+        ]);
+    }
+    public function unsubscribeNotification(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'gig_category_id' => 'required|exists:gig_categories,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $subscription = NotificationPreference::where('user_id', $request->user_id)
+            ->where('gig_category_id', $request->gig_category_id)
+            ->first();
+
+        if ($subscription) {
+            $subscription->delete();
+
+            return response()->json([
+                'message' => 'Unsubscribed successfully',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'No existing subscription found',
+            ], 404);
+        }
     }
 }

@@ -45,11 +45,6 @@ export default function SearchJobs() {
     }, [filters.title, filters.category]);
 
 
-    // React.useEffect(() => {
-    //     fetchCategories();
-    //     fetchGigs();
-    // }, []);
-
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters(prev => ({ ...prev, [name]: value }));

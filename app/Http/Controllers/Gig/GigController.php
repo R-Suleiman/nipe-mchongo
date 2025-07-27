@@ -81,18 +81,13 @@ class GigController extends Controller
         return response()->json(['success' => true, 'message' => 'Job Updated Successfully!']);
     }
 
+    //get gig categories
     public function getGigCategories()
     {
-        $gigCategories = DB::table('gig_categories')
-            ->select(
-                DB::raw('MIN(id) as id'),
-                'name',
-            )
-            ->groupBy('name')
+        $gigCategories = GigCategory::select('id', 'name')
+            ->distinct()
             ->orderBy('name', 'desc')
             ->get();
-
-        $gigCategories = GigCategory::select(['id', 'name'])->orderBy('name', 'asc')->get();
 
         return response()->json($gigCategories);
     }
