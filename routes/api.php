@@ -53,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/jobposter/jobs/{jobId}', [GigController::class, 'getJob']);
     Route::put('/jobs/{jobId}/edit', [GigController::class, 'editJob']);
     Route::post('/jobs/close/{jobId}', [GigController::class, 'closeJob']);
+    Route::get('/job-seeker/jobs/{jobId}', [GigController::class, 'getJob']);
 
     //Applications
     Route::post('/job-applications', [GigApplicationController::class, 'getApplications']);
@@ -73,6 +74,7 @@ Route::get('/gig-seeker/recent-applications', [GigSeekerController::class, 'getR
 Route::get('/popular-gigs', [GigController::class, 'popularGigs']);
 Route::get('/gig-categories', [GigController::class, 'getGigCategories']);
 Route::get('/gig-seeker-gigs', [GigSeekerController::class, 'getGigs']);
+Route::get('/about-gig/{gigId}', [GigSeekerController::class, 'AboutGig']);
 Route::post('/gig-seeker/gig/apply', [GigSeekerController::class, 'storeGigApplication']);
 Route::delete('/gig-seeker/cancel/gig/application/{id}', [GigSeekerController::class, 'cancelGigApplication']);
 

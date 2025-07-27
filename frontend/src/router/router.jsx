@@ -16,7 +16,6 @@ import MchongoPoints from "../pages/JobPoster/balance/MchongoPoints";
 import PurchasePoints from "../pages/JobPoster/balance/PurchasePoints";
 import JobSeekerDashboard from "../pages/JobSeeker/JobSeekerDashboard";
 import MyApplications from "../pages/JobSeeker/MyApplications";
-import SeekerMchongoPoints from "../pages/JobSeeker/SeekerMchongoPoints";
 import SearchJobs from "../pages/JobSeeker/SearchJobs";
 import UpdateProfile from "../pages/JobSeeker/UpdateProfile";
 import JobSeekerSettings from "../pages/JobSeeker/JobSeekerSettings";
@@ -38,6 +37,9 @@ import AdminMchongoPoints from "../pages/Admin/mchongoPoints/AdminMchongoPoints"
 import CreateUser from "../pages/Admin/users/CreateUser";
 import BlockedUsers from "../pages/Admin/users/blocked/BlockedUsers";
 import JobSeekerLayout from "../layouts/JobSeekerLayout";
+import JobSeekerPurchasePoints from "../pages/JobSeeker/balance/JobSeekerPurchasePoints";
+import SeekerMchongoPoints from "../pages/JobSeeker/balance/SeekerMchongoPoints";
+import AboutGig from "../pages/JobSeeker/AboutGig";
 
 const Router = createBrowserRouter([
     {
@@ -113,12 +115,20 @@ const Router = createBrowserRouter([
                 element: <MyApplications />,
             },
             {
+                path: "about-gig/:id",
+                element: <AboutGig />,
+            },
+            {
                 path: "search-jobs",
                 element: <SearchJobs />,
             },
             {
                 path: "my-balance",
                 element: <SeekerMchongoPoints />,
+            },
+            {
+                path: "purchase-points",
+                element: <JobSeekerPurchasePoints />,
             },
             {
                 path: "update-profile",

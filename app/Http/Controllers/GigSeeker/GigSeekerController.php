@@ -51,6 +51,29 @@ class GigSeekerController extends Controller
         return response()->json($gigs);
     }
 
+    public function AboutGig($gigId)
+    {
+        // dd($gigId);
+
+        $gig = Gig::where('id', $gigId)
+            ->with(['poster:id,firstname,lastname', 'category'])
+            ->select([
+                'id',
+                'title',
+                'gig_poster_id',
+                'gig_category_id',
+                'description',
+                'location',
+                'payment',
+                'payment_frequency',
+                'duration',
+                'slots'
+            ])
+            ->first();
+
+        return response()->json($gig);
+    }
+
     public function getAllApplications(Request $request)
     {
         $request->validate([
