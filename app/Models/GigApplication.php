@@ -12,7 +12,7 @@ class GigApplication extends Model
         'gig_poster_id',
         'gig_seeker_id',
         'gig_id',
-        'application_status_id',
+        'status_id',
     ];
 
     public function poster()

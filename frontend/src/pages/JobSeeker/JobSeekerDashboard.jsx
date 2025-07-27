@@ -87,20 +87,23 @@ export default function JobSeekerDashboard() {
                     </div>
 
                     {/* Opportunities Card */}
-                    <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500 flex items-start gap-5">
-                        <div className="bg-blue-100 p-3 rounded-lg">
-                            <Rocket className="text-blue-600 w-6 h-6" />
+                    <Link to={'/job/seeker/search-jobs'}>
+                        <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500 flex items-start gap-5">
+                            <div className="bg-blue-100 p-3 rounded-lg">
+                                <Rocket className="text-blue-600 w-6 h-6" />
+                            </div>
+                            <div>
+                                <h2 className="text-sm font-semibold text-blue-600 uppercase tracking-wider">Opportunities Available</h2>
+                                <p className="text-3xl font-bold text-gray-900 mt-1">{totalPopularGigs}</p>
+                                <p className="text-sm text-blue-500 mt-2">
+                                    {totalPopularGigs > 0 ?
+                                        `${newOpportunitiesCount} new today` :
+                                        'Check back soon!'}
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h2 className="text-sm font-semibold text-blue-600 uppercase tracking-wider">Opportunities Available</h2>
-                            <p className="text-3xl font-bold text-gray-900 mt-1">{totalPopularGigs}</p>
-                            <p className="text-sm text-blue-500 mt-2">
-                                {totalPopularGigs > 0 ?
-                                    `${newOpportunitiesCount} new today` :
-                                    'Check back soon!'}
-                            </p>
-                        </div>
-                    </div>
+                    </Link>
+
                 </div>
 
                 {/* Optional CTA */}

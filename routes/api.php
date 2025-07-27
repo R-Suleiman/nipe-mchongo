@@ -74,7 +74,7 @@ Route::get('/gig-seeker/recent-applications', [GigSeekerController::class, 'getR
 Route::get('/popular-gigs', [GigController::class, 'popularGigs']);
 Route::get('/gig-categories', [GigController::class, 'getGigCategories']);
 Route::get('/gig-seeker-gigs', [GigSeekerController::class, 'getGigs']);
-Route::get('/about-gig/{gigId}', [GigSeekerController::class, 'AboutGig']);
+Route::get('/about-gig/{gigId}/gig-seeker/{seekerId}', [GigSeekerController::class, 'AboutGig']);
 Route::post('/gig-seeker/gig/apply', [GigSeekerController::class, 'storeGigApplication']);
 Route::delete('/gig-seeker/cancel/gig/application/{id}', [GigSeekerController::class, 'cancelGigApplication']);
 

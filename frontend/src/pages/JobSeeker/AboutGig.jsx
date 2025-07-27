@@ -7,22 +7,34 @@ import {
 } from "lucide-react";
 import ConfirmApplication from "./ConfirmApplication";
 import { useModal } from "../../context/ModalContext";
+import { useAuth } from "../../context/AuthProvider";
 
 export default function AboutGig() {
     const { id } = useParams();
+    const { user } = useAuth();
     const { openModal } = useModal();
+    const seekerId = user?.id;
 
     const [gig, setGig] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const gigDetails = async () => {
+        setLoading(true);
+        try {
+            const { data } = await axiosClient.get(`about-gig/${id}/gig-seeker/${seekerId}`);
+            setGig(data);
+            console.log(data);
+        } catch (err) {
+            console.error("Failed to load gig details", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        axiosClient.get(`about-gig/${id}`)
-            .then(({ data }) => {
-                setGig(data);
-                setLoading(false);
-            })
-            .catch(() => setLoading(false));
+        gigDetails();
     }, [id]);
+
 
     if (loading) return (
         <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-8 mt-10 border border-gray-100 animate-pulse">
@@ -162,22 +174,29 @@ export default function AboutGig() {
                 </div>
             </div>
 
-            <button
-                onClick={() => openModal(<ConfirmApplication gig={gig} />, "xl4", `${gig.title} - Confirm Application`)}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm px-4 py-2.5 rounded-lg font-semibold transition-all shadow-sm hover:shadow-md flex items-center justify-center"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Apply Now
-            </button>
-
             {/* CTA Button */}
             <div className="mt-8 flex justify-end">
-                <button className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all transform hover:-translate-y-0.5">
-                    Apply Now <ArrowRight className="ml-2 w-4 h-4" />
-                </button>
+                {!gig.has_applied ? (
+                    <button
+                        onClick={() =>
+                            openModal({
+                                title: `Confirm application for - ${gig.title}`,
+                                content: <ConfirmApplication gigDetails={gigDetails} gig={gig} />,
+                                size: "xl2",
+                                variant: "default",
+                            })
+                        }
+                        className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all transform hover:-translate-y-0.5"
+                    >
+                        Apply Now <ArrowRight className="ml-2 w-4 h-4" />
+                    </button>
+                ) : (
+                    <span className="inline-flex items-center px-4 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-md shadow-sm border border-green-300">
+                        <CheckCircle className="w-4 h-4 mr-2" /> Already Applied
+                    </span>
+                )}
             </div>
+
         </div>
     );
 }

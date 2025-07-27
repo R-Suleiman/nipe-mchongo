@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-
+import { X } from 'lucide-react'
 // Modal size options
 const modalSizes = {
     sm: "max-w-sm w-full sm:w-11/12",
@@ -26,11 +26,10 @@ const modalVariants = {
         headerTextColor: "text-white",
         footerBackground: "bg-blue-800",
         footerTextColor: "text-white",
-        closeButtonBackground: "bg-red-500",
+        closeButtonBackground: "bg-red-700",
         closeButtonTextColor: "text-white",
         closeButtonHoverBackground: "hover:bg-red-600",
         closeButtonHoverTextColor: "hover:text-white",
-        shadow: "shadow-xl shadow-blue-200/50",
     },
     info: {
         backgroundColor: "bg-blue-50",
@@ -42,11 +41,10 @@ const modalVariants = {
         headerTextColor: "text-white",
         footerBackground: "bg-blue-600",
         footerTextColor: "text-white",
-        closeButtonBackground: "bg-blue-500",
+        closeButtonBackground: "bg-red-500",
         closeButtonTextColor: "text-white",
-        closeButtonHoverBackground: "hover:bg-blue-600",
+        closeButtonHoverBackground: "hover:bg-red-600",
         closeButtonHoverTextColor: "hover:text-white",
-        shadow: "shadow-xl shadow-blue-200/50",
     },
     success: {
         backgroundColor: "bg-green-50",
@@ -58,11 +56,10 @@ const modalVariants = {
         headerTextColor: "text-white",
         footerBackground: "bg-green-600",
         footerTextColor: "text-white",
-        closeButtonBackground: "bg-green-500",
+        closeButtonBackground: "bg-red-500",
         closeButtonTextColor: "text-white",
-        closeButtonHoverBackground: "hover:bg-green-600",
+        closeButtonHoverBackground: "hover:bg-red-600",
         closeButtonHoverTextColor: "hover:text-white",
-        shadow: "shadow-xl shadow-green-200/50",
     },
     warning: {
         backgroundColor: "bg-yellow-50",
@@ -74,11 +71,10 @@ const modalVariants = {
         headerTextColor: "text-white",
         footerBackground: "bg-yellow-600",
         footerTextColor: "text-white",
-        closeButtonBackground: "bg-yellow-500",
+        closeButtonBackground: "bg-red-500",
         closeButtonTextColor: "text-white",
-        closeButtonHoverBackground: "hover:bg-yellow-600",
+        closeButtonHoverBackground: "hover:bg-red-600",
         closeButtonHoverTextColor: "hover:text-white",
-        shadow: "shadow-xl shadow-yellow-200/50",
     },
     danger: {
         backgroundColor: "bg-red-50",
@@ -90,11 +86,10 @@ const modalVariants = {
         headerTextColor: "text-white",
         footerBackground: "bg-red-600",
         footerTextColor: "text-white",
-        closeButtonBackground: "bg-red-500",
-        closeButtonTextColor: "text-white",
-        closeButtonHoverBackground: "hover:bg-red-600",
+        closeButtonBackground: "bg-white",
+        closeButtonTextColor: "text-red-600",
+        closeButtonHoverBackground: "hover:bg-red-400",
         closeButtonHoverTextColor: "hover:text-white",
-        shadow: "shadow-xl shadow-red-200/50",
     },
     custom: {
         backgroundColor: "",
@@ -190,7 +185,7 @@ const Modal = () => {
 
     return (
         <div
-            className={`fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-50 p-4 transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+            className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${isOpen ? "opacity-100 backdrop-blur-sm bg-gray-900/40" : "opacity-0 pointer-events-none"
                 }`}
             onClick={handleOutsideClick}
             role="dialog"
@@ -198,45 +193,44 @@ const Modal = () => {
             aria-modal="true"
         >
             <div
-                className={`${modalSizes[size] || modalSizes.md} ${mergedStyles.backgroundColor} ${mergedStyles.borderColor} ${mergedStyles.borderSize} ${mergedStyles.borderRadius} ${mergedStyles.shadow} max-h-[90vh] overflow-y-auto transition-transform duration-300 transform ${isOpen ? "scale-100" : "scale-95"
-                    }`}
+                className={`${modalSizes[size] || modalSizes.md} max-h-[90vh] w-full overflow-y-auto rounded-2xl transition-transform duration-300 transform shadow-xl ring-1 ring-blue-500/20 ${isOpen ? "scale-100" : "scale-95"
+                    } ${mergedStyles.backgroundColor} ${mergedStyles.borderColor} ${mergedStyles.borderSize} ${mergedStyles.shadow}`}
+                onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
                 <div
-                    className={`w-full p-4 sm:p-6 ${mergedStyles.headerBackground} ${mergedStyles.headerTextColor} rounded-t-xl`}
+                    className={`flex items-center justify-between w-full p-4 sm:p-6 rounded-t-2xl ${mergedStyles.headerBackground} ${mergedStyles.headerTextColor}`}
                 >
-                    <div className="flex justify-between items-center">
-                        <h2 id="modal-title" className="text-lg sm:text-xl font-semibold truncate">
-                            {title}
-                        </h2>
-                        {showCloseButton && (
-                            <button
-                                onClick={closeModal}
-                                className={`p-2 rounded-full ${mergedStyles.closeButtonBackground} ${mergedStyles.closeButtonTextColor} ${mergedStyles.closeButtonHoverBackground} ${mergedStyles.closeButtonHoverTextColor} transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-                                aria-label="Close modal"
-                            >
-                                ✕
-                            </button>
-                        )}
-                    </div>
+                    <h2 id="modal-title" className="text-lg sm:text-xl font-semibold truncate">
+                        {title}
+                    </h2>
+                    {showCloseButton && (
+                        <button
+                            onClick={closeModal}
+                            className={`p-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${mergedStyles.closeButtonBackground} ${mergedStyles.closeButtonTextColor} ${mergedStyles.closeButtonHoverBackground} ${mergedStyles.closeButtonHoverTextColor}`}
+                            aria-label="Close modal"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    )}
                 </div>
 
                 {/* Content */}
-                <div className={`w-full p-4 sm:p-6 ${mergedStyles.textColor}`}>{content}</div>
+                <div className={`w-full p-4 sm:p-6 ${mergedStyles.textColor}`}>
+                    {content}
+                </div>
 
                 {/* Footer */}
                 {showFooter && (
                     <div
-                        className={`w-full p-4 sm:p-6 ${mergedStyles.footerBackground} ${mergedStyles.footerTextColor} rounded-b-xl`}
+                        className={`flex justify-end w-full gap-2 p-4 sm:p-6 rounded-b-2xl ${mergedStyles.footerBackground} ${mergedStyles.footerTextColor}`}
                     >
-                        <div className="flex justify-end space-x-2">
-                            <button
-                                onClick={closeModal}
-                                className={`px-4 py-2 rounded-md ${mergedStyles.closeButtonBackground} ${mergedStyles.closeButtonTextColor} ${mergedStyles.closeButtonHoverBackground} ${mergedStyles.closeButtonHoverTextColor} transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-                            >
-                                Close
-                            </button>
-                        </div>
+                        <button
+                            onClick={closeModal}
+                            className={`px-4 py-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${mergedStyles.closeButtonBackground} ${mergedStyles.closeButtonTextColor} ${mergedStyles.closeButtonHoverBackground} ${mergedStyles.closeButtonHoverTextColor}`}
+                        >
+                            Close
+                        </button>
                     </div>
                 )}
             </div>

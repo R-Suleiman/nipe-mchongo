@@ -3,7 +3,7 @@ import ApplicationDetails from "./ApplicationDetails";
 import { useEffect, useState } from "react";
 import axiosClient from "../../assets/js/axios-client";
 import { useAuth } from "../../context/AuthProvider";
-import { Clipboard, Eye, FileText, User, UserCheck } from "lucide-react";
+import { Clipboard, Eye, FileText, User, UserCheck, X, XCircle } from "lucide-react";
 
 export default function MyApplications() {
     const { openModal } = useModal();
@@ -11,6 +11,7 @@ export default function MyApplications() {
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
     const userId = user?.id;
+    console.log(userId);
 
     const [totalApplications, setTotalApplications] = useState(0);
 
@@ -23,6 +24,7 @@ export default function MyApplications() {
 
                 // 👇 Extract correctly
                 setApplications(res.data.applications || []);
+                console.log(res.data.applications);
                 setTotalApplications(res.data.total || 0);
 
                 console.log("Applications fetched:", res.data);
@@ -131,12 +133,12 @@ export default function MyApplications() {
                                                 Details
                                             </button>
 
-                                            {(app.application_status === "pending" || app.application_status === "denied") && (
+                                            {(app.status?.name === "Pending" || app.status?.name === "Denied") && (
                                                 <button
                                                     onClick={() => handleCancelApplication(app.id)}
-                                                    className="inline-flex items-center bg-white border border-red-200 hover:bg-red-50 text-red-600 text-sm px-4 py-2 rounded-lg font-medium transition shadow-sm hover:shadow-md"
+                                                    className="inline-flex items-center gap-2 rounded-2xl border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm transition-all hover:border-red-400 hover:bg-red-50 hover:text-red-700 hover:shadow-md"
                                                 >
-                                                    <Clipboard className="h-4 w-4 mr-1" />
+                                                    <XCircle className="h-4 w-4" />
                                                     Cancel
                                                 </button>
                                             )}

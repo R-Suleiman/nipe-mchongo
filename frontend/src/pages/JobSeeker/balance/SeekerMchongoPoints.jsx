@@ -59,7 +59,7 @@ export default function SeekerMchongoPoints() {
                                 </h2>
                             </div>
                             <div className="flex items-end space-x-2 mb-3">
-                                <span className="text-5xl font-bold text-gray-900">
+                                <span className="text-4xl font-bold text-gray-900">
                                     {user?.mchongo_points}
                                 </span>
                                 <span className="text-blue-500 mb-2 text-lg font-medium">pts</span>
@@ -80,7 +80,7 @@ export default function SeekerMchongoPoints() {
                                 </h2>
                             </div>
                             <div className="flex items-end space-x-2 mb-3">
-                                <span className="text-5xl font-bold text-gray-900">
+                                <span className="text-4xl font-bold text-gray-900">
                                     {Number.isFinite(user?.mchongo_points) ? Math.floor(user.mchongo_points / 10) : 0}
                                 </span>
                                 <span className="text-indigo-500 mb-2 text-lg font-medium">gigs</span>

@@ -83,14 +83,14 @@ class GigController extends Controller
 
     public function getGigCategories()
     {
-        // $gigCategories = DB::table('gig_categories')
-        //     ->select(
-        //         DB::raw('MIN(id) as id'),
-        //         'name',
-        //     )
-        //     ->groupBy('name')
-        //     ->orderBy('name', 'desc')
-        //     ->get();
+        $gigCategories = DB::table('gig_categories')
+            ->select(
+                DB::raw('MIN(id) as id'),
+                'name',
+            )
+            ->groupBy('name')
+            ->orderBy('name', 'desc')
+            ->get();
 
         $gigCategories = GigCategory::select(['id', 'name'])->orderBy('name', 'asc')->get();
 
