@@ -160,6 +160,7 @@ function AccountForm() {
                                 onChange={handleInputChange}
                                 className="w-10/12 p-2 outline-0 border border-blue-300 rounded-sm"
                             >
+                                <option value="">-- select --</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>

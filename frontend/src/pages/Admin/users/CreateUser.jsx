@@ -31,7 +31,7 @@ function CreateUser({ userData = null, type, reload }) {
         e.preventDefault();
         if (userData?.id) {
             axiosClient
-                .post(`/user/update-user/${userData.id}`, profileData)
+                .post(`/admin/user/update-user/${userData.id}`, profileData)
                 .then(({ data }) => {
                     showTopSuccessAlert(data.message);
                     closeModal();
@@ -45,7 +45,7 @@ function CreateUser({ userData = null, type, reload }) {
                 });
         } else {
             axiosClient
-                .post(`/user/create-user`, profileData)
+                .post(`/admin/user/create-user`, profileData)
                 .then(({ data }) => {
                     showTopSuccessAlert(data.message);
                     closeModal();

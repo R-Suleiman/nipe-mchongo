@@ -94,7 +94,7 @@ function GigPoster() {
 
     const unblockUser = () => {
         axiosClient
-            .post(`/user/unblock-user/${gigPoster.id}`)
+            .post(`/admin/user/unblock-user/${gigPoster.id}`)
             .then(({ data }) => {
                 showTopSuccessAlert(data.message);
                 getGigPoster()

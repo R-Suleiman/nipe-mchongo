@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "../pages/Home";
+import Login from "../pages/auth/Login";
 import PageNotFound from "../pages/PageNotFound";
 import JobPosterLayout from "../layouts/JobPosterLayout";
 import Jobs from "../pages/JobPoster/jobs/Jobs";
@@ -36,67 +36,108 @@ import GigSeeker from "../pages/Admin/users/gigseekers/GigSeeker";
 import AdminMchongoPoints from "../pages/Admin/mchongoPoints/AdminMchongoPoints";
 import CreateUser from "../pages/Admin/users/CreateUser";
 import BlockedUsers from "../pages/Admin/users/blocked/BlockedUsers";
+import Home from "../pages/Home";
 import JobSeekerLayout from "../layouts/JobSeekerLayout";
 import JobSeekerPurchasePoints from "../pages/JobSeeker/balance/JobSeekerPurchasePoints";
 import SeekerMchongoPoints from "../pages/JobSeeker/balance/SeekerMchongoPoints";
 import AboutGig from "../pages/JobSeeker/AboutGig";
+import Signup from "../pages/auth/Signup";
+import OtpVerification from "../pages/auth/OtpVerification";
+import ForgotPassword from "../pages/auth/password-reset/ForgotPassword";
+import PasswordResetOtpVerification from "../pages/auth/password-reset/PasswordResetOtpVerification";
+import ResetPassword from "../pages/auth/password-reset/ResetPassword";
+import ProtectedRoute from "../components/ProtectedRoute";
+import Unauthorized from "../pages/Unauthorized";
 
 const Router = createBrowserRouter([
     {
-        path: "/login",
+        path: "/",
         element: <Home />,
     },
+    {
+        path: "/login",
+        element: <Login />,
+    },
+    {
+        path: "/register",
+        element: <Signup />,
+    },
+    {
+        path: "/verify-otp",
+        element: <OtpVerification />,
+    },
+    {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
+    },
+    {
+        path: "/verify-password-reset-otp",
+        element: <PasswordResetOtpVerification />,
+    },
+    {
+        path: "/reset-password",
+        element: <ResetPassword />,
+    },
+    {
+        path: "/unauthorized",
+        element: <Unauthorized />,
+    },
+
     // Job Poster
     {
-        path: "/",
-        element: <JobPosterLayout />,
+        path: "/jobposter",
+        element: (
+            <ProtectedRoute allowedUser="poster">
+                <JobPosterLayout />
+            </ProtectedRoute>
+        ),
         children: [
             {
-                path: "/jobposter/dashboard",
+                path: "dashboard",
                 element: <Dashboard />,
             },
             {
-                path: "/jobposter/account",
+                path: "account",
                 element: <Account />,
             },
             {
-                path: "/jobposter/account/edit",
+                path: "account/edit",
                 element: <AccountForm />,
             },
             {
-                path: "/jobposter/jobs",
+                path: "jobs",
                 element: <Jobs />,
             },
             {
-                path: "/jobposter/jobs/:id",
+                path: "jobs/:id",
                 element: <Job />,
             },
             {
-                path: "/jobposter/jobs/create",
+                path: "jobs/create",
                 element: <JobsForm />,
             },
             {
-                path: "/jobposter/jobs/:id/edit",
+                path: "jobs/:id/edit",
                 element: <JobsEditForm />,
             },
             {
-                path: "/jobposter/applications",
+                path: "applications",
                 element: <Applications />,
             },
             {
-                path: "/jobposter/applications/:id",
+                path: "applications/:id",
                 element: <Application />,
             },
             {
-                path: "/jobposter/settings",
+                path: "settings",
                 element: <Settings />,
             },
             {
-                path: "/jobposter/points",
+                path: "points",
                 element: <MchongoPoints />,
             },
             {
-                path: "/jobposter/purchase-points",
+                path: "purchase-points",
                 element: <PurchasePoints />,
             },
         ],
@@ -104,7 +145,11 @@ const Router = createBrowserRouter([
 
     {
         path: "/job/seeker",
-        element: <JobSeekerLayout />,
+         element: (
+            <ProtectedRoute allowedUser="seeker">
+                <JobSeekerLayout />
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: "dashboard",
@@ -145,11 +190,14 @@ const Router = createBrowserRouter([
         ],
     },
 
-
     // admin
     {
         path: "/",
-        element: <AdminLayout />,
+         element: (
+            <ProtectedRoute allowedUser="admin">
+                <AdminLayout />
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: "/admin/dashboard",
