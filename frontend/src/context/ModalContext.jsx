@@ -1,77 +1,241 @@
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { X } from 'lucide-react'
+// Modal size options
+const modalSizes = {
+    sm: "max-w-sm w-full sm:w-11/12",
+    md: "max-w-md w-full sm:w-11/12",
+    lg: "max-w-lg w-full sm:w-11/12",
+    xl: "max-w-xl w-full sm:w-11/12",
+    xl2: "max-w-2xl w-full sm:w-10/12",
+    xl4: "max-w-4xl w-full sm:w-10/12",
+    xl5: "max-w-5xl w-full sm:w-10/12",
+    xl7: "max-w-7xl w-full sm:w-11/12",
+    xl8: "max-w-[90rem] w-full sm:w-11/12",
+    full: "max-w-full w-full",
+};
 
-const ModalContext = createContext();
+// Predefined modal variants
+const modalVariants = {
+    default: {
+        backgroundColor: "bg-white",
+        textColor: "text-gray-800",
+        borderColor: "border-gray-200",
+        borderSize: "border",
+        borderRadius: "rounded-xl",
+        headerBackground: "bg-blue-800",
+        headerTextColor: "text-white",
+        footerBackground: "bg-blue-800",
+        footerTextColor: "text-white",
+        closeButtonBackground: "bg-red-700",
+        closeButtonTextColor: "text-white",
+        closeButtonHoverBackground: "hover:bg-red-600",
+        closeButtonHoverTextColor: "hover:text-white",
+    },
+    info: {
+        backgroundColor: "bg-blue-50",
+        textColor: "text-blue-800",
+        borderColor: "border-blue-200",
+        borderSize: "border-2",
+        borderRadius: "rounded-xl",
+        headerBackground: "bg-blue-600",
+        headerTextColor: "text-white",
+        footerBackground: "bg-blue-600",
+        footerTextColor: "text-white",
+        closeButtonBackground: "bg-red-500",
+        closeButtonTextColor: "text-white",
+        closeButtonHoverBackground: "hover:bg-red-600",
+        closeButtonHoverTextColor: "hover:text-white",
+    },
+    success: {
+        backgroundColor: "bg-green-50",
+        textColor: "text-green-800",
+        borderColor: "border-green-200",
+        borderSize: "border-2",
+        borderRadius: "rounded-xl",
+        headerBackground: "bg-green-600",
+        headerTextColor: "text-white",
+        footerBackground: "bg-green-600",
+        footerTextColor: "text-white",
+        closeButtonBackground: "bg-red-500",
+        closeButtonTextColor: "text-white",
+        closeButtonHoverBackground: "hover:bg-red-600",
+        closeButtonHoverTextColor: "hover:text-white",
+    },
+    warning: {
+        backgroundColor: "bg-yellow-50",
+        textColor: "text-yellow-800",
+        borderColor: "border-yellow-200",
+        borderSize: "border-2",
+        borderRadius: "rounded-xl",
+        headerBackground: "bg-yellow-600",
+        headerTextColor: "text-white",
+        footerBackground: "bg-yellow-600",
+        footerTextColor: "text-white",
+        closeButtonBackground: "bg-red-500",
+        closeButtonTextColor: "text-white",
+        closeButtonHoverBackground: "hover:bg-red-600",
+        closeButtonHoverTextColor: "hover:text-white",
+    },
+    danger: {
+        backgroundColor: "bg-red-50",
+        textColor: "text-red-800",
+        borderColor: "border-red-200",
+        borderSize: "border-2",
+        borderRadius: "rounded-xl",
+        headerBackground: "bg-red-600",
+        headerTextColor: "text-white",
+        footerBackground: "bg-red-600",
+        footerTextColor: "text-white",
+        closeButtonBackground: "bg-white",
+        closeButtonTextColor: "text-red-600",
+        closeButtonHoverBackground: "hover:bg-red-400",
+        closeButtonHoverTextColor: "hover:text-white",
+    },
+    custom: {
+        backgroundColor: "",
+        textColor: "",
+        borderColor: "",
+        borderSize: "",
+        borderRadius: "",
+        headerBackground: "",
+        headerTextColor: "",
+        footerBackground: "",
+        footerTextColor: "",
+        closeButtonBackground: "",
+        closeButtonTextColor: "",
+        closeButtonHoverBackground: "",
+        closeButtonHoverTextColor: "",
+        shadow: "",
+    },
+};
 
-export const ModalProvider = ({ children }) => {
-    const [modalContent, setModalContent] = useState(null);
+const ModalContext = createContext(null);
+
+const ModalProvider = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [size, setSize] = useState("md");
-    const [title, setTitle] = useState("");
+    const [modalConfig, setModalConfig] = useState(null);
 
-    const openModal = (content, modalSize = "md", title = "") => {
-        setModalContent(content);
-        setSize(modalSize);
-        setTitle(title);
+    const openModal = (config) => {
+        setModalConfig({
+            size: "md",
+            variant: "default",
+            showCloseButton: true,
+            closeOnOutsideClick: true,
+            showFooter: true,
+            ...config,
+        });
         setIsOpen(true);
     };
 
     const closeModal = () => {
         setIsOpen(false);
-        setModalContent(null);
+        setModalConfig(null);
     };
 
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (e.key === "Escape" && isOpen) {
+                closeModal();
+            }
+        };
+        window.addEventListener("keydown", handleEscape);
+        return () => window.removeEventListener("keydown", handleEscape);
+    }, [isOpen]);
+
     return (
-        <ModalContext.Provider
-            value={{ isOpen, modalContent, size, title, openModal, closeModal }}
-        >
+        <ModalContext.Provider value={{ isOpen, modalConfig, openModal, closeModal }}>
             {children}
-            <Modal />
+            {isOpen && modalConfig && <Modal />}
         </ModalContext.Provider>
     );
 };
 
-export const useModal = () => useContext(ModalContext);
+const useModal = () => {
+    const context = useContext(ModalContext);
+    if (!context) throw new Error("useModal must be used within ModalProvider");
+    return context;
+};
 
 const Modal = () => {
-    const { isOpen, modalContent, closeModal, size, title } = useModal();
+    const { isOpen, modalConfig, closeModal } = useModal();
 
-    if (!isOpen) return null;
+    if (!isOpen || !modalConfig) return null;
 
-    const widthClasses = {
-        sm: "max-w-sm",
-        md: "max-w-md",
-        lg: "max-w-lg",
-        xl: "max-w-xl",
-        xl2: "max-w-2xl",
-        xl4: "max-w-4xl",
-        xl7: "max-w-7xl",
-        xl5: "max-w-5xl",
-        full: "max-w-full",
+    const {
+        content,
+        size = "md",
+        title = "",
+        variant = "default",
+        customStyles = {},
+        showCloseButton = true,
+        closeOnOutsideClick = true,
+        showFooter = true,
+    } = modalConfig;
+
+    const mergedStyles = {
+        ...modalVariants[variant],
+        ...customStyles,
+    };
+
+    const handleOutsideClick = (e) => {
+        if (closeOnOutsideClick && e.target === e.currentTarget) {
+            closeModal();
+        }
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-opacity-40 backdrop-blur-sm z-50 m-4">
+        <div
+            className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300 ${isOpen ? "opacity-100 backdrop-blur-sm bg-gray-900/40" : "opacity-0 pointer-events-none"
+                }`}
+            onClick={handleOutsideClick}
+            role="dialog"
+            aria-labelledby="modal-title"
+            aria-modal="true"
+        >
             <div
-                className={`bg-white rounded-lg shadow-lg shadow-blue-200 w-full ${widthClasses[size]} max-h-lvh overflow-y-auto`}
+                className={`${modalSizes[size] || modalSizes.md} max-h-[90vh] w-full overflow-y-auto rounded-2xl transition-transform duration-300 transform shadow-xl ring-1 ring-blue-500/20 ${isOpen ? "scale-100" : "scale-95"
+                    } ${mergedStyles.backgroundColor} ${mergedStyles.borderColor} ${mergedStyles.borderSize} ${mergedStyles.shadow}`}
+                onClick={(e) => e.stopPropagation()}
             >
-                <div className="w-full p-4 rounded-t-md bg-blue-800">
-                    <h2 className="text-xl text-center text-white">{title}</h2>
-                </div>
-                <div className="w-full p-6">
-                    {modalContent}
-                </div>
-                <div className="w-full p-2 bg-blue-800">
-                    <div className="w-fit mx-auto">
+                {/* Header */}
+                <div
+                    className={`flex items-center justify-between w-full p-4 sm:p-6 rounded-t-2xl ${mergedStyles.headerBackground} ${mergedStyles.headerTextColor}`}
+                >
+                    <h2 id="modal-title" className="text-lg sm:text-xl font-semibold truncate">
+                        {title}
+                    </h2>
+                    {showCloseButton && (
                         <button
                             onClick={closeModal}
-                            className="mt-4 w-full py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-md hover:cursor-pointer"
+                            className={`p-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${mergedStyles.closeButtonBackground} ${mergedStyles.closeButtonTextColor} ${mergedStyles.closeButtonHoverBackground} ${mergedStyles.closeButtonHoverTextColor}`}
+                            aria-label="Close modal"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    )}
+                </div>
+
+                {/* Content */}
+                <div className={`w-full p-4 sm:p-6 ${mergedStyles.textColor}`}>
+                    {content}
+                </div>
+
+                {/* Footer */}
+                {showFooter && (
+                    <div
+                        className={`flex justify-end w-full gap-2 p-4 sm:p-6 rounded-b-2xl ${mergedStyles.footerBackground} ${mergedStyles.footerTextColor}`}
+                    >
+                        <button
+                            onClick={closeModal}
+                            className={`px-4 py-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${mergedStyles.closeButtonBackground} ${mergedStyles.closeButtonTextColor} ${mergedStyles.closeButtonHoverBackground} ${mergedStyles.closeButtonHoverTextColor}`}
                         >
                             Close
                         </button>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );
 };
-//
+
+export { ModalProvider, useModal };

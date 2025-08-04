@@ -1,18 +1,17 @@
 import React from "react";
-import { useModal } from "../../context/ModalContext";
-import ConfirmApplication from "./ConfirmApplication";
-import { Rocket } from 'lucide-react';
+import { ArrowBigRight, CheckCircle2, Rocket } from 'lucide-react';
 import axiosClient from "../../assets/js/axios-client";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthProvider";
 
 export default function SearchJobs() {
-    const { openModal } = useModal();
-
+    const { user } = useAuth();
     const [loading, setLoading] = React.useState(false);
     const [gigs, setGigs] = React.useState([]);
     const [categories, setCategories] = React.useState([]);
 
     const [filters, setFilters] = React.useState({
-        user_id: 10, // Replace with actual authenticated user ID
+        seeker_id: user?.id || "",  // ✅ use seeker_id not user_id
         title: '',
         category: '',
     });
@@ -22,7 +21,7 @@ export default function SearchJobs() {
         let url = `/gig-seeker-gigs`;
         const params = [];
 
-        if (filters.user_id) params.push(`seeker_id=${filters.user_id}`);
+        if (filters.seeker_id) params.push(`seeker_id=${filters.seeker_id}`);
         if (filters.title) params.push(`title=${encodeURIComponent(filters.title)}`);
         if (filters.category) params.push(`category=${encodeURIComponent(filters.category)}`);
 
@@ -41,9 +40,10 @@ export default function SearchJobs() {
     };
 
     React.useEffect(() => {
-        fetchCategories();
         fetchGigs();
-    }, []);
+        fetchCategories();
+    }, [filters.title, filters.category]);
+
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -139,23 +139,18 @@ export default function SearchJobs() {
                                     {gig.has_applied ? (
                                         <button
                                             disabled
-                                            className="w-full bg-blue-50 text-blue-600 text-sm px-4 py-2.5 rounded-lg font-semibold cursor-not-allowed flex items-center justify-center"
+                                            className="w-full bg-green-50 text-green-600 text-sm px-4 py-2.5 rounded-lg font-semibold cursor-not-allowed flex items-center justify-center"
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                            Application Submitted
+                                            <CheckCircle2 className="h-4 w-4 mr-2" />
+                                            Already Applied
                                         </button>
                                     ) : (
-                                        <button
-                                            onClick={() => openModal(<ConfirmApplication gig={gig} />, "xl4", `${gig.title} - Confirm Application`)}
+                                        <Link to={`/job/seeker/about-gig/${gig.id}`}
                                             className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm px-4 py-2.5 rounded-lg font-semibold transition-all shadow-sm hover:shadow-md flex items-center justify-center"
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                            </svg>
-                                            Apply Now
-                                        </button>
+                                            Details
+                                            <ArrowBigRight className="h-4 w-4 mr-2" />
+                                        </Link>
                                     )}
                                 </div>
                             </div>
