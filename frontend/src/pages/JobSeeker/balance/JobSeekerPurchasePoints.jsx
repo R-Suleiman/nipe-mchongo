@@ -1,6 +1,4 @@
-import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthProvider";
 import axiosClient from "../../../assets/js/axios-client";
 import {
     showConfirmAlert,
@@ -8,8 +6,10 @@ import {
     showSuccessAlert,
 } from "../../../utils/sweetAlert";
 import Spinner from "../../../components/Spinner";
+import { useState } from "react";
+import { useAuth } from "../../../context/AuthProvider";
 
-export default function PurchasePoints() {
+export default function JobSeekerPurchasePoints() {
     const navigate = useNavigate();
     const { search } = useLocation();
     const query = new URLSearchParams(search);

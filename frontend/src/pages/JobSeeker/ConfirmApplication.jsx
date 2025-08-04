@@ -6,7 +6,7 @@ import axiosClient from "../../assets/js/axios-client";
 import { useAuth } from "../../context/AuthProvider";
 
 
-export default function ConfirmApplication({ gig }) {
+export default function ConfirmApplication({ gig, gigDetails }) {
     const { user } = useAuth();
     const [loading, setLoading] = React.useState(false);
     const { closeModal } = useModal();
@@ -17,15 +17,16 @@ export default function ConfirmApplication({ gig }) {
         try {
             const response = await axiosClient.post('/gig-seeker/gig/apply', {
                 gig_id: gig.id,
-                poster_id: gig.poster_id,
-                seeker_id: user_id
+                gig_poster_id: gig?.gig_poster_id,
+                gig_seeker_id: user_id
             });
 
             toast.success('Application submitted successfully!');
             closeModal();
+            gigDetails();
         } catch (error) {
             toast.error('Error submitting application!');
-            console.error("Error submitting application:", error.response?.data || error.message);
+            console.error(error.response?.data || error.message);
         } finally {
             setLoading(false);
         }
@@ -36,24 +37,31 @@ export default function ConfirmApplication({ gig }) {
             <div className="bg-white shadow-lg rounded-3xl p-6">
                 <p className="text-gray-600 mb-4">Are you sure you want to apply for this gig?</p>
                 {/* gigId = {gig.id} <br />
-                poster_id = {gig.poster_id} <br />
+                poster_id = {gig.gig_poster_id} <br />
                 seeker_id = {user_id} <br /> */}
 
-                <div className="flex justify-end space-x-4">
+                <div className="flex justify-end gap-4 px-4 py-3 sm:px-6">
+                    {/* Cancel Button */}
                     <button
-                        onClick={() => closeModal()}
-                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                        onClick={closeModal}
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-gray-300 rounded-md hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
                     >
                         Cancel
                     </button>
+
+                    {/* Confirm Button */}
                     <button
                         onClick={handleConfirm}
                         disabled={loading}
-                        className={`px-4 py-2 ${loading ? "bg-blue-300" : "bg-blue-500"} text-white rounded-lg hover:bg-blue-600 transition`}
+                        className={`inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${loading
+                            ? "bg-green-300 text-white cursor-not-allowed"
+                            : "bg-green-600 text-white hover:bg-green-700"
+                            }`}
                     >
                         {loading ? "Submitting..." : "Confirm Application"}
                     </button>
                 </div>
+
             </div>
         </div>
     );

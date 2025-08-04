@@ -1,13 +1,18 @@
 import { useState } from "react";
-import JobSeekerLayout from "../../layouts/JobSeekerLayout";
+import { useAuth } from "../../context/AuthProvider";
+import axiosClient from "../../assets/js/axios-client";
 
 export default function UpdateProfile() {
+    const { user } = useAuth();
+
     const [formData, setFormData] = useState({
-        fullName: 'John Doe',
-        email: 'johndoe@example.com',
-        phone: '+255712345678',
-        location: 'Dar es Salaam',
-        bio: 'Experienced freelance photographer passionate about capturing moments.',
+        firstname: user?.firstname || '',
+        lastname: user?.lastname || '',
+        email: user?.email || '',
+        phone: user?.phone || '',
+        address: user?.address || '',
+        dob: user?.dob || '',
+        gender: user?.gender || '',
         profilePhoto: null,
     });
 
@@ -20,24 +25,58 @@ export default function UpdateProfile() {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Send formData to the backend via API here
-        alert('Profile updated successfully!');
+
+        const payload = new FormData();
+
+        // Append form fields
+        Object.entries(formData).forEach(([key, value]) => {
+            if (value !== null && value !== undefined) {
+                payload.append(key, value);
+            }
+        });
+
+        // Append user ID from frontend (not using Laravel Auth)
+        payload.append('seeker_id', user.id); // <- This is what you meant
+
+        try {
+            const response = await axiosClient.post('/profile/update', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            alert("Profile updated!");
+        } catch (err) {
+            console.error(err);
+            alert("Update failed!");
+        }
     };
 
     return (
-        <JobSeekerLayout>
+        <>
             <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto mt-6">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">Update Profile</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
+
                     <div className="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
                             <input
                                 type="text"
-                                name="fullName"
-                                value={formData.fullName}
+                                name="firstname"
+                                value={formData.firstname}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                            <input
+                                type="text"
+                                name="lastname"
+                                value={formData.lastname}
                                 onChange={handleChange}
                                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
@@ -63,37 +102,38 @@ export default function UpdateProfile() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
                             <input
                                 type="text"
-                                name="location"
-                                value={formData.location}
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                            <input
+                                type="date"
+                                name="dob"
+                                value={formData.dob}
                                 onChange={handleChange}
                                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
                     </div>
-
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Short Bio</label>
-                        <textarea
-                            name="bio"
-                            rows="4"
-                            value={formData.bio}
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                        <select
+                            name="gender"
+                            value={formData.gender}
                             onChange={handleChange}
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
-                        <input
-                            type="file"
-                            name="profilePhoto"
-                            accept="image/*"
-                            onChange={handleChange}
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-50"
-                        />
+                            className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
                     </div>
 
                     <div>
@@ -106,6 +146,6 @@ export default function UpdateProfile() {
                     </div>
                 </form>
             </div>
-        </JobSeekerLayout>
+        </>
     );
 }
