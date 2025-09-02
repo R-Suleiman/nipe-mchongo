@@ -31,6 +31,7 @@ class User extends Authenticatable
         'password',
         'mchongo_points',
         'profile_photo',
+        'is_verified',
     ];
 
     /**
