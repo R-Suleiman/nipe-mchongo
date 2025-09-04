@@ -149,7 +149,7 @@ class GigSeekerController extends Controller
                 'gig_id' => $request->gig_id,
                 'gig_seeker_id' => $request->gig_seeker_id,
                 'gig_poster_id' => $request->gig_poster_id,
-                'status_id' => 3,
+                'status_id' => 1, //pending -- initially set to 3
             ]);
 
             return response()->json([

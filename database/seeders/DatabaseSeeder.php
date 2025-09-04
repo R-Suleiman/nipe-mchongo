@@ -74,3 +74,10 @@ class GIgCategorySeeder extends Seeder {
     }
 }
 
+
+// statuses
+// 1. Application pending
+// 2. Application approved
+// 3. Application rejected
+// 4. OPen Gig
+// 5. Closed Gig

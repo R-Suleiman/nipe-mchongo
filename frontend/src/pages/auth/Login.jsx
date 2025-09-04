@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { showTopSuccessAlert } from "../../utils/sweetAlert";
 import axiosClient from "../../assets/js/axios-client";
@@ -9,6 +8,7 @@ function Login() {
     const navigate = useNavigate();
     const { setUser, setToken } = useAuth();
     const [errors, setErrors] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [loginData, setLoginData] = useState({
         email: "",
         password: "",
@@ -20,6 +20,7 @@ function Login() {
 
     const login = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         axiosClient
             .post(`/login`, loginData)
@@ -64,7 +65,7 @@ function Login() {
                         });
                     }
                 }
-            });
+            }).finally(() => setLoading(false));
     };
 
     return (
@@ -110,11 +111,11 @@ function Login() {
                         />
                     </div>
                     <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl transition-all duration-300">
-                        Login
+                        {loading ? "Loading..." : "Login"}
                     </button>
                 </form>
 
-                   <p className="mt-4 text-sm text-center">
+                <p className="mt-4 text-sm text-center">
                     <Link
                         to="/forgot-password"
                         className="text-blue-600 font-medium hover:underline"
