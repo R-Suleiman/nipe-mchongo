@@ -1,8 +1,8 @@
 export default function ApplicationDetails({ application }) {
     return (
         <div className="container mx-auto p-6 space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800 border-b pb-2">
-                {application?.gig?.title} Gig Application Summary
+            <h2 className="text-2xl font-bold text-white border-b pb-2">
+                {application?.gig?.title} (Summary)
             </h2>
 
             {/* Gig Info */}
@@ -34,7 +34,7 @@ export default function ApplicationDetails({ application }) {
                 <div>
                     <h3 className="text-sm text-gray-500">Application Status</h3>
                     <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${application?.status?.name === "Approved"
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${application?.status?.name === "Accepted"
                             ? "bg-green-100 text-green-700"
                             : application?.status?.name === "Pending"
                                 ? "bg-yellow-100 text-yellow-700"
