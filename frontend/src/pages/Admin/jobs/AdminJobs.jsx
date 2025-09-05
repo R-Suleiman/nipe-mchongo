@@ -5,7 +5,6 @@ import axiosClient from "../../../assets/js/axios-client";
 import Loading from "../../../components/Loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useModal } from "../../../context/ModalContext";
 import Pagination from "../../../components/Pagination";
 
 function AdminJobs() {
@@ -14,7 +13,6 @@ function AdminJobs() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const { openModal } = useModal();
     const [search, setSearch] = useState("");
     const [meta, setMeta] = useState({});
     const [page, setPage] = useState(1);

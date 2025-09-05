@@ -14,7 +14,6 @@ function AdminApplication() {
     const { id } = useParams();
     const [application, setApplication] = useState();
     const [loading, setLoading] = useState(true);
-    const { openModal } = useModal();
 
     const getApplication = () => {
         axiosClient

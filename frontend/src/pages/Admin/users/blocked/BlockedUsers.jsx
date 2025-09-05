@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../../../../assets/js/axios-client";
 import Loading from "../../../../components/Loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Pagination from "../../../../components/Pagination";
-import CreateUser from "../CreateUser";
-import { useModal } from "../../../../context/ModalContext";
 
 function BlockedUsers() {
     dayjs.extend(relativeTime);
@@ -17,7 +14,6 @@ function BlockedUsers() {
     const [search, setSearch] = useState("");
     const [meta, setMeta] = useState({});
     const [page, setPage] = useState(1);
-    const { openModal } = useModal();
 
     const getusers = () => {
         setLoading(true);

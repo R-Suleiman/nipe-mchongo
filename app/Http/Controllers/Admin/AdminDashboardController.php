@@ -23,19 +23,40 @@ class AdminDashboardController extends Controller
         $posters = User::where('usertype', 'poster')->get();
         $seekers = User::where('usertype', 'seeker')->get();
 
-        // Graph stats (Jobs per month)
-        $jobsGraph = Gig::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count")
-            ->groupByRaw("DATE_FORMAT(created_at, '%Y-%m')")
-            ->orderBy('month')
-            ->get();
+     // Prepare months (last 12 months)
+        $start = now()->subMonths(11)->startOfMonth();
+        $end = now()->endOfMonth();
+        $period = \Carbon\CarbonPeriod::create($start, '1 month', $end);
 
-        // Graph stats (Jobs per month)
-        $applicationsGraph = GigApplication::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count")->where('gig_poster_id', Auth::user()->id)
-            ->groupByRaw("DATE_FORMAT(created_at, '%Y-%m')")
-            ->orderBy('month')
-            ->get();
+        $months = collect();
+        foreach ($period as $date) {
+            $months->put($date->format('Y-m'), [
+                'month' => $date->format('Y-m'),
+                'jobs' => 0,
+                'applications' => 0,
+            ]);
+        }
 
-        return response()->json(['success' => true, 'jobs' => $jobs->take(5), 'jobs_count' => $jobs->count(), 'applications' => $applications->take(5), 'applications_count' => $applications->count(), 'employments' => $employments->count(), 'posters' => $posters->count(), 'seekers' => $seekers->count(), 'jobsGraph' => $jobsGraph, 'applicationsGraph' => $applicationsGraph]);
+        // Jobs per month
+        $jobsGraph = Gig::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as jobs")
+            ->groupByRaw("DATE_FORMAT(created_at, '%Y-%m')")
+            ->pluck('jobs', 'month');
+
+        // Applications per month
+        $applicationsGraph = GigApplication::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as applications")
+            ->groupByRaw("DATE_FORMAT(created_at, '%Y-%m')")
+            ->pluck('applications', 'month');
+
+        // Merge into one dataset
+        $graphData = $months->map(function ($data, $month) use ($jobsGraph, $applicationsGraph) {
+            return [
+                'month' => $month,
+                'jobs' => $jobsGraph[$month] ?? 0,
+                'applications' => $applicationsGraph[$month] ?? 0,
+            ];
+        })->values();
+
+        return response()->json(['success' => true, 'jobs' => $jobs->take(5), 'jobs_count' => $jobs->count(), 'applications' => $applications->take(5), 'applications_count' => $applications->count(), 'employments' => $employments->count(), 'posters' => $posters->count(), 'seekers' => $seekers->count(), 'graphData' => $graphData]);
     }
 
     public function mchongoPoints()

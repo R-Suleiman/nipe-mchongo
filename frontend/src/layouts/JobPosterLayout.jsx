@@ -58,6 +58,7 @@ function JobPosterLayout() {
         getUser();
     }, []);
 
+
     return (
         <section className="w-full">
             <aside
@@ -122,7 +123,7 @@ function JobPosterLayout() {
                             </li>
                         </Link>
                         <button
-                            className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
+                            className="w-full p-2 font-semibold flex items-center bg-red-500 hover:bg-red-600 mt-5 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
                             onClick={logout}
                         >
                             <FaSignOutAlt className="mr-3" />{" "}

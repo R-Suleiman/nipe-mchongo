@@ -14,7 +14,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $user['profile_photo'] = asset('storage/' . $user['profile_photo']);
+        if($user['profile_photo'] !== null) {
+            $user['profile_photo'] = asset('storage/' . $user['profile_photo']);
+        }
 
         return response()->json(['success' => true, 'user' => $user]);
     }

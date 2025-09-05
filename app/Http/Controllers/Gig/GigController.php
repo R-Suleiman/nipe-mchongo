@@ -42,16 +42,16 @@ class GigController extends Controller
         $user->decrement('mchongo_points', 1);
 
         // sending email notofications
-        // $gigCategory = $gig['gig_category_id'];
-        // if ($newGig) {
-        //     $subscribedUsers = User::whereHas('subscriptions', function ($q) use ($gigCategory) {
-        //         $q->where('gig_category_id', $gigCategory)->where('email', 1);
-        //     })->get();
+        $gigCategory = $gig['gig_category_id'];
+        if ($newGig) {
+            $subscribedUsers = User::whereHas('subscriptions', function ($q) use ($gigCategory) {
+                $q->where('gig_category_id', $gigCategory)->where('email', 1);
+            })->get();
 
-        //     foreach ($subscribedUsers as $user) {
-        //         Mail::to($user->email)->send(new JobPostMail($newGig, $user));
-        //     }
-        // }
+            foreach ($subscribedUsers as $user) {
+                Mail::to($user->email)->send(new JobPostMail($newGig, $user));
+            }
+        }
 
         return response()->json(['success' => true, 'message' => 'Job Posted Successfully!']);
     }

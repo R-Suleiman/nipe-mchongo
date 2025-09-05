@@ -54,11 +54,11 @@ class GigApplicationController extends Controller
         $application->update(['status_id' => 2]);
 
         // Send Notification to the applicant
-        // $user = $application->seeker;
-        // $job = $application->job;
-        // if ($user) {
-        //         Mail::to($user->email)->send(new JobAcceptedMail($job, $user));
-        // }
+        $user = $application->seeker;
+        $job = $application->job;
+        if ($user) {
+                Mail::to($user->email)->send(new JobAcceptedMail($job, $user));
+        }
 
         return response()->json(['success' => true, 'message' => 'Application Accepted Successfully']);
     }
@@ -70,11 +70,11 @@ class GigApplicationController extends Controller
         $application->update(['status_id' => 3]);
 
           // Send Notification to the applicant
-        //   $user = $application->seeker;
-        //   $job = $application->job;
-        //   if ($user) {
-        //           Mail::to($user->email)->send(new JobDeniedMail($job, $user));
-        //   }
+          $user = $application->seeker;
+          $job = $application->job;
+          if ($user) {
+                  Mail::to($user->email)->send(new JobDeniedMail($job, $user));
+          }
 
         return response()->json(['success' => true, 'message' => 'Application Denied']);
     }

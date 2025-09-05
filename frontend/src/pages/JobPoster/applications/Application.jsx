@@ -24,15 +24,15 @@ function Application() {
             .get(`/job-applications/${id}`)
             .then(({ data }) => {
                 setApplication(data.application);
-                setLoading(false)
+                setLoading(false);
             })
             .catch((err) => {
                 const response = err.response;
                 if (response && response.status == 422) {
                     showTopErrorAlert(response.data.errors);
                 }
-                setLoading(false)
-            })
+                setLoading(false);
+            });
     };
 
     useEffect(() => {
@@ -54,14 +54,19 @@ function Application() {
             .post(`/job-appplication/accept/${application.id}`)
             .then(({ data }) => {
                 if (data) {
-                    openModal(
-                        <ApplicationConfirmMessage application={application} />,
-                        "xl4",
-                        "Application Confirmed"
-                    );
+                    openModal({
+                        title: "Application Confirmed",
+                        content: (
+                            <ApplicationConfirmMessage
+                                application={application}
+                            />
+                        ),
+                        size: "xl4",
+                        variant: "info",
+                    });
                     getApplication();
                 }
-                setLoading(false)
+                setLoading(false);
             })
             .catch((err) => {
                 const response = err.response;
@@ -72,8 +77,8 @@ function Application() {
                 } else {
                     showTopErrorAlert(response.data.message);
                 }
-                setLoading(false)
-            })
+                setLoading(false);
+            });
     };
 
     const denyApplication = () => {
@@ -91,14 +96,17 @@ function Application() {
             .post(`/job-appplication/deny/${application.id}`)
             .then(({ data }) => {
                 if (data) {
-                    openModal(
-                        <ApplicationDenialMessage application={application} />,
-                        "xl4",
-                        "Application Denied"
-                    );
+                     openModal({
+                        title: "Application Denied",
+                        content: (
+                             <ApplicationDenialMessage application={application} />
+                        ),
+                        size: "xl4",
+                        variant: "info",
+                    });
                     getApplication();
                 }
-                setLoading(false)
+                setLoading(false);
             })
             .catch((err) => {
                 const response = err.response;
@@ -109,8 +117,8 @@ function Application() {
                 } else {
                     showTopErrorAlert(response.data.message);
                 }
-                setLoading(false)
-            })
+                setLoading(false);
+            });
     };
 
     const calculateAge = (dob) => {
@@ -234,16 +242,11 @@ function Application() {
                 {application?.status.id === 2 ? (
                     <p className="text-lg font-semibold my-4">
                         Application{" "}
-                        <span className="text-green-600">
-                            Accepted
-                        </span>
+                        <span className="text-green-600">Accepted</span>
                     </p>
                 ) : application?.status.id === 3 ? (
                     <p className="text-lg font-semibold my-4">
-                        Application{" "}
-                        <span className="text-red-600">
-                            Denied
-                        </span>
+                        Application <span className="text-red-600">Denied</span>
                     </p>
                 ) : (
                     <div className="my-4 flex space-x-2">
@@ -265,11 +268,13 @@ function Application() {
                                 )}
                             </span>
                         </button>
-                        <button className="bg-red-500 py-2 px-4 rounded-md hover:bg-red-600 text-white cursor-pointer flex items-center space-x-2 font-semibold"
+                        <button
+                            className="bg-red-500 py-2 px-4 rounded-md hover:bg-red-600 text-white cursor-pointer flex items-center space-x-2 font-semibold"
                             onClick={denyApplication}
                             disabled={loading}
                         >
-                            <FaTimes />  <span>
+                            <FaTimes />{" "}
+                            <span>
                                 {" "}
                                 {loading ? (
                                     <div className="flex items-center">

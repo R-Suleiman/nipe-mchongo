@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axiosClient from "../../../assets/js/axios-client";
 import { showTopSuccessAlert } from "../../../utils/sweetAlert";
 import { useNavigate } from "react-router-dom";
+import logo from "../../../assets/images/logo-2.png";
 
 function ResetPassword() {
     const user_id = localStorage.getItem("user_id");
@@ -44,7 +45,10 @@ function ResetPassword() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-200">
-            <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
+            <div className="w-full max-w-md bg-white px-8 py-4 rounded-2xl shadow-xl m-3">
+                <div className="w-fit mx-auto">
+                    <img src={logo} alt="logo" className="w-40 h-32" />
+                </div>
                 <h2 className="text-2xl font-bold mb-6 text-center text-indigo-600">
                     Create New Password
                 </h2>

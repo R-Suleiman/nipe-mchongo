@@ -49,7 +49,12 @@ function GigSeekers() {
     }, [search, page]);
 
      const createUser = () => {
-        openModal(<CreateUser type='seeker' reload={getusers}/>, 'xl5', 'Create new gig seeker');
+          openModal({
+            title: "Create new gig seeker",
+            content: <CreateUser type='seeker' reload={getusers}/>,
+            size: "xl5",
+            variant: "info",
+        });
     };
 
     {

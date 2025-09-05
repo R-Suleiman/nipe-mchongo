@@ -4,7 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaPen } from "react-icons/fa";
 import { useModal } from "../../../context/ModalContext";
 import UpdateProfilePhoto from "./UpdateProfilePhoto";
-import { showTopErrorAlert, showTopSuccessAlert } from "../../../utils/sweetAlert";
+import {
+    showTopErrorAlert,
+    showTopSuccessAlert,
+} from "../../../utils/sweetAlert";
 import Loading from "../../../components/Loading";
 import axiosClient from "../../../assets/js/axios-client";
 
@@ -13,6 +16,7 @@ function Account() {
     const [user, setUser] = useState(null);
     const { openModal } = useModal();
     const [loading, setLoading] = useState(false);
+    const [loading2, setLoading2] = useState(false);
 
     const [passwordAttributes, setPaaswordAttributes] = useState({
         old_password: "",
@@ -41,11 +45,17 @@ function Account() {
 
     const handlePasswordUpdate = (e) => {
         e.preventDefault();
+        setLoading2(true);
         axiosClient
             .post("/change-password", passwordAttributes)
             .then(({ data }) => {
                 showTopSuccessAlert(data.message);
-                navigate(".jobposter/account");
+                setPaaswordAttributes({
+                    old_password: "",
+                    new_password: "",
+                    new_password_confirmation: "",
+                });
+                navigate("/jobposter/account");
             })
             .catch((err) => {
                 const response = err.response;
@@ -56,7 +66,8 @@ function Account() {
                         }
                     );
                 }
-            });
+            })
+            .finally(() => setLoading2(false));
     };
 
     {
@@ -82,11 +93,16 @@ function Account() {
                             <div
                                 className="w-full absolute top-0 h-full rounded-full opacity-95 bg-gray-600 items-center justify-center z-50 hidden group-hover:flex cursor-pointer"
                                 onClick={() =>
-                                    openModal(
-                                        <UpdateProfilePhoto getUser={getUser}/>,
-                                        "xl4",
-                                        "Update Profile Photo"
-                                    )
+                                    openModal({
+                                        title: "Update Profile Photo",
+                                        content: (
+                                            <UpdateProfilePhoto
+                                                getUser={getUser}
+                                            />
+                                        ),
+                                        size: "xl4",
+                                        variant: "danger",
+                                    })
                                 }
                             >
                                 <FaPen className="text-black text-3xl" />
@@ -168,7 +184,7 @@ function Account() {
                     <h4 className="text-lg text-blue-900 mb-4 font-semibold">
                         Change Password
                     </h4>
-                    <form onChange={handlePasswordUpdate}>
+                    <form onSubmit={handlePasswordUpdate}>
                         <div className="w-full md:w-2/6 flex flex-col space-y-2 my-2">
                             <label
                                 htmlFor="old_password"
@@ -208,7 +224,9 @@ function Account() {
                             </label>
                             <input
                                 type="password"
-                                value={passwordAttributes.new_password_confirm}
+                                value={
+                                    passwordAttributes.new_password_confirmation
+                                }
                                 onChange={handleInputChange}
                                 name="new_password_confirmation"
                                 className="p-2 outline-0 border border-blue-300 rounded-sm"
@@ -216,7 +234,7 @@ function Account() {
                         </div>
                         <div className="my-4">
                             <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer">
-                                Change Password
+                                {loading2 ? "saving..." : "Change Password"}
                             </button>
                         </div>
                     </form>

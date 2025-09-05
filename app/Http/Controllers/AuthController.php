@@ -44,11 +44,11 @@ class AuthController extends Controller
         Otp::create([
             'user_id' => $user->id,
             'code' => $code,
-            'expires_at' => Carbon::now()->addMinutes(10),
+            'expires_at' => Carbon::now()->addMinutes(5),
         ]);
 
         // Dispatch email with an OPT to the user
-        Mail::to($user->email)->send(new SendOtpMail($code));
+        Mail::to($user->email)->send(new SendOtpMail($code, $user->firstname));
 
         return response()->json([
             'message' => 'User registered successfully. OTP sent to your email.',
@@ -102,10 +102,10 @@ class AuthController extends Controller
         Otp::create([
             'user_id' => $user->id,
             'code' => $otpCode,
-            'expires_at' => now()->addMinutes(10),
+            'expires_at' => now()->addMinutes(5),
         ]);
 
-        Mail::to($user->email)->send(new SendOtpMail($otpCode));
+        Mail::to($user->email)->send(new SendOtpMail($otpCode, $user->firstname));
 
         return response()->json([
             'success' => true,
@@ -196,11 +196,11 @@ class AuthController extends Controller
         Otp::create([
             'user_id' => $user->id,
             'code' => $otpCode,
-            'expires_at' => now()->addMinutes(10),
+            'expires_at' => now()->addMinutes(5),
         ]);
 
         // Send via email
-        Mail::to($user->email)->send(new SendOtpMail($otpCode));
+        Mail::to($user->email)->send(new SendOtpMail($otpCode, $user->firstname));
 
         return response()->json([
             'success' => true,

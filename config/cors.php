@@ -28,6 +28,7 @@ return [
     'allowed_origins' => [
     'https://nipemchongo.seswarenexus.com',
     'https://www.nipemchongo.seswarenexus.com',
+    'http://localhost:3000'
 ],
 
     'allowed_origins_patterns' => [],

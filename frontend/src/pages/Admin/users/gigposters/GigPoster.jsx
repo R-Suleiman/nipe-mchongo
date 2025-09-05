@@ -6,7 +6,10 @@ import Loading from "../../../../components/Loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import userImg from "../../../../assets/images/user.avif";
-import { showTopErrorAlert, showTopSuccessAlert } from "../../../../utils/sweetAlert";
+import {
+    showTopErrorAlert,
+    showTopSuccessAlert,
+} from "../../../../utils/sweetAlert";
 import Pagination from "../../../../components/Pagination";
 import { useModal } from "../../../../context/ModalContext";
 import CreateUser from "../CreateUser";
@@ -73,23 +76,27 @@ function GigPoster() {
     };
 
     const updateUser = () => {
-        openModal(
-            <CreateUser
-                userData={gigPoster}
-                type="poster"
-                reload={getGigPoster}
-            />,
-            "xl5",
-            "Update gig poster details"
-        );
+        openModal({
+            title: `Update gig poster details`,
+            content: (
+                <CreateUser
+                    userData={gigPoster}
+                    type="poster"
+                    reload={getGigPoster}
+                />
+            ),
+            size: "xl5",
+            variant: "info",
+        });
     };
 
     const blockUser = () => {
-        openModal(
-            <BlockUser userId={gigPoster.id} reload={getGigPoster} />,
-            "xl5",
-            "Block Gig Poster"
-        );
+        openModal({
+            title: `UBlock Gig Poster`,
+            content: <BlockUser userId={gigPoster.id} reload={getGigPoster} />,
+            size: "xl5",
+            variant: "info",
+        });
     };
 
     const unblockUser = () => {
@@ -97,7 +104,7 @@ function GigPoster() {
             .post(`/admin/user/unblock-user/${gigPoster.id}`)
             .then(({ data }) => {
                 showTopSuccessAlert(data.message);
-                getGigPoster()
+                getGigPoster();
             })
             .catch((err) => {
                 const response = err.response;

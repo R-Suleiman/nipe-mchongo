@@ -38,7 +38,7 @@ export default function JobSeekerSettings() {
                                 title: `${user?.firstname} ${user?.lastname} Profile`,
                                 content: <UpdateProfile />,
                                 size: "xl5",
-                                variant: "default",
+                                variant: "info",
                             })
                         }
 

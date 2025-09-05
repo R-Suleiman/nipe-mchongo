@@ -73,23 +73,25 @@ function GigSeeker() {
     };
 
     const updateUser = () => {
-        openModal(
-            <CreateUser
+         openModal({
+            title: `Update gig seeker details`,
+            content: <CreateUser
                 userData={gigSeeker}
                 type="seeker"
                 reload={getGigSeeker}
             />,
-            "xl5",
-            "Update gig seeker details"
-        );
+            size: "xl5",
+            variant: "info",
+        });
     };
 
     const blockUser = () => {
-        openModal(
-            <BlockUser userId={gigSeeker.id} reload={getGigSeeker} />,
-            "xl5",
-            "Block Gig Seeker"
-        );
+         openModal({
+            title: "Block Gig Seeker",
+            content: <BlockUser userId={gigSeeker.id} reload={getGigSeeker} />,
+            size: "xl5",
+            variant: "info",
+        });
     };
 
     const unblockUser = () => {

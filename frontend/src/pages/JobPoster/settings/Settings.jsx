@@ -123,52 +123,6 @@ function Settings() {
                         </div>
                     </form>
                 </div>
-
-                {/* theme */}
-                <div className="w-full my-4 bg-blue-50 p-4">
-                    <h4 className="text-lg text-blue-900 mb-2 font-semibold">
-                        App Theme
-                    </h4>
-                    <div className="w-fit my-2 p-2">
-                        <p className="flex space-x-4 text-gray-600">
-                            <span>Current Theme:</span>{" "}
-                            <span className="font-semibold">Light Mode</span>
-                        </p>
-                    </div>
-
-                    <div>
-                        <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold">
-                            <span>Change Theme</span>
-                        </button>
-                    </div>
-                </div>
-
-                {/* Theme Form */}
-                <div className="border border-gray-300 rounded-sm p-4 hidden">
-                    <form>
-                        <FaLightbulb className="text-blue-600 my-2" />
-                        <h3 className="text-gray-600 italic">
-                            Set how you want the App theme to appear
-                        </h3>
-                        <div className="flex space-x-4 my-2 flex-col">
-                            <label htmlFor="theme" className="text-gray-600">
-                                Select Theme:{" "}
-                            </label>
-                            <div>
-                                Dark Theme <input type="radio" name="theme" />
-                            </div>
-                            <div>
-                                {" "}
-                                Light Theme <input type="radio" name="theme" />
-                            </div>
-                        </div>
-                        <div className="my-4">
-                            <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold">
-                                <span>Save Theme</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
             </div>
         );
     }

@@ -3,18 +3,21 @@ import React, { useState } from "react";
 import { showTopSuccessAlert } from "../../../utils/sweetAlert";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../../assets/js/axios-client";
+import logo from "../../../assets/images/logo-2.png";
 
 function ForgotPassword() {
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handlePasswordReset = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             const response = await axiosClient.post("/password/forgot", {
-                email
+                email,
             });
             if (response.data.success) {
                 showTopSuccessAlert(response.data.message);
@@ -24,18 +27,22 @@ function ForgotPassword() {
             navigate("/verify-password-reset-otp");
         } catch (error) {
             setErrors(error.response?.data?.message || "Something went wrong");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-200">
-            <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
+            <div className="w-full max-w-md bg-white px-8 py-4 rounded-2xl shadow-xl m-3">
+                <div className="w-fit mx-auto">
+                    <img src={logo} alt="logo" className="w-40 h-32" />
+                </div>
                 <h2 className="text-2xl font-bold mb-6 text-center text-indigo-600">
                     Forgot Password
                 </h2>
                 <p className="my-2 text-gray-600">
-                    Please enter you email to receive a password reset
-                    code.
+                    Please enter you email to receive a password reset code.
                 </p>
                 <form onSubmit={handlePasswordReset} className="space-y-5">
                     <div>
@@ -54,7 +61,7 @@ function ForgotPassword() {
                         type="submit"
                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl transition-all duration-300"
                     >
-                        Send reset code
+                        {loading ? "loading..." : "Send reset code"}
                     </button>
 
                     {errors && (

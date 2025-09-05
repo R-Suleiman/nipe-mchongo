@@ -25,7 +25,7 @@ function ApplicationConfirmMessage(props) {
                 Check their profile for contact information
             </p>
 
-            <div className="my-6 pt-4">
+            {/* <div className="my-6 pt-4">
                 <p className="font-semibold text-gray-600 text-center">
                     How do you rate Nipe Mchongo?
                 </p>
@@ -36,7 +36,7 @@ function ApplicationConfirmMessage(props) {
                     <FaStar className="text-lg" />
                     <FaStar className="text-lg" />
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

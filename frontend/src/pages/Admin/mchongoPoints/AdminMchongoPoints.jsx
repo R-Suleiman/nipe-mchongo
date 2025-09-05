@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axiosClient from "../../../assets/js/axios-client";
 import { showTopErrorAlert } from "../../../utils/sweetAlert";
 import Loading from "../../../components/Loading";
-import { useModal } from "../../../context/ModalContext";
 import Pagination from "../../../components/Pagination";
 import PointsSummary from "../../../components/PointsSummary";
 
@@ -14,7 +13,6 @@ function AdminMchongoPoints() {
     const [user, setUser] = useState(null);
     const [jobsGraph, setJobsGraph] = useState([]);
     const [applicationsGraph, setApplicationsGraph] = useState([]);
-    const { openModal } = useModal();
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [meta, setMeta] = useState({});

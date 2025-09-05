@@ -4,7 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaPen } from "react-icons/fa";
 import { useModal } from "../../../context/ModalContext";
 import UpdateProfilePhoto from "./UpdateProfilePhoto";
-import { showTopErrorAlert, showTopSuccessAlert } from "../../../utils/sweetAlert";
+import {
+    showTopErrorAlert,
+    showTopSuccessAlert,
+} from "../../../utils/sweetAlert";
 import Loading from "../../../components/Loading";
 import axiosClient from "../../../assets/js/axios-client";
 
@@ -82,11 +85,16 @@ function AdminAccount() {
                             <div
                                 className="w-full absolute top-0 h-full rounded-full opacity-95 bg-gray-600 items-center justify-center z-50 hidden group-hover:flex cursor-pointer"
                                 onClick={() =>
-                                    openModal(
-                                        <UpdateProfilePhoto getUser={getUser}/>,
-                                        "xl4",
-                                        "Update Profile Photo"
-                                    )
+                                    openModal({
+                                        title: `Update Profile Photo`,
+                                        content: (
+                                            <UpdateProfilePhoto
+                                                getUser={getUser}
+                                            />
+                                        ),
+                                        size: "xl4",
+                                        variant: "info",
+                                    })
                                 }
                             >
                                 <FaPen className="text-black text-3xl" />

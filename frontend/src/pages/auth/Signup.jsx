@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import { showTopSuccessAlert } from "../../utils/sweetAlert";
 import axiosClient from "../../assets/js/axios-client";
+import logo from "../../assets/images/logo-2.png";
 
 function Signup() {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const { setUser } = useAuth();
     const [formValues, setFormValues] = useState({
         firstName: "",
@@ -23,9 +25,11 @@ function Signup() {
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setLoading(true);
         setError(null);
 
         if (formValues.password !== formValues.confirmPassword) {
+            setLoading(false);
             return setError("Passwords do not match");
         }
 
@@ -36,12 +40,17 @@ function Signup() {
             navigate("/verify-otp");
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-[url('/assets/images/register.png')] bg-cover bg-no-repeat bg-center">
-            <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
+            <div className="w-full max-w-md bg-white px-8 py-4 rounded-2xl shadow-xl m-3">
+                <div className="w-fit mx-auto">
+                    <img src={logo} alt="logo" className="w-40 h-32" />
+                </div>
                 <h2 className="text-2xl font-bold mb-6 text-center text-orange-600">
                     Register
                 </h2>
@@ -160,7 +169,7 @@ function Signup() {
                         to="/login"
                         className="text-orange-600 font-medium hover:underline"
                     >
-                        Sign in
+                        {loading ? "Signing In..." : "Sign in"}
                     </Link>
                 </p>
             </div>

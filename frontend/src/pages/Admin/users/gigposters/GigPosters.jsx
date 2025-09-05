@@ -49,7 +49,12 @@ function GigPosters() {
     }, [search, page]);
 
     const createUser = () => {
-        openModal(<CreateUser type='poster' reload={getusers}/>, 'xl5', 'Create new gig poster');
+         openModal({
+            title: `Create new gig poster`,
+            content: <CreateUser type='poster' reload={getusers}/>,
+            size: "xl5",
+            variant: "info",
+        });
     };
 
     {
