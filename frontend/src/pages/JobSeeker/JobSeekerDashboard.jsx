@@ -107,9 +107,12 @@ export default function JobSeekerDashboard() {
                 </div>
 
                 {/* Optional CTA */}
-                <button className="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors shadow-sm">
-                    Explore New Jobs
-                </button>
+                <Link to={'/job/seeker/search-jobs'}>
+                    <button className="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors shadow-sm">
+                        Explore New Jobs
+                    </button>
+                </Link>
+
             </div>
             <div className="space-y-6">
                 {/* Popular Gigs Card */}
@@ -172,42 +175,70 @@ export default function JobSeekerDashboard() {
                 </div>
 
                 {/* Recent Applications Card */}
-                <div className="bg-white p-6 rounded-2xl shadow">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Applications</h2>
+                <div className="bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm sm:shadow-md">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800">Recent Applications</h2>
+                        {!loading && recentApplications?.length > 0 && (
+                            <span className="bg-blue-50 text-blue-600 text-xs sm:text-sm font-medium px-2.5 py-1 rounded-full mt-2 sm:mt-0">
+                                {recentApplications.length} Applied
+                            </span>
+                        )}
+                    </div>
+
                     {loading ? (
-                        <div className="flex justify-center items-center h-32">
-                            <Rocket className="animate-spin h-10 w-10 text-blue-500" />
+                        <div className="flex justify-center items-center h-28 sm:h-32">
+                            <Rocket className="animate-spin h-8 w-8 sm:h-10 sm:w-10 text-blue-500" />
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full table-auto text-sm text-left text-gray-600">
-                                <thead className="bg-blue-100 text-blue-600 text-xs uppercase font-semibold">
+                        <div className="overflow-x-auto -mx-2 sm:mx-0">
+                            <table className="min-w-full table-auto text-xs sm:text-sm text-left text-gray-600">
+                                <thead className="bg-blue-50 text-blue-700 text-[11px] sm:text-xs uppercase font-semibold">
                                     <tr>
-                                        <th className="px-4 py-3">Gig Title</th>
-                                        <th className="px-4 py-3">Location</th>
-                                        <th className="px-4 py-3">Date Applied</th>
-                                        <th className="px-4 py-3">Amount Deducted</th>
+                                        <th className="px-3 sm:px-4 py-2.5 sm:py-3">Gig</th>
+                                        <th className="px-3 sm:px-4 py-2.5 sm:py-3">Location</th>
+                                        <th className="px-3 sm:px-4 py-2.5 sm:py-3">Applied</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="divide-y divide-gray-200">
                                     {recentApplications?.map((application) => {
                                         const gig = application.gig || {};
                                         return (
-                                            <tr key={application.id} className="border-b border-gray-300 hover:border-transparent hover:bg-blue-50 transition transform ease-out duration-700">
-                                                <td className="px-4 py-3">{gig.name || gig.title || "—"}</td>
-                                                <td className="px-4 py-3">{gig.location || "—"}</td>
-                                                <td className="px-4 py-3">
-                                                    {application.created_at ? new Date(application.created_at).toLocaleDateString() : "—"}
+                                            <tr
+                                                key={application.id}
+                                                className="hover:bg-blue-50 transition-colors duration-200"
+                                            >
+                                                <Link to={`/job/seeker/about-gig/${gig.id}`}>
+
+                                                    <td className="px-3 sm:px-4 py-2.5 sm:py-3 font-medium text-gray-800 truncate max-w-[180px] sm:max-w-[240px]">
+                                                        {gig.name || gig.title || "—"}
+                                                    </td>
+                                                </Link>
+                                                <td className="px-3 sm:px-4 py-2.5 sm:py-3 whitespace-nowrap">
+                                                    {gig.location || "—"}
                                                 </td>
-                                                <td className="px-4 py-3 text-red-600 font-semibold">
-                                                    TSh {gig.payment ? gig.payment.toLocaleString() : "0"}
+                                                <td className="px-3 sm:px-4 py-2.5 sm:py-3 whitespace-nowrap">
+                                                    {application.created_at ? (
+                                                        <span className="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-medium">
+                                                            {new Date(application.created_at).toLocaleDateString("en-GB", {
+                                                                day: "2-digit",
+                                                                month: "short",
+                                                                year: "numeric",
+                                                            })}
+                                                        </span>
+                                                    ) : (
+                                                        "—"
+                                                    )}
                                                 </td>
                                             </tr>
-                                        )
+                                        );
                                     })}
+
                                     {(!recentApplications || recentApplications.length === 0) && (
                                         <tr>
-                                            <td className="px-4 py-4 text-center text-gray-500" colSpan="4">
+                                            <td
+                                                colSpan={3}
+                                                className="px-4 py-6 text-center text-gray-500 text-sm"
+                                            >
                                                 No gigs applied yet.
                                             </td>
                                         </tr>
@@ -217,6 +248,7 @@ export default function JobSeekerDashboard() {
                         </div>
                     )}
                 </div>
+
             </div>
         </>
     );

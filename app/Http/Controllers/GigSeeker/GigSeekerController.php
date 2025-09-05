@@ -156,7 +156,7 @@ class GigSeekerController extends Controller
                 'message' => 'Application submitted successfully',
                 'data' => $application,
             ], 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['message' => ['Something went wrong. Please try again.']], 500);
         }
     }
