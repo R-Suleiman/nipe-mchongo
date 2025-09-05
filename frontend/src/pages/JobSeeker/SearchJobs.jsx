@@ -55,27 +55,32 @@ export default function SearchJobs() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6 md:space-y-8">
+            {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold text-gray-800">Search Gigs</h1>
-                <p className="text-gray-600">Explore latest gigs around Tanzania and apply instantly.</p>
+                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 leading-snug">
+                    Search Gigs
+                </h1>
+                <p className="text-sm sm:text-base md:text-lg text-gray-600 mt-1 sm:mt-2">
+                    Explore latest gigs around Tanzania and apply instantly.
+                </p>
             </div>
 
-            {/* Search Bar and Category Filter */}
-            <div className="flex flex-col md:flex-row items-center gap-4">
+            {/* Search Bar and Filters */}
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
                 <input
                     type="text"
                     name="title"
                     value={filters.title}
                     onChange={handleFilterChange}
                     placeholder="Search by title..."
-                    className="border border-gray-300 rounded-lg px-4 py-2 w-full md:w-1/2"
+                    className="border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 w-full sm:flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
                 <select
                     name="category"
                     value={filters.category}
                     onChange={handleFilterChange}
-                    className="border border-gray-300 rounded-lg px-4 py-2 w-full md:w-1/3"
+                    className="border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 w-full sm:w-1/3 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
                     <option value="">All Categories</option>
                     {categories.map((cat) => (
@@ -86,7 +91,7 @@ export default function SearchJobs() {
                 </select>
                 <button
                     onClick={handleSearch}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg w-full sm:w-auto transition-all shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                     Search
                 </button>
@@ -95,27 +100,27 @@ export default function SearchJobs() {
             {/* Gigs Grid */}
             {loading ? (
                 <div className="flex justify-center items-center h-32">
-                    <Rocket className="animate-spin h-10 w-10 text-blue-500" />
+                    <Rocket className="animate-spin h-8 w-8 sm:h-10 sm:w-10 text-blue-500" />
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                     {gigs.map((gig) => (
                         <div
                             key={gig.id}
-                            className="bg-white border border-blue-100 rounded-2xl shadow-sm hover:shadow-lg p-6 transition-all duration-300 hover:border-blue-200 group"
+                            className="bg-white border border-blue-100 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-lg p-4 sm:p-6 transition-all duration-300 hover:border-blue-200 group"
                         >
                             <div className="flex flex-col h-full">
                                 <div className="flex-grow">
-                                    <h2 className="text-lg font-bold text-blue-900 mb-2 group-hover:text-blue-700 transition-colors">
+                                    <h2 className="text-base sm:text-lg font-bold text-blue-900 mb-1.5 sm:mb-2 group-hover:text-blue-700 transition-colors">
                                         {gig.title}
                                     </h2>
 
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <span className="bg-blue-50 text-blue-600 text-xs px-2.5 py-1 rounded-full font-medium">
+                                    <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
+                                        <span className="bg-blue-50 text-blue-600 text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-medium">
                                             {gig.gig_category_name}
                                         </span>
-                                        <span className="flex items-center text-blue-500 text-xs">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <span className="flex items-center text-blue-500 text-[11px] sm:text-xs">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
@@ -123,14 +128,16 @@ export default function SearchJobs() {
                                         </span>
                                     </div>
 
-                                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">{gig.description}</p>
+                                    <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-3">{gig.description}</p>
 
-                                    <div className="mb-4">
-                                        <p className="text-blue-700 font-bold">
+                                    <div className="mb-3 sm:mb-4">
+                                        <p className="text-blue-700 font-bold text-sm sm:text-base">
                                             TSh {gig.payment.toLocaleString()}
                                         </p>
                                         {gig.payment_type && (
-                                            <p className="text-blue-500 text-xs mt-0.5">{gig.payment_type}</p>
+                                            <p className="text-blue-500 text-[11px] sm:text-xs mt-0.5">
+                                                {gig.payment_type}
+                                            </p>
                                         )}
                                     </div>
                                 </div>
@@ -139,17 +146,18 @@ export default function SearchJobs() {
                                     {gig.has_applied ? (
                                         <button
                                             disabled
-                                            className="w-full bg-green-50 text-green-600 text-sm px-4 py-2.5 rounded-lg font-semibold cursor-not-allowed flex items-center justify-center"
+                                            className="w-full bg-green-50 text-green-600 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-semibold cursor-not-allowed flex items-center justify-center"
                                         >
-                                            <CheckCircle2 className="h-4 w-4 mr-2" />
+                                            <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                                             Already Applied
                                         </button>
                                     ) : (
-                                        <Link to={`/job/seeker/about-gig/${gig.id}`}
-                                            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm px-4 py-2.5 rounded-lg font-semibold transition-all shadow-sm hover:shadow-md flex items-center justify-center"
+                                        <Link
+                                            to={`/job/seeker/about-gig/${gig.id}`}
+                                            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-semibold transition-all shadow-sm hover:shadow-md flex items-center justify-center"
                                         >
                                             Details
-                                            <ArrowBigRight className="h-4 w-4 mr-2" />
+                                            <ArrowBigRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
                                         </Link>
                                     )}
                                 </div>
@@ -159,5 +167,6 @@ export default function SearchJobs() {
                 </div>
             )}
         </div>
+
     );
 }
