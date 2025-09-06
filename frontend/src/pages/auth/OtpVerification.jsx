@@ -11,12 +11,27 @@ export default function OtpVerification() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [loading2, setLoading2] = useState(false);
+    const tempUser = JSON.parse(localStorage.getItem("USER"));
 
     // Timers
     const [expiryTime, setExpiryTime] = useState(300); // 5 min = 300s
     const [resendCooldown, setResendCooldown] = useState(30); // 30s
 
     const navigate = useNavigate();
+
+    // If user is not logged in or already rerified, redirect to login
+    useEffect(() => {
+        const newUser = user || tempUser;
+        if (newUser) {
+            if (newUser?.is_verified === 1) {
+                localStorage.removeItem("USER");
+                localStorage.removeItem("ACCESS_TOKEN");
+                navigate("/login");
+            }
+        } else {
+            navigate("/login");
+        }
+    }, [user, tempUser, navigate]);
 
     // Handle OTP verification
     const handleVerification = async (e) => {
@@ -27,9 +42,10 @@ export default function OtpVerification() {
         try {
             const response = await axiosClient.post("/verify-otp", {
                 code: otp,
-                email: user.email,
+                email: user?.email || tempUser.email,
             });
             showTopSuccessAlert("Verification successful. Login to proceed");
+            localStorage.removeItem("USER");
             navigate("/login");
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong");
@@ -39,11 +55,13 @@ export default function OtpVerification() {
     };
 
     const resendOtp = async () => {
+        console.log(user);
         if (resendCooldown > 0) return; // block until cooldown is done
         setLoading2(true);
+        setError(null);
         try {
             const response = await axiosClient.post("/resend-otp", {
-                user_id: user.id,
+                user_id: user?.id || tempUser.id,
             });
             showTopSuccessAlert(response.data.message);
 

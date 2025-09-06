@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
     const [token, _setToken] = useState(localStorage.getItem("ACCESS_TOKEN"));
     const [loading, setLoading] = useState(false);
     const tokenExpiryTimeout = useRef(null);
-    const expiryTimeInSeconds = 3600; // 1 hour
+    const expiryTimeInSeconds = 600; //  10 minutes
     const isAuthenticated = !!token && user;
 
     const setToken = (token) => {

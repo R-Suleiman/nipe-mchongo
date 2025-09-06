@@ -48,6 +48,7 @@ import PasswordResetOtpVerification from "../pages/auth/password-reset/PasswordR
 import ResetPassword from "../pages/auth/password-reset/ResetPassword";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
+import ProtectedAuthRoute from "../components/ProtectedAuthRoute";
 
 const Router = createBrowserRouter([
     {
@@ -56,27 +57,51 @@ const Router = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <Login />,
+        element: (
+            <ProtectedAuthRoute>
+                <Login />
+            </ProtectedAuthRoute>
+        ),
     },
     {
         path: "/register",
-        element: <Signup />,
+        element: (
+            <ProtectedAuthRoute>
+                <Signup />
+            </ProtectedAuthRoute>
+        ),
     },
     {
         path: "/verify-otp",
-        element: <OtpVerification />,
+        element: (
+            <ProtectedAuthRoute>
+                <OtpVerification />
+            </ProtectedAuthRoute>
+        ),
     },
     {
         path: "/forgot-password",
-        element: <ForgotPassword />,
+        element: (
+            <ProtectedAuthRoute>
+                <ForgotPassword />
+            </ProtectedAuthRoute>
+        ),
     },
     {
         path: "/verify-password-reset-otp",
-        element: <PasswordResetOtpVerification />,
+        element: (
+            <ProtectedAuthRoute>
+                <PasswordResetOtpVerification />
+            </ProtectedAuthRoute>
+        ),
     },
     {
         path: "/reset-password",
-        element: <ResetPassword />,
+        element: (
+            <ProtectedAuthRoute>
+                <ResetPassword />
+            </ProtectedAuthRoute>
+        ),
     },
     {
         path: "/unauthorized",
@@ -145,7 +170,7 @@ const Router = createBrowserRouter([
 
     {
         path: "/job/seeker",
-         element: (
+        element: (
             <ProtectedRoute allowedUser="seeker">
                 <JobSeekerLayout />
             </ProtectedRoute>
@@ -193,7 +218,7 @@ const Router = createBrowserRouter([
     // admin
     {
         path: "/",
-         element: (
+        element: (
             <ProtectedRoute allowedUser="admin">
                 <AdminLayout />
             </ProtectedRoute>

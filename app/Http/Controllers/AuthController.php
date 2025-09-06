@@ -97,6 +97,9 @@ class AuthController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
+        // OTPs cleanup
+        Otp::where('user_id', $user->id)->delete();
+
         $otpCode = rand(100000, 999999);
 
         Otp::create([
@@ -127,9 +130,22 @@ class AuthController extends Controller
         $user = Auth::user();
 
         if (!$user->is_verified) {
+            $code = rand(100000, 999999);
+
+            Otp::create([
+                'user_id' => $user->id,
+                'code' => $code,
+                'expires_at' => Carbon::now()->addMinutes(5),
+            ]);
+
+            // Dispatch email with an OPT to the user
+            Mail::to($user->email)->send(new SendOtpMail($code, $user->firstname));
+
             return response()->json([
                 'success' => false,
-                'message' => 'Your account is not verified. Please verify your phone number first.'
+                'isVerified' => false,
+                'message' => 'Your account is not verified. Please verify your account. A verification code has been sent to your email',
+                'user' => $user
             ], 403);
         }
 
@@ -139,7 +155,7 @@ class AuthController extends Controller
             Auth::logout();
             return response()->json([
                 'success' => false,
-                'message' => 'Your account has been blocked. Contact support.'
+                'message' => 'Your account has been restricted. Please contact support.'
             ], 403);
         }
 

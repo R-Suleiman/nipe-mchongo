@@ -48,7 +48,6 @@ function Dashboard() {
             // check for complete profile
             const user = data.user;
             if (
-                !user.username ||
                 !user.gender ||
                 !user.dob ||
                 !user.phone ||
@@ -59,6 +58,7 @@ function Dashboard() {
             setLoading(false);
         });
     }, []);
+
 
     useEffect(() => {
         getStats();

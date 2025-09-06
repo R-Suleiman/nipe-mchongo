@@ -94,14 +94,14 @@ function Job() {
                         <FaArrowLeft className="text-lg text-blue-900" />
                     </Link>
 
-                    <div className="flex items-center space-x-2">
-                        <Link to={`/jobposter/jobs/${job?.id}/edit`}>
-                            <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm">
-                                <FaPen /> <span>Edit Job</span>
-                            </button>
-                        </Link>
+                    {job?.status.name !== "Closed" && (
+                        <div className="flex items-center space-x-2">
+                            <Link to={`/jobposter/jobs/${job?.id}/edit`}>
+                                <button className="bg-blue-500 py-2 px-4 rounded-md hover:bg-blue-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm">
+                                    <FaPen /> <span>Edit Job</span>
+                                </button>
+                            </Link>
 
-                        {job?.status.name !== "Closed" && (
                             <button
                                 className="bg-red-500 py-2 px-4 rounded-md hover:bg-red-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm"
                                 onClick={closeJob}
@@ -120,8 +120,8 @@ function Job() {
                                     )}
                                 </span>
                             </button>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="w-full my-2 overflow-x-auto">

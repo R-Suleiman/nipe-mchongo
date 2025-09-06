@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { showTopSuccessAlert } from "../../utils/sweetAlert";
+import { showTopErrorAlert, showTopSuccessAlert } from "../../utils/sweetAlert";
 import axiosClient from "../../assets/js/axios-client";
 import { useAuth } from "../../context/AuthProvider";
-import logo from '../../assets/images/logo-2.png'
+import logo from "../../assets/images/logo-2.png";
 
 function Login() {
     const navigate = useNavigate();
@@ -26,21 +26,18 @@ function Login() {
         axiosClient
             .post(`/login`, loginData)
             .then(({ data }) => {
-                if (!data.user) {
-                    console.error("User data is missing");
-                    return;
-                }
-
                 setUser(data.user);
                 setToken(data.token);
 
-                showTopSuccessAlert("Login Successful", `Welcome back!`);
-                if (data.user.usertype === "poster") {
-                    navigate("/jobposter/dashboard");
-                } else if (data.user.usertype === "seeker") {
-                    navigate("/job/seeker/dashboard");
-                } else if (data.user.usertype === "admin") {
-                    navigate("/admin/dashboard");
+                if (data.success === true) {
+                    showTopSuccessAlert("Login Successful", `Welcome back!`);
+                    if (data.user.usertype === "poster") {
+                        navigate("/jobposter/dashboard");
+                    } else if (data.user.usertype === "seeker") {
+                        navigate("/job/seeker/dashboard");
+                    } else if (data.user.usertype === "admin") {
+                        navigate("/admin/dashboard");
+                    }
                 }
             })
             .catch((err) => {
@@ -53,6 +50,12 @@ function Login() {
                             }
                         );
                     } else if (response.status === 403) {
+                        if (response.data.isVerified === false) {
+                            localStorage.setItem('USER', JSON.stringify(response.data.user))
+                            showTopErrorAlert(response.data.message);
+                            navigate("/verify-otp");
+                        }
+
                         setErrors({
                             general: [
                                 response.data.message || "Access denied.",
@@ -66,14 +69,15 @@ function Login() {
                         });
                     }
                 }
-            }).finally(() => setLoading(false));
+            })
+            .finally(() => setLoading(false));
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-[url('/assets/images/register.png')] bg-cover bg-no-repeat bg-center">
             <div className="w-full max-w-md bg-white px-8 py-4 rounded-2xl shadow-xl m-3">
                 <div className="w-fit mx-auto">
-                    <img src={logo} alt="logo" className="w-40 h-32"/>
+                    <img src={logo} alt="logo" className="w-40 h-32" />
                 </div>
                 <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
                     Sign In

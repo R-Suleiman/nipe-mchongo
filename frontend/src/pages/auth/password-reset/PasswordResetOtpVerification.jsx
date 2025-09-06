@@ -134,7 +134,7 @@ export default function PasswordResetOtpVerification() {
                     </p>
 
                     {error && (
-                        <p className="text-sm text-center mt-2 text-gray-600">
+                        <p className="text-sm text-center mt-2 text-red-600">
                             {error}
                         </p>
                     )}
