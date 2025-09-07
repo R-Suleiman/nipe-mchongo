@@ -15,6 +15,8 @@ class Transaction extends Model
         'status',
         'payment_provider',
         'reference',
+        'available_methods',
+        'channel'
     ];
 
     public function user()

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import axiosClient from "../assets/js/axios-client";
 
 const AuthContext = createContext();
 
@@ -28,6 +29,20 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const getUser = () => {
+        setLoading(true);
+        axiosClient.get("/get-user").then(({ data }) => {
+            setUser(data.user);
+            setLoading(false);
+        });
+    };
+
+    useEffect(() => {
+        if (token) {
+            getUser();
+        }
+    }, []);
+
     // Global logout sync (Log out user in all tabs)
     useEffect(() => {
         const handleStorageChange = (event) => {
@@ -52,7 +67,6 @@ export const AuthProvider = ({ children }) => {
         tokenExpiryTimeout.current = setTimeout(() => {
             setUser({});
             setToken(null);
-            setUserType(null);
             window.location.href = "/login";
         }, expiryTimeInSeconds * 1000);
     };
@@ -87,7 +101,8 @@ export const AuthProvider = ({ children }) => {
                 setUser,
                 setToken,
                 setLoading,
-                isAuthenticated
+                isAuthenticated,
+                getUser,
             }}
         >
             {children}

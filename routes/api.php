@@ -92,6 +92,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Payment test routes
-    Route::post('/buy-points', [PaymentController::class, 'buyMchongoPoints']);
-    Route::post('/azampay/callback', [PaymentController::class, 'azampayCallback'])->name('azampay.callback');
+    Route::post('/payments/preview-ussd', [PaymentController::class, 'previewUssdPush']);
+    Route::post('/payments/initiate-ussd', [PaymentController::class, 'initiateUssdPayment']);
 });

@@ -37,6 +37,10 @@ function Signup() {
             const response = await axiosClient.post("/register", formValues);
             setUser(response.data.user);
             showTopSuccessAlert(response.data.message);
+
+            // save OTP  expiration
+            localStorage.setItem("OTP_EXPIRES_AT", response.data.expires_at)
+
             navigate("/verify-otp");
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong");
@@ -154,7 +158,7 @@ function Signup() {
                         type="submit"
                         className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded-xl transition-all duration-300 cursor-pointer"
                     >
-                        Create Account
+                        {loading ? "Creating account..." : "Create Account"}
                     </button>
 
                     {error && (
@@ -169,7 +173,7 @@ function Signup() {
                         to="/login"
                         className="text-orange-600 font-medium hover:underline"
                     >
-                        {loading ? "Signing In..." : "Sign in"}
+                        Sign In
                     </Link>
                 </p>
             </div>

@@ -51,7 +51,16 @@ function Login() {
                         );
                     } else if (response.status === 403) {
                         if (response.data.isVerified === false) {
-                            localStorage.setItem('USER', JSON.stringify(response.data.user))
+                            localStorage.setItem(
+                                "USER",
+                                JSON.stringify(response.data.user)
+                            );
+                            // save OTP  expiration
+                            localStorage.setItem(
+                                "OTP_EXPIRES_AT",
+                                response.data.expires_at
+                            );
+
                             showTopErrorAlert(response.data.message);
                             navigate("/verify-otp");
                         }

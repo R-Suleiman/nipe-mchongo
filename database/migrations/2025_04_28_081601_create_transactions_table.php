@@ -17,9 +17,11 @@ return new class extends Migration {
             $table->integer('amount');
             $table->integer('points_purchased');
             $table->enum('type', ['posting', 'applying']);
-            $table->enum('status', ['pending', 'success', 'failed'])->default('pending');
+            $table->enum('status', ['PROCESSING', 'SUCCESS', 'FAILED', 'PREVIEWED', 'SETTLED'])->default('pending');
             $table->string('payment_provider')->default('AzamPay');
             $table->string('reference')->nullable();
+            $table->json_encode('available_methods')->nullable();
+            $table->string('channel')->nullable();
             $table->timestamps();
         });
     }

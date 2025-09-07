@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    // ClickPesa
+    'clickpesa' => [
+        'base_url' => env('CLICKPESA_BASE_URL', 'https://api.clickpesa.com'),
+        'client_id' => env('CLICKPESA_CLIENT_ID'),
+        'api_key' => env('CLICKPESA_API_KEY'),
+        'callback_url' => env('CLICKPESA_CALLBACK_URL'),
+    ],
+
 ];

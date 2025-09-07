@@ -23,8 +23,10 @@ class AuthController extends Controller
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'password' => ['required', Password::min(8)->letters()->symbols()->numbers()],
             'usertype' => 'required|string',
+        ], [
+            'password' => 'The password must contain at least 8 characters including letters, numbers and special characters'
         ]);
 
         if ($validator->fails()) {
@@ -41,7 +43,7 @@ class AuthController extends Controller
 
         $code = rand(100000, 999999);
 
-        Otp::create([
+        $otp = Otp::create([
             'user_id' => $user->id,
             'code' => $code,
             'expires_at' => Carbon::now()->addMinutes(5),
@@ -53,6 +55,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'User registered successfully. OTP sent to your email.',
             'user' => $user,
+            'expires_at' => $otp->expires_at
         ], 201);
     }
 
@@ -102,17 +105,18 @@ class AuthController extends Controller
 
         $otpCode = rand(100000, 999999);
 
-        Otp::create([
+        $otp = Otp::create([
             'user_id' => $user->id,
             'code' => $otpCode,
             'expires_at' => now()->addMinutes(5),
         ]);
 
-        Mail::to($user->email)->send(new SendOtpMail($otpCode, $user->firstname));
+        // Mail::to($user->email)->send(new SendOtpMail($otpCode, $user->firstname));
 
         return response()->json([
             'success' => true,
             'message' => 'OTP resent to your email',
+            'expires_at' => $otp->expires_at
         ]);
     }
 
@@ -132,7 +136,7 @@ class AuthController extends Controller
         if (!$user->is_verified) {
             $code = rand(100000, 999999);
 
-            Otp::create([
+            $otp = Otp::create([
                 'user_id' => $user->id,
                 'code' => $code,
                 'expires_at' => Carbon::now()->addMinutes(5),
@@ -145,7 +149,8 @@ class AuthController extends Controller
                 'success' => false,
                 'isVerified' => false,
                 'message' => 'Your account is not verified. Please verify your account. A verification code has been sent to your email',
-                'user' => $user
+                'user' => $user,
+                'expires_at' => $otp->expires_at
             ], 403);
         }
 
@@ -180,7 +185,11 @@ class AuthController extends Controller
     {
         $attributes = request()->validate([
             'old_password' => 'required',
-            'new_password' => ['required', Password::min(8)->letters()->symbols(), 'confirmed']
+            'new_password' => ['required', Password::min(8)->letters()->symbols()->numbers(), 'confirmed']
+        ], [
+            'new_password.required' => 'New password is required',
+            'new_password.confirmed' => 'Password confirmation does not match',
+            'new_password' => 'Password must be at least 8 characters long and include letters, numbers, and symbols.',
         ]);
 
         $user = Auth::user();
@@ -255,7 +264,9 @@ class AuthController extends Controller
         $data = $request->validate([
             'user_id' => 'required|exists:users,id',
             'otp' => 'required|string',
-            'password' => 'required|min:6',
+            'password' => ['required', Password::min(8)->letters()->symbols()->numbers()],
+        ], [
+            'password' => 'The password must contain at least 8 characters including letters, numbers and special characters'
         ]);
 
         $otp = Otp::where('user_id', $data['user_id'])

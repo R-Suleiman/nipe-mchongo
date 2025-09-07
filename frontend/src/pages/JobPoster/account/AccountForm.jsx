@@ -8,7 +8,7 @@ import {
 import { useAuth } from "../../../context/AuthProvider";
 
 function AccountForm() {
-    const { user: userData } = useAuth();
+    const { user: userData, getUser } = useAuth();
     const navigate = useNavigate();
     const [updateData, setupdateData] = useState({
         username: userData?.username || "",
@@ -32,6 +32,7 @@ function AccountForm() {
             .then(({ data }) => {
                 localStorage.setItem("user", JSON.stringify(data.user));
                 showTopSuccessAlert(data.message);
+                getUser()
                 navigate("/jobposter/account");
             })
             .catch((err) => {

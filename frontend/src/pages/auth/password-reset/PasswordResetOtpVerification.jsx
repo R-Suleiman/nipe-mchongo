@@ -13,7 +13,12 @@ export default function PasswordResetOtpVerification() {
     const navigate = useNavigate();
 
     // Timers
-    const [expiryTime, setExpiryTime] = useState(300); // 5 min = 300s
+    // Initialize from localStorage if available
+    const savedExpiry = localStorage.getItem("OTP_EXPIRES_AT");
+    const initialExpiry = savedExpiry
+        ? Math.max(0, Math.floor((new Date(savedExpiry) - new Date()) / 1000))
+        : 300; // 5 minutes
+    const [expiryTime, setExpiryTime] = useState(initialExpiry);
     const [resendCooldown, setResendCooldown] = useState(30); // 30s
 
     const handleVerification = async (e) => {
@@ -51,9 +56,15 @@ export default function PasswordResetOtpVerification() {
             });
             showTopSuccessAlert(response.data.message);
 
-            // Reset timers
-            setExpiryTime(300); // new OTP valid for 5 minutes
-            setResendCooldown(30); // cooldown again
+            const { expires_at } = response.data;
+            localStorage.setItem("OTP_EXPIRES_AT", expires_at);
+
+            const newExpiry = Math.max(
+                0,
+                Math.floor((new Date(expires_at) - new Date()) / 1000)
+            );
+            setExpiryTime(newExpiry);
+            setResendCooldown(30);
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong");
         } finally {
