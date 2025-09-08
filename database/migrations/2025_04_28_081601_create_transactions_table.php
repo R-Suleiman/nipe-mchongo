@@ -15,13 +15,16 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('transaction_id')->nullable();
             $table->integer('amount');
+            $table->decimal('collected_amount', 10, 2)->nullable();
+            $table->string('collected_currency')->nullable();
             $table->integer('points_purchased');
             $table->enum('type', ['posting', 'applying']);
             $table->enum('status', ['PROCESSING', 'SUCCESS', 'FAILED', 'PREVIEWED', 'SETTLED'])->default('pending');
-            $table->string('payment_provider')->default('AzamPay');
             $table->string('reference')->nullable();
-            $table->json_encode('available_methods')->nullable();
+            $table->json('available_methods')->nullable();
             $table->string('channel')->nullable();
+            $table->string('failure_reason')->nullable();
+            $table->json('customer_details')->nullable();
             $table->timestamps();
         });
     }

@@ -12,6 +12,7 @@ use App\Http\Controllers\GigPoster\DashboardController;
 use App\Http\Controllers\GigPoster\NotificationController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
 
 // authentications
@@ -94,4 +95,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Payment test routes
     Route::post('/payments/preview-ussd', [PaymentController::class, 'previewUssdPush']);
     Route::post('/payments/initiate-ussd', [PaymentController::class, 'initiateUssdPayment']);
+    Route::get('/payments/status/{reference}', [PaymentController::class, 'checkTransactionStatus']);
 });
+
+Route::post('/webhooks/clickpesa/payment-status', [WebhookController::class, 'handleClickPesaPaymentStatus']);
+// Route::post('/webhooks/clickpesa/payment-status', [WebhookController::class, 'handleClickPesaPaymentStatus'])
+//     ->middleware('throttle:60,1');  // 60 requests per 1 minute

@@ -16,7 +16,19 @@ class Transaction extends Model
         'payment_provider',
         'reference',
         'available_methods',
-        'channel'
+        'channel',
+        'collected_amount',
+        'customer_details',
+        'failure_reason',
+    ];
+
+    protected $casts = [
+        'amount' => 'decimal:2',
+        'collected_amount' => 'decimal:2',
+        'available_methods' => 'array',  // If using JSON
+        'customer_details' => 'array',  // If using JSON
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function user()

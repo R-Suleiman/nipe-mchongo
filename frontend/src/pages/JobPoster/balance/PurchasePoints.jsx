@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthProvider";
 import axiosClient from "../../../assets/js/axios-client";
@@ -20,6 +20,7 @@ export default function PurchasePoints() {
     const [reference, setReference] = useState(null);
     const [error, setError] = useState("");
     const [selectedMethod, setSelectedMethod] = useState(null);
+    const [polling, setPolling] = useState(false);
 
     const type = "posting";
     const quantity = parseInt(query.get("quantity")) || 1;
@@ -89,7 +90,7 @@ export default function PurchasePoints() {
             });
             setMessage(response.data.message);
             setAvailableMethods([]);
-            setReference(null);
+            setPolling(true); // Start polling
         } catch (error) {
             setError(
                 error.response?.data?.error || "Failed to initiate payment"
@@ -97,6 +98,36 @@ export default function PurchasePoints() {
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        let interval;
+        if (polling && reference) {
+            interval = setInterval(async () => {
+                try {
+                    const response = await axiosClient.get(
+                        `/payments/status/${reference}`
+                    );
+                    const { status, failure_reason } = response.data;
+                    if (status === "COMPLETED") {
+                        setMessage("Payment successful! Redirecting...");
+                        setPolling(false);
+                        setTimeout(() => navigate("/jobposter/payment-success"), 2000);
+                    } else if (status === "FAILED") {
+                        setError(
+                            `Payment failed: ${
+                                failure_reason || "Unknown error"
+                            }`
+                        );
+                        setPolling(false);
+                    }
+                } catch (error) {
+                    setError("Failed to check payment status");
+                    setPolling(false);
+                }
+            }, 5000); // Poll every 5 seconds
+        }
+        return () => clearInterval(interval);
+    }, [polling, reference, navigate]);
 
     return (
         <div className="min-h-screen bg-blue-50 p-8 flex items-center justify-center">
@@ -165,6 +196,12 @@ export default function PurchasePoints() {
                         <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 flex items-center gap-2">
                             <AlertCircle className="w-4 h-4" />
                             {error}
+                        </div>
+                    )}
+
+                     {polling && (
+                        <div className="mb-4 p-3 rounded-lg bg-blue-50 text-blue-700 border border-blue-200">
+                            Waiting for payment confirmation...
                         </div>
                     )}
 

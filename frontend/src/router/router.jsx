@@ -49,6 +49,7 @@ import ResetPassword from "../pages/auth/password-reset/ResetPassword";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
 import ProtectedAuthRoute from "../components/ProtectedAuthRoute";
+import PaymentSuccess from "../pages/JobPoster/balance/PaymentSuccess";
 
 const Router = createBrowserRouter([
     {
@@ -164,6 +165,10 @@ const Router = createBrowserRouter([
             {
                 path: "purchase-points",
                 element: <PurchasePoints />,
+            },
+            {
+                path: "payment-success",
+                element: <PaymentSuccess />,
             },
         ],
     },

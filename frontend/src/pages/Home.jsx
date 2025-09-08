@@ -32,10 +32,12 @@ export default function Home() {
                         </div>
 
                         <div className="md:flex space-x-4 items-center font-mormal">
-                            <a href="#signup"
-                                className="bg-orange-500 text-center text-white px-4 py-2 rounded-sm hover:bg-orange-500 transition">Jiunge</a>
-                            <a href="#signup"
-                                className="bg-blue-900 text-center text-white px-4 py-2 rounded-sm hover:bg-blue-700 transition">Ingia</a>
+                            <Link to="/register"
+                                className="bg-orange-500 text-center text-white px-4 py-2 rounded-sm hover:bg-orange-500 transition">Jiunge</Link>
+                                <Link to='/login' className="bg-blue-900 text-center text-white px-4 py-2 rounded-sm hover:bg-blue-700 transition">
+                                Ingia
+                                </Link>
+
                         </div>
 
                     </div>
