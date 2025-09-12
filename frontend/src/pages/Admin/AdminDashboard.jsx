@@ -28,7 +28,7 @@ function AdminDashboard() {
             .then(({ data }) => {
                 setStats(data);
 
-                setGraphData(data.graphData)
+                setGraphData(data.graphData);
 
                 setLoading(false);
             })
@@ -173,33 +173,46 @@ function AdminDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {stats?.jobs?.map((job, index) => {
-                                        return (
-                                            <tr key={job.id}>
-                                                <td className="p-2 text-left border border-gray-300">
-                                                    {index + 1}
-                                                </td>
-                                                <td className="p-2 text-left border border-gray-300">
-                                                    {job.title}
-                                                </td>
-                                                <td className="p-2 text-left border border-gray-300">
-                                                    {formatDate(job.created_at)}
-                                                </td>
-                                                <td className="p-2 text-left border border-gray-300">
-                                                    {job.status.name}
-                                                </td>
-                                                <td className="p-2 text-left border border-gray-300">
-                                                    <Link
-                                                        to={`/admin/jobs/${job.id}`}
-                                                    >
-                                                        <button className="w-full bg-blue-500 py-1 px-2 rounded-sm hover:bg-blue-600 text-white cursor-pointer">
-                                                            view
-                                                        </button>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
+                                    {stats?.jobs?.length > 0 ? (
+                                        stats.jobs.map((job, index) => {
+                                            return (
+                                                <tr key={job.id}>
+                                                    <td className="p-2 text-left border border-gray-300">
+                                                        {index + 1}
+                                                    </td>
+                                                    <td className="p-2 text-left border border-gray-300">
+                                                        {job.title}
+                                                    </td>
+                                                    <td className="p-2 text-left border border-gray-300">
+                                                        {formatDate(
+                                                            job.created_at
+                                                        )}
+                                                    </td>
+                                                    <td className="p-2 text-left border border-gray-300">
+                                                        {job.status.name}
+                                                    </td>
+                                                    <td className="p-2 text-left border border-gray-300">
+                                                        <Link
+                                                            to={`/admin/jobs/${job.id}`}
+                                                        >
+                                                            <button className="w-full bg-blue-500 py-1 px-2 rounded-sm hover:bg-blue-600 text-white cursor-pointer">
+                                                                view
+                                                            </button>
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                className="text-center tect-gray-600 p-3"
+                                                colSpan={5}
+                                            >
+                                                No jobs found
+                                            </td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             </table>
                         </div>
@@ -234,56 +247,73 @@ function AdminDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {stats?.applications?.map(
-                                        (application, index) => {
-                                            return (
-                                                <tr key={application.id}>
-                                                    <td className="p-2 text-left border border-gray-300">
-                                                        {index + 1}
-                                                    </td>
-                                                    <td className="p-2 text-left border border-gray-300">
-                                                        {application.job.title}
-                                                    </td>
-                                                    <td className="p-2 text-left border border-gray-300">
-                                                        {
-                                                            application.seeker
-                                                                .firstname
-                                                        }{" "}
-                                                        {
-                                                            application.seeker
-                                                                .lastname
-                                                        }
-                                                    </td>
-                                                    <td className="p-2 text-left border border-gray-300">
-                                                        {formatDate(
-                                                            application.created_at
-                                                        )}
-                                                    </td>
-                                                    <td
-                                                        className={`p-2 text-left border border-gray-300 font-semibold ${
-                                                            status[
+                                    {stats?.application?.length > 0 ? (
+                                        stats.applications.map(
+                                            (application, index) => {
+                                                return (
+                                                    <tr key={application.id}>
+                                                        <td className="p-2 text-left border border-gray-300">
+                                                            {index + 1}
+                                                        </td>
+                                                        <td className="p-2 text-left border border-gray-300">
+                                                            {
+                                                                application.job
+                                                                    .title
+                                                            }
+                                                        </td>
+                                                        <td className="p-2 text-left border border-gray-300">
+                                                            {
+                                                                application
+                                                                    .seeker
+                                                                    .firstname
+                                                            }{" "}
+                                                            {
+                                                                application
+                                                                    .seeker
+                                                                    .lastname
+                                                            }
+                                                        </td>
+                                                        <td className="p-2 text-left border border-gray-300">
+                                                            {formatDate(
+                                                                application.created_at
+                                                            )}
+                                                        </td>
+                                                        <td
+                                                            className={`p-2 text-left border border-gray-300 font-semibold ${
+                                                                status[
+                                                                    application
+                                                                        .status
+                                                                        .name
+                                                                ]
+                                                            }`}
+                                                        >
+                                                            {
                                                                 application
                                                                     .status.name
-                                                            ]
-                                                        }`}
-                                                    >
-                                                        {
-                                                            application.status
-                                                                .name
-                                                        }
-                                                    </td>
-                                                    <td className="p-2 text-left border border-gray-300">
-                                                        <Link
-                                                            to={`/admin/applications/${application.id}`}
-                                                        >
-                                                            <button className="w-full bg-blue-500 py-1 px-2 rounded-sm hover:bg-blue-600 text-white cursor-pointer">
-                                                                view
-                                                            </button>
-                                                        </Link>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        }
+                                                            }
+                                                        </td>
+                                                        <td className="p-2 text-left border border-gray-300">
+                                                            <Link
+                                                                to={`/admin/applications/${application.id}`}
+                                                            >
+                                                                <button className="w-full bg-blue-500 py-1 px-2 rounded-sm hover:bg-blue-600 text-white cursor-pointer">
+                                                                    view
+                                                                </button>
+                                                            </Link>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            }
+                                        )
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                className="text-center tect-gray-600 p-3"
+                                                colSpan={6}
+                                            >
+                                                No applications found
+                                            </td>
+                                        </tr>
                                     )}
                                 </tbody>
                             </table>
@@ -295,7 +325,7 @@ function AdminDashboard() {
                     <h3 className="text-lg text-blue-900 font-semibold">
                         Graph Analytics
                     </h3>
-                   <div className="w-full">
+                    <div className="w-full">
                         <JobsAndApplicationsChart data={graphData} />
                     </div>
                 </div>

@@ -64,7 +64,6 @@ export default function PurchasePoints() {
             })
             .catch((error) => {
                 setError(
-                    error.response?.data?.error ||
                         "Failed to validate payment details. Please try again."
                 );
             })
@@ -93,7 +92,7 @@ export default function PurchasePoints() {
             setPolling(true); // Start polling
         } catch (error) {
             setError(
-                error.response?.data?.error || "Failed to initiate payment"
+                 "Failed to initiate payment. Please try again later"
             );
         }
         setLoading(false);
@@ -282,7 +281,7 @@ export default function PurchasePoints() {
                 </div>
 
                 <div className="text-center text-blue-400 text-sm mt-4">
-                    <p>🔒 Secure Payment</p>
+                    <p>Secure Payment</p>
                 </div>
             </div>
         </div>

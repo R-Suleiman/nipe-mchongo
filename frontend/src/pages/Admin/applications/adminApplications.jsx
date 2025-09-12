@@ -61,8 +61,57 @@ function AdminApplications() {
         ) : (
             <div className="w-full p-2">
                 <h2 className="border-l-4 border-blue-900 text-blue-900 font-semibold text-lg p-2 italic bg-blue-50">
-                    My Job Applications
+                    All Job Applications
                 </h2>
+                <div className="w-full flex flex-col md:flex-row">
+                    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 my-5">
+                        <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
+                            <h2 className="text-xl font-semibold text-blue-600 mb-4">
+                                Total Applications
+                            </h2>
+                            <div className="text-5xl font-bold text-blue-700">
+                                {applications?.length}
+                            </div>
+                        </div>
+                         <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
+                            <h2 className="text-xl font-semibold text-blue-600 mb-4">
+                                Pending Applications
+                            </h2>
+                            <div className="text-5xl font-bold text-blue-700">
+                                {
+                                    applications?.filter(
+                                        (app) => app.status_id === 1
+                                    ).length
+                                }
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
+                            <h2 className="text-xl font-semibold text-blue-600 mb-4">
+                                Accepted Applications
+                            </h2>
+                            <div className="text-5xl font-bold text-blue-700">
+                                {
+                                    applications?.filter(
+                                        (app) => app.status_id === 2
+                                    ).length
+                                }
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
+                            <h2 className="text-xl font-semibold text-blue-600 mb-4">
+                                Rejected Applications
+                            </h2>
+                            <div className="text-5xl font-bold text-blue-700">
+                                {
+                                    applications?.filter(
+                                        (app) => app.status_id === 3
+                                    ).length
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="w-full my-2">
                     <form className="w-full">
                         <div className="w-full flex">
@@ -90,8 +139,8 @@ function AdminApplications() {
                                 <th className="p-2 text-left border border-gray-300">
                                     Job Title
                                 </th>
-                                 <th className="p-2 text-left border border-gray-300">
-                                   Gig Poster
+                                <th className="p-2 text-left border border-gray-300">
+                                    Gig Poster
                                 </th>
                                 <th className="p-2 text-left border border-gray-300">
                                     Applicant
@@ -118,7 +167,7 @@ function AdminApplications() {
                                             <td className="p-2 text-left border border-gray-300">
                                                 {application.job.title}
                                             </td>
-                                             <td className="p-2 text-left border border-gray-300">
+                                            <td className="p-2 text-left border border-gray-300">
                                                 {application.poster.firstname}{" "}
                                                 {application.poster.lastname}
                                             </td>

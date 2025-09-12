@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('location');
-            $table->string('payment')->nullable();
+            $table->integer('payment')->nullable();
             $table->string('payment_frequency')->nullable();
             $table->string('duration')->nullable();
-            $table->string('slots');
+            $table->integer('slots');
             $table->foreignId('status_id')->constrained('statuses');
             $table->timestamps();
         });

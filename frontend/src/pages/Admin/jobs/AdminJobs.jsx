@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaCalendar, FaPlus, FaSearch, FaUser } from "react-icons/fa";
+import { FaCalendar, FaClock, FaPlus, FaSearch, FaTasks, FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../../../assets/js/axios-client";
 import Loading from "../../../components/Loading";
@@ -70,6 +70,55 @@ function AdminJobs() {
                 </button>
             </div>
 
+              <div className="w-full flex flex-col md:flex-row">
+                    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 my-5">
+                        <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
+                            <h2 className="text-xl font-semibold text-blue-600 mb-4">
+                                Total Jobs
+                            </h2>
+                            <div className="text-5xl font-bold text-blue-700">
+                                {jobs?.length}
+                            </div>
+                        </div>
+                         <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
+                            <h2 className="text-xl font-semibold text-blue-600 mb-4">
+                                Open Jobs
+                            </h2>
+                            <div className="text-5xl font-bold text-blue-700">
+                                {
+                                    jobs?.filter(
+                                        (job) => job.status_id === 4
+                                    ).length
+                                }
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
+                            <h2 className="text-xl font-semibold text-blue-600 mb-4">
+                                closed Jobs
+                            </h2>
+                            <div className="text-5xl font-bold text-blue-700">
+                                 {
+                                    jobs?.filter(
+                                        (job) => job.status_id === 5
+                                    ).length
+                                }
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl shadow-md border border-blue-100">
+                            <h2 className="text-xl font-semibold text-blue-600 mb-4">
+                                Having Applications
+                            </h2>
+                            <div className="text-5xl font-bold text-blue-700">
+                                {
+                                    jobs.filter(
+                                        (job) => job.applications.length !== 0
+                                    ).length
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             <div className="w-full my-2">
                 <form className="w-full">
                     <div className="w-full flex">
@@ -97,7 +146,7 @@ function AdminJobs() {
                                         {job.title}
                                     </h3>
                                     <p className="flex space-x-2 text-blue-900 text-sm items-center my-1">
-                                        <FaCalendar />
+                                        <FaClock/>
                                         <span>
                                             {dayjs(job.created_at).fromNow()}
                                         </span>
@@ -110,7 +159,7 @@ function AdminJobs() {
                                         </span>
                                     </p>
                                     <p className="flex space-x-2 text-blue-900 text-sm items-center font-semibold my-1">
-                                        <FaUser />
+                                        <FaTasks />
                                         <span
                                             className={`${
                                                 job.status.name === "Closed"

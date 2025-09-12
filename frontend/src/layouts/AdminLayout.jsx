@@ -5,7 +5,8 @@ import userImg from "../assets/images/user.avif";
 import {
     FaAlignRight,
     FaCaretRight,
-    FaCogs,
+    FaChevronDown,
+    FaChevronUp,
     FaEnvelopeOpen,
     FaHome,
     FaMoneyBillWave,
@@ -14,24 +15,25 @@ import {
     FaTimes,
     FaUser,
     FaUsers,
-    // FaHouse
 } from "react-icons/fa";
 import { useAuth } from "../context/AuthProvider";
 import axiosClient from "../assets/js/axios-client";
-import { showSuccessAlert, showTopSuccessAlert } from "../utils/sweetAlert";
+import { showTopSuccessAlert } from "../utils/sweetAlert";
 
 function AdminLayout() {
     const navigate = useNavigate();
-    const {  user, setUser, setToken, isAuthenticated } = useAuth();
+    const { user, setUser, setToken, isAuthenticated } = useAuth();
     const [newUser, setNewUser] = useState();
     const [loading, setLoading] = useState(false);
     const [hidden, setHidden] = useState(true);
+    const [openUsers, setOpenUsers] = useState(false);
+    const [openFinance, setOpenFinance] = useState(false);
 
-   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    }
-  }, []);
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate("/login");
+        }
+    }, []);
 
     const location = useLocation();
 
@@ -100,26 +102,40 @@ function AdminLayout() {
                                 <span>My Account</span>
                             </li>
                         </Link>
-                        <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
-                            <FaUsers className="mr-3" /> <span>Users</span>
-                            <FaCaretRight className="ml-auto" />
-                        </li>
-                        <ul className="ml-5">
-                            <Link to="/admin/users/gig-posters">
-                                <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer hover:border-l-4 hover:border-white">
-                                    <span>Gig Posters</span>
-                                </li>
-                            </Link>
-                             <Link to="/admin/users/gig-seekers">
-                                <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer hover:border-l-4 hover:border-white">
-                                    <span>Gig Seekers</span>
-                                </li>
-                            </Link>
-                             <Link to="/admin/users/blocked-users">
-                                <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer hover:border-l-4 hover:border-white">
-                                    <span>Blocked Users</span>
-                                </li>
-                            </Link>
+                        <ul>
+                            <li
+                                className="w-full p-2 font-semibold flex items-center justify-between hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
+                                onClick={() => setOpenUsers(!openUsers)}
+                            >
+                                <div className="flex items-center">
+                                    <FaUsers className="mr-3" />{" "}
+                                    <span>Users</span>
+                                </div>
+                                {openUsers ? (
+                                    <FaChevronUp />
+                                ) : (
+                                    <FaChevronDown />
+                                )}
+                            </li>
+                            {openUsers && (
+                                <ul className="ml-5">
+                                    <Link to="/admin/users/gig-posters">
+                                        <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer hover:border-l-4 hover:border-white">
+                                            <span>Gig Posters</span>
+                                        </li>
+                                    </Link>
+                                    <Link to="/admin/users/gig-seekers">
+                                        <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer hover:border-l-4 hover:border-white">
+                                            <span>Gig Seekers</span>
+                                        </li>
+                                    </Link>
+                                    <Link to="/admin/users/blocked-users">
+                                        <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer hover:border-l-4 hover:border-white">
+                                            <span>Blocked Users</span>
+                                        </li>
+                                    </Link>
+                                </ul>
+                            )}
                         </ul>
 
                         <Link to="/admin/jobs">
@@ -134,12 +150,38 @@ function AdminLayout() {
                                 <span>Job Applications</span>
                             </li>
                         </Link>
-                        <Link to="/admin/mchongo-points">
-                            <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
-                                <FaMoneyBillWave className="mr-3" />{" "}
-                                <span>Mchongo Points</span>
+                       <ul className="w-full">
+                            <li
+                                className="w-full p-2 font-semibold flex items-center justify-between hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
+                                onClick={() => setOpenFinance(!openFinance)}
+                            >
+                                <div className="flex items-center">
+                                    <FaMoneyBillWave className="mr-3" />{" "}
+                                    <span>Finance</span>
+                                </div>
+                                {openFinance ? (
+                                    <FaChevronUp />
+                                ) : (
+                                    <FaChevronDown />
+                                )}
                             </li>
-                        </Link>
+
+                            {/* Submenus */}
+                            {openFinance && (
+                                <ul className="ml-8 mt-2 space-y-1">
+                                    <Link to="/admin/mchongo-points">
+                                        <li className="w-full p-2 text-base font-medium flex items-center hover:bg-blue-700 rounded-sm cursor-pointer">
+                                            Mchongo Points
+                                        </li>
+                                    </Link>
+                                    <Link to="/admin/transactions">
+                                        <li className="w-full p-2 text-base font-medium flex items-center hover:bg-blue-700 rounded-sm cursor-pointer">
+                                            Transactions
+                                        </li>
+                                    </Link>
+                                </ul>
+                            )}
+                        </ul>
                         {/* <Link to="/admin/settings">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaCogs className="mr-3" />{" "}
@@ -147,7 +189,7 @@ function AdminLayout() {
                             </li>
                         </Link> */}
                         <button
-                            className="w-full p-2 font-semibold flex items-center bg-blue-600 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
+                            className="w-full p-2 font-semibold flex items-center bg-red-500 mt-4 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
                             onClick={logout}
                         >
                             <FaSignOutAlt className="mr-3" />{" "}

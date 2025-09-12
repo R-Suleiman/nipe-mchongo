@@ -50,6 +50,8 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
 import ProtectedAuthRoute from "../components/ProtectedAuthRoute";
 import PaymentSuccess from "../pages/JobPoster/balance/PaymentSuccess";
+import Transactions from "../pages/JobPoster/balance/Transactions";
+import AdminTransactions from "../pages/Admin/mchongoPoints/AdminTransactions";
 
 const Router = createBrowserRouter([
     {
@@ -170,6 +172,10 @@ const Router = createBrowserRouter([
                 path: "payment-success",
                 element: <PaymentSuccess />,
             },
+            {
+                path: "transactions",
+                element: <Transactions />,
+            },
         ],
     },
 
@@ -288,6 +294,10 @@ const Router = createBrowserRouter([
             {
                 path: "/admin/mchongo-points",
                 element: <AdminMchongoPoints />,
+            },
+            {
+                path: "/admin/transactions",
+                element: <AdminTransactions />,
             },
             {
                 path: "/admin/users/blocked-users",

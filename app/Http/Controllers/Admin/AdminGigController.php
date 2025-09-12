@@ -33,7 +33,9 @@ class AdminGigController extends Controller
 
         $job = Gig::where('id', $jobId)->with('poster', 'applications', 'applications.seeker', 'applications.status', 'status')->first();
 
-        $job['poster']['profile_photo'] = asset('storage/' . $job['poster']['profile_photo']);
+        if($job['poster']['profile_photo']) {
+            $job['poster']['profile_photo'] = asset('storage/' . $job['poster']['profile_photo']);
+        }
 
         return response()->json(['success' => true, 'job' => $job]);
     }

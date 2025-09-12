@@ -14,6 +14,7 @@ class Transaction extends Model
         'type',
         'status',
         'payment_provider',
+        'phone_number',
         'reference',
         'available_methods',
         'channel',

@@ -81,6 +81,7 @@ class PaymentController extends Controller
                 'amount' => $validated['amount'],
                 'points_purchased' => (int) $validated['quantity'], // default
                 'type' => $validated['type'],
+                'phone_number' => $validated['phoneNumber'],
                 'status' => 'previewed',
                 'reference' => $referenceNumber,
                 'available_methods' => json_encode($availableMethods),

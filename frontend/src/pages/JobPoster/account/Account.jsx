@@ -84,14 +84,14 @@ function Account() {
                         Profile Information
                     </h4>
                     <div className="w-full flex flex-col md:flex-row md:space-x-4">
-                        <div className="w-32 h-32 relative overflow-hidden group">
+                        <div className="w-32 h-32 relative overflow-hidden">
                             <img
                                 src={user?.profile_photo || userImg}
                                 alt=""
                                 className="w-full h-full rounded-full"
                             />
                             <div
-                                className="w-full absolute top-0 h-full rounded-full opacity-95 bg-gray-600 items-center justify-center z-50 hidden group-hover:flex cursor-pointer"
+                                className="w-full absolute top-0 h-full rounded-full opacity-0 hover:opacity-95 bg-gray-600 items-center justify-center z-50 flex cursor-pointer"
                                 onClick={() =>
                                     openModal({
                                         title: "Update Profile Photo",
@@ -101,7 +101,7 @@ function Account() {
                                             />
                                         ),
                                         size: "xl4",
-                                        variant: "danger",
+                                        variant: "info",
                                     })
                                 }
                             >

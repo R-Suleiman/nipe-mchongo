@@ -4,6 +4,8 @@ import logo from "../assets/images/logo.png";
 import userImg from "../assets/images/user.avif";
 import {
     FaAlignRight,
+    FaChevronDown,
+    FaChevronUp,
     FaCogs,
     FaEnvelopeOpen,
     FaHome,
@@ -24,11 +26,12 @@ function JobPosterLayout() {
     const [newUser, setNewUser] = useState();
     const [loading, setLoading] = useState(false);
     const [hidden, setHidden] = useState(true);
+    const [openFinance, setOpenFinance] = useState(false);
 
     useEffect(() => {
-      if (!isAuthenticated) {
-        navigate("/login");
-      }
+        if (!isAuthenticated) {
+            navigate("/login");
+        }
     }, []);
 
     const location = useLocation();
@@ -58,12 +61,12 @@ function JobPosterLayout() {
         getUser();
     }, []);
 
-
     return (
         <section className="w-full">
             <aside
-                className={`w-10/12 md:w-[20%] p-2 bg-blue-900 h-full fixed left-0 top-0 shadow-md shadow-orange-100 transform transition-transform duration-300 ease-in-out z-50 ${hidden ? "-translate-x-full" : "translate-x-0"
-                    } md:translate-x-0 md:block`}
+                className={`w-10/12 md:w-[20%] p-2 bg-blue-900 h-full fixed left-0 top-0 shadow-md shadow-orange-100 transform transition-transform duration-300 ease-in-out z-50 ${
+                    hidden ? "-translate-x-full" : "translate-x-0"
+                } md:translate-x-0 md:block`}
             >
                 <div
                     className="m-4 cursor-pointer w-fit ml-auto text-white block md:hidden"
@@ -110,12 +113,38 @@ function JobPosterLayout() {
                                 <span>Job Applications</span>
                             </li>
                         </Link>
-                        <Link to="/jobposter/points">
-                            <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
-                                <FaMoneyBillWave className="mr-3" />{" "}
-                                <span>Mchongo Points</span>
+                        <ul className="w-full">
+                            <li
+                                className="w-full p-2 font-semibold flex items-center justify-between hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white"
+                                onClick={() => setOpenFinance(!openFinance)}
+                            >
+                                <div className="flex items-center">
+                                    <FaMoneyBillWave className="mr-3" />{" "}
+                                    <span>Finance</span>
+                                </div>
+                                {openFinance ? (
+                                    <FaChevronUp />
+                                ) : (
+                                    <FaChevronDown />
+                                )}
                             </li>
-                        </Link>
+
+                            {/* Submenus */}
+                            {openFinance && (
+                                <ul className="ml-8 mt-2 space-y-1">
+                                    <Link to="/jobposter/points">
+                                        <li className="w-full p-2 text-base font-medium flex items-center hover:bg-blue-700 rounded-sm cursor-pointer">
+                                            Mchongo Points
+                                        </li>
+                                    </Link>
+                                    <Link to="/jobposter/transactions">
+                                        <li className="w-full p-2 text-base font-medium flex items-center hover:bg-blue-700 rounded-sm cursor-pointer">
+                                            Transactions
+                                        </li>
+                                    </Link>
+                                </ul>
+                            )}
+                        </ul>
                         <Link to="/jobposter/settings">
                             <li className="w-full p-2 font-semibold flex items-center hover:bg-blue-800 rounded-sm cursor-pointer text-lg hover:border-l-4 hover:border-white">
                                 <FaCogs className="mr-3" />{" "}

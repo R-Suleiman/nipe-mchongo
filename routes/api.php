@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminGigController;
+use App\Http\Controllers\Admin\AdminTransactionsController;
 use App\Http\Controllers\Admin\AdminUsersController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GigSeeker\GigSeekerController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\GigPoster\GigApplicationController;
 use App\Http\Controllers\Gig\GigController;
 use App\Http\Controllers\GigPoster\DashboardController;
 use App\Http\Controllers\GigPoster\NotificationController;
+use App\Http\Controllers\GigPoster\TransactionsController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WebhookController;
@@ -51,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/user/unblock-user/{userId}', [AdminUsersController::class, 'unblockUser']);
         Route::post('/user/create-user', [AdminUsersController::class, 'createUser']);
         Route::post('/user/update-user/{userId}', [AdminUsersController::class, 'updateUser']);
+        Route::get('/transactions', [AdminTransactionsController::class, 'getTransactions']);
     });
 
     Route::middleware('role:poster')->group(function () {
@@ -70,6 +73,8 @@ Route::middleware('auth:sanctum')->group(function () {
         // Notifications
         Route::post('/notification-preference', [NotificationController::class, 'updateNotificationPreference']);
         Route::get('/notification-preference', [NotificationController::class, 'getNotificationPreference']);
+        // Transactions
+        Route::get('/jobposter/transactions', [TransactionsController::class, 'getTransactions']);
     });
 
     Route::middleware('role:seeker')->group(function () {

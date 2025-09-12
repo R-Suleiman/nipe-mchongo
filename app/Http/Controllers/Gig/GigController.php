@@ -28,10 +28,10 @@ class GigController extends Controller
             'title' => 'required|string',
             'description' => 'required|string',
             'location' => 'required|string',
-            'payment' => 'required|string',
+            'payment' => 'required|integer',
             'payment_frequency' => 'required|string',
             'duration' => 'required|string',
-            'slots' => 'required|string',
+            'slots' => 'required|integer',
         ]);
 
         $gig['status_id'] = 4; // The gig is open by default
@@ -64,10 +64,10 @@ class GigController extends Controller
             'title' => 'required|string',
             'description' => 'required|string',
             'location' => 'required|string',
-            'payment' => 'required|string',
+            'payment' => 'required|integer',
             'payment_frequency' => 'required|string',
             'duration' => 'required|string',
-            'slots' => 'required|string',
+            'slots' => 'required|integer',
         ]);
 
         $gig = Gig::where('id', $jobId)->first();

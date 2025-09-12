@@ -42,7 +42,7 @@ function JobsEditForm() {
                 if (response && response.status == 422) {
                     console.error(response.data.errors);
                 }
-            })
+            });
     };
 
     const getJobCategories = () => {
@@ -174,10 +174,10 @@ function JobsEditForm() {
                                 htmlFor="payment"
                                 className="text-gray-600 text-lg font-semibold"
                             >
-                                Job Salary:
+                                Job Salary (TZS):
                             </label>
                             <input
-                                type="text"
+                                type="number"
                                 name="payment"
                                 value={job.payment}
                                 onChange={handleInputChange}
@@ -216,6 +216,7 @@ function JobsEditForm() {
                                 value={job.duration}
                                 onChange={handleInputChange}
                                 className="w-10/12 p-2 outline-0 border border-blue-300 rounded-sm"
+                                placeholder="eg. 2 weeks"
                             />
                         </div>
                         <div className="w-full md:w-1/2 flex flex-col space-y-2 my-2">
@@ -226,6 +227,7 @@ function JobsEditForm() {
                                 Job slots:
                             </label>
                             <input
+                                type="number"
                                 name="slots"
                                 value={job.slots}
                                 onChange={handleInputChange}

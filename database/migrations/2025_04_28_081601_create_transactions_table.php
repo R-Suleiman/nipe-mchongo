@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('transaction_id')->nullable();
             $table->integer('amount');
+            $table->string('phone_number');
             $table->decimal('collected_amount', 10, 2)->nullable();
             $table->string('collected_currency')->nullable();
             $table->integer('points_purchased');

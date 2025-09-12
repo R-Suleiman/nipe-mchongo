@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { FaCalendar, FaPlus, FaSearch, FaUser } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaClock, FaPlus, FaTasks, FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../../../assets/js/axios-client";
 import Loading from "../../../components/Loading";
@@ -114,7 +114,7 @@ function Jobs() {
                                             {job.title}
                                         </h3>
                                         <p className="flex space-x-2 text-blue-900 text-sm items-center my-1">
-                                            <FaCalendar />
+                                            <FaClock />
                                             <span>
                                                 {dayjs(
                                                     job.created_at
@@ -129,7 +129,7 @@ function Jobs() {
                                             </span>
                                         </p>
                                         <p className="flex space-x-2 text-blue-900 text-sm items-center font-semibold my-1">
-                                            <FaUser />
+                                            <FaTasks />
                                             <span
                                                 className={`${
                                                     job.status.name === "Closed"

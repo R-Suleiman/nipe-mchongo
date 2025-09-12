@@ -80,7 +80,9 @@ class AdminUsersController extends Controller
 
         $gigs = $gigPoster->gigs()->with('applications', 'status')->paginate(10);
 
-        $gigPoster['profile_photo'] = asset('storage/' . $gigPoster['profile_photo']);
+        if($gigPoster['profile_photo']) {
+            $gigPoster['profile_photo'] = asset('storage/' . $gigPoster['profile_photo']);
+        }
 
         return response()->json(['success' => true, 'gigPoster' => $gigPoster, 'gigs' => $gigs]);
     }
