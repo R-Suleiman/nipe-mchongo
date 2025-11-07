@@ -21,6 +21,8 @@ axiosClient.interceptors.response.use(
     const { response } = error;
     if (response && response.status === 401) {
       localStorage.removeItem("ACCESS_TOKEN");
+      localStorage.removeItem("USER");
+      window.location.href = "/login";
       console.error("Unauthorized:", response.data);
     }
     throw error;

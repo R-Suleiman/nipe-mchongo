@@ -84,10 +84,10 @@ function BlockedUsers() {
                                     Last Name
                                 </th>
                                 <th className="p-2 text-left border border-gray-300">
-                                    Username
+                                    Email
                                 </th>
                                 <th className="p-2 text-left border border-gray-300">
-                                    Gender
+                                    Username
                                 </th>
                                 <th className="p-2 text-left border border-gray-300">
                                     Phone
@@ -116,10 +116,10 @@ function BlockedUsers() {
                                                 {user.lastname}
                                             </td>
                                             <td className="p-2 text-left border border-gray-300">
-                                                {user.username}
+                                                {user.email}
                                             </td>
                                             <td className="p-2 text-left border border-gray-300">
-                                                {user.gender}
+                                                {user.username}
                                             </td>
                                             <td className="p-2 text-left border border-gray-300">
                                                 {user.phone}

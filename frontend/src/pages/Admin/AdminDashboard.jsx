@@ -4,9 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../../assets/js/axios-client";
 import { showTopErrorAlert } from "../../utils/sweetAlert";
 import Loading from "../../components/Loading";
-import { useModal } from "../../context/ModalContext";
 import JobsAndApplicationsChart from "../../components/JobsAndApplicationsChart";
-// import NoPointsModal from "./jobs/NoPointsModal";
 
 function AdminDashboard() {
     const [loading, setLoading] = useState(false);

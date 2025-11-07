@@ -22,13 +22,18 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
+// email verification via link
+Route::post('/send-verification-link/{$userId}', [AuthController::class, 'resendVerificationLink']);
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyLink'])
+    ->middleware(['signed'])
+    ->name('verification.verify');
 
 // Password Resets
 Route::post('/password/forgot', [AuthController::class, 'requestPasswordReset']);
 Route::post('/password/forgot/verify-reset-otp', [AuthController::class, 'verifyResetOtp']);
 Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'checkToken'])->group(function () {
     // Profile
     Route::get('/get-user', [UserController::class, 'getUser']);
     Route::post('/user/profile/update-photo', [UserController::class, 'updatePhoto']);
@@ -46,8 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/users/gig-posters/{id}', [AdminUsersController::class, 'getGigPoster']);
         Route::post('/users/gig-seekers', [AdminUsersController::class, 'getGigSeekers']);
         Route::post('/users/gig-seeker/{id}', [AdminUsersController::class, 'getGigSeeker']);
-        Route::get('/mchongo-points-stats', [AdminDashboardController::class, 'mchongoPoints']);
-        Route::get('/transactions', [AdminDashboardController::class, 'getTransactions']);
+        Route::get('/mchongo-points-stats', [AdminTransactionsController::class, 'mchongoPoints']);
         Route::post('/user/blocked-users', [AdminUsersController::class, 'getBlockedUsers']);
         Route::post('/user/block-user/{userId}', [AdminUsersController::class, 'blockUser']);
         Route::post('/user/unblock-user/{userId}', [AdminUsersController::class, 'unblockUser']);

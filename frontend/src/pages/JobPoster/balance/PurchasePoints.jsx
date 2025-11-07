@@ -19,7 +19,6 @@ export default function PurchasePoints() {
     const [unavailableMessages, setUnavailableMessages] = useState({});
     const [reference, setReference] = useState(null);
     const [error, setError] = useState("");
-    const [selectedMethod, setSelectedMethod] = useState(null);
     const [polling, setPolling] = useState(false);
 
     const type = "posting";
@@ -64,7 +63,7 @@ export default function PurchasePoints() {
             })
             .catch((error) => {
                 setError(
-                        "Failed to validate payment details. Please try again."
+                    "Failed to validate payment details. Please try again."
                 );
             })
             .finally(() => {
@@ -73,10 +72,6 @@ export default function PurchasePoints() {
     };
 
     const handlePayment = async () => {
-        if (!selectedMethod) {
-            setError("Please select a payment method first.");
-            return;
-        }
         setLoading(true);
         setMessage("");
         setError("");
@@ -85,15 +80,12 @@ export default function PurchasePoints() {
                 reference,
                 phoneNumber: phone,
                 amount: total,
-                paymentMethod: selectedMethod,
             });
             setMessage(response.data.message);
             setAvailableMethods([]);
             setPolling(true); // Start polling
         } catch (error) {
-            setError(
-                 "Failed to initiate payment. Please try again later"
-            );
+            setError("Failed to initiate payment. Please try again later");
         }
         setLoading(false);
     };
@@ -110,7 +102,10 @@ export default function PurchasePoints() {
                     if (status === "COMPLETED") {
                         setMessage("Payment successful! Redirecting...");
                         setPolling(false);
-                        setTimeout(() => navigate("/jobposter/payment-success"), 2000);
+                        setTimeout(
+                            () => navigate("/jobposter/payment-success"),
+                            2000
+                        );
                     } else if (status === "FAILED") {
                         setError(
                             `Payment failed: ${
@@ -198,7 +193,7 @@ export default function PurchasePoints() {
                         </div>
                     )}
 
-                     {polling && (
+                    {polling && (
                         <div className="mb-4 p-3 rounded-lg bg-blue-50 text-blue-700 border border-blue-200">
                             Waiting for payment confirmation...
                         </div>
@@ -217,27 +212,20 @@ export default function PurchasePoints() {
                     )}
 
                     {/* Payment methods */}
-                    {availableMethods.length > 0 && (
+                    {/* {availableMethods.length > 0 && ( */}
+                    {true && (
                         <Card className="shadow-lg rounded-2xl">
                             <CardContent className="p-6">
                                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                                     <Wallet className="w-5 h-5 text-blue-600" />
-                                    Select a Payment Method
+                                    Available Payment Methods
                                 </h3>
 
                                 <div className="space-y-3 mb-4">
                                     {availableMethods.map((method, index) => (
                                         <div
                                             key={index}
-                                            onClick={() =>
-                                                setSelectedMethod(method.name)
-                                            }
-                                            className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition
-                        ${
-                            selectedMethod === method.name
-                                ? "border-blue-500 bg-blue-50"
-                                : "border-gray-200 hover:bg-gray-50"
-                        }`}
+                                            className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition border-gray-200 hover:bg-gray-50`}
                                         >
                                             <div>
                                                 <p className="font-medium text-gray-800">
@@ -247,23 +235,17 @@ export default function PurchasePoints() {
                                                     Fee: {method.fee}
                                                 </p>
                                             </div>
-                                            {selectedMethod === method.name && (
-                                                <CheckCircle2 className="text-blue-600 w-5 h-5" />
-                                            )}
+                                            <CheckCircle2 className="text-blue-600 w-5 h-5" />
                                         </div>
                                     ))}
                                 </div>
 
                                 <Button
                                     onClick={handlePayment}
-                                    disabled={!selectedMethod || loading}
+                                    disabled={loading}
                                     className="w-full"
                                 >
-                                    {loading
-                                        ? "Processing..."
-                                        : selectedMethod
-                                        ? `Pay with ${selectedMethod}`
-                                        : "Select a method to pay"}
+                                    {loading ? "Processing..." : `Pay`}
                                 </Button>
                             </CardContent>
                         </Card>

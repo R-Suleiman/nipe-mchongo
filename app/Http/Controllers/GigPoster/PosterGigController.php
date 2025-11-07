@@ -16,11 +16,12 @@ class PosterGigController extends Controller
 
         $query = Gig::with('applications', 'status')->where('gig_poster_id', Auth::user()->id);
         if ($search) {
-            $query->where('title', 'LIKE', "%{$search}%")
-                ->orWhereHas('status', function ($query) use ($search) {
-                    $query->where('name', 'LIKE', "%{$search}%");
-                });
-
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                    ->orWhereHas('status', function ($subQ) use ($search) {
+                        $subQ->where('name', 'LIKE', "%{$search}%");
+                    });
+            });
         }
         $jobs = $query->orderBy('created_at', 'desc')->paginate(12);
 

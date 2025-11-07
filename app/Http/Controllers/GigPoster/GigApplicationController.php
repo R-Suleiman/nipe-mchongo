@@ -18,20 +18,26 @@ class GigApplicationController extends Controller
         $page = $request->input('page');
 
         // select my applications only
-        $query = GigApplication::with('poster', 'seeker', 'job', 'status')->where('gig_poster_id', Auth::user()->id);
+        $query = GigApplication::with('poster', 'seeker', 'job', 'status')
+            ->where('gig_poster_id', Auth::user()->id);
+
         if ($search) {
-            $query->whereHas('seeker', function ($query) use ($search) {
-                $query->where('firstname', 'LIKE', "%{$search}%")
-                    ->orWhere('lastname', 'LIKE', "%{$search}%");
-            })
-                ->orWhereHas('job', function ($query) use ($search) {
-                    $query->where('title', 'LIKE', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('seeker', function ($subQ) use ($search) {
+                    $subQ->where('firstname', 'LIKE', "%{$search}%")
+                        ->orWhere('lastname', 'LIKE', "%{$search}%");
                 })
-                ->orWhereHas('status', function ($query) use ($search) {
-                    $query->where('name', 'LIKE', "%{$search}%");
-                });
+                    ->orWhereHas('job', function ($subQ) use ($search) {
+                        $subQ->where('title', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('status', function ($subQ) use ($search) {
+                        $subQ->where('name', 'LIKE', "%{$search}%");
+                    });
+            });
         }
+
         $applications = $query->orderBy('created_at', 'desc')->paginate(12);
+
 
         return response()->json(['success' => true, 'applications' => $applications]);
     }
@@ -57,7 +63,7 @@ class GigApplicationController extends Controller
         $user = $application->seeker;
         $job = $application->job;
         if ($user) {
-                Mail::to($user->email)->send(new JobAcceptedMail($job, $user));
+            Mail::to($user->email)->send(new JobAcceptedMail($job, $user));
         }
 
         return response()->json(['success' => true, 'message' => 'Application Accepted Successfully']);
@@ -69,12 +75,12 @@ class GigApplicationController extends Controller
 
         $application->update(['status_id' => 3]);
 
-          // Send Notification to the applicant
-          $user = $application->seeker;
-          $job = $application->job;
-          if ($user) {
-                  Mail::to($user->email)->send(new JobDeniedMail($job, $user));
-          }
+        // Send Notification to the applicant
+        $user = $application->seeker;
+        $job = $application->job;
+        if ($user) {
+            Mail::to($user->email)->send(new JobDeniedMail($job, $user));
+        }
 
         return response()->json(['success' => true, 'message' => 'Application Denied']);
     }

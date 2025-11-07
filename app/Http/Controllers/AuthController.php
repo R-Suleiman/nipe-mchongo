@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Mail\SendOtpMail;
+use App\Mail\VerifyUserMail;
 use App\Models\BlockedUser;
 use App\Models\Otp;
 use App\Models\User;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Validator;
 
@@ -164,8 +166,14 @@ class AuthController extends Controller
             ], 403);
         }
 
-        $token = $user->createToken('main')->plainTextToken;
-        $user['profile_photo'] = asset('storage/' . $user['profile_photo']);
+        $token = $user->createToken('main', ['*'])->accessToken;
+        $user->tokens()->latest()->first()->update([
+            'expires_at' => now()->addMinutes(5) // or addDays(7)
+        ]);
+
+        if ($user['profile_photo']) {
+            $user['profile_photo'] = asset('storage/' . $user['profile_photo']);
+        }
 
         return response()->json(['success' => true, 'message' => 'Login successfully!', 'user' => $user, 'token' => $token], 200);
     }
@@ -295,5 +303,38 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Password reset successfully.',
         ]);
+    }
+
+    // email verification via URL (triggered by admin)
+    public function resendVerificationLink($userId)
+    {
+        $user = User::findOrFail($userId);
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify', // name of the route
+            now()->addMinutes(60), // expiry time
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        );
+
+        Mail::to($user->email)->send(new VerifyUserMail($user, $verificationUrl));
+
+        return response()->json(['success' => true, 'message' => 'Verification email sent']);
+    }
+
+    public function verifyLink(Request $request, $id, $hash)
+    {
+        $user = User::findOrFail($id);
+
+        if (! hash_equals((string) $hash, sha1($user->email))) {
+            return redirect('https://nipemchongo.seswarenexus.com/login?status=invalid');
+        }
+
+        if ($user->is_verified) {
+            return redirect('https://nipemchongo.seswarenexus.com/login?status=already_verified');
+        }
+
+        $user->update(['is_verified' => true]);
+
+        return redirect('https://nipemchongo.seswarenexus.com/login?status=verified');
     }
 }

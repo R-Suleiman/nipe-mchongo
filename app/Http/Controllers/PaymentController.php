@@ -107,18 +107,9 @@ class PaymentController extends Controller
             'reference' => 'required|string|exists:transactions,reference',
             'phoneNumber' => 'required|string|regex:/^255[0-9]{9}$/',
             'amount' => 'required|numeric|min:100|max:3000000',
-            'paymentMethod' => 'required|string', // Not in API sample, but kept for flexibility
         ]);
 
         $transaction = Transaction::where('reference', $validated['reference'])->first();
-
-        // Verify payment method is in available_methods
-        $availableMethods = json_decode($transaction->available_methods, true);
-        if (!in_array($validated['paymentMethod'], array_column($availableMethods, 'name'))) {
-            return response()->json([
-                'error' => 'Selected payment method is not available.',
-            ], 400);
-        }
 
         $response = $this->clickPesa->initiateUssdPush([
             'amount' => $validated['amount'],
@@ -139,7 +130,7 @@ class PaymentController extends Controller
                 'status' => $response['status'],
                 'channel' => $response['channel'],
                 'transaction_id' => $response['id'] ?? null,
-                'payment_method' => $response['channel'] ?? $validated['paymentMethod'],
+                'payment_method' => $response['channel'],
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to update transaction: ' . $e->getMessage());

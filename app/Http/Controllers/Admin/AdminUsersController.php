@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller
 {
-     public function createUser(Request $request)
+    public function createUser(Request $request)
     {
         $user = $request->validate([
             'firstname' => 'required|string',
@@ -30,7 +30,7 @@ class AdminUsersController extends Controller
         return response()->json(['success' => true, 'message' => 'User created successfully']);
     }
 
-     public function updateUser(Request $request, $userId)
+    public function updateUser(Request $request, $userId)
     {
         $updatedProfile = $request->validate([
             'username' => ['required', 'min:3', 'max:25'],
@@ -64,10 +64,12 @@ class AdminUsersController extends Controller
 
         $query = User::where('usertype', 'poster')->whereNotIn('id', $blockedUsers)->with('gigs');
         if ($search) {
-            $query->where('firstname', 'LIKE', "%{$search}%")
-                ->orWhere('lastname', 'LIKE', "%{$search}%")
-                ->orWhere('gender', 'LIKE', "%{$search}%")
-                ->orWhere('phone', 'LIKE', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('firstname', 'LIKE', "%{$search}%")
+                    ->orWhere('lastname', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('phone', 'LIKE', "%{$search}%");
+            });
         }
         $users = $query->orderBy('firstname', 'asc')->paginate(12);
 
@@ -80,7 +82,7 @@ class AdminUsersController extends Controller
 
         $gigs = $gigPoster->gigs()->with('applications', 'status')->paginate(10);
 
-        if($gigPoster['profile_photo']) {
+        if ($gigPoster['profile_photo']) {
             $gigPoster['profile_photo'] = asset('storage/' . $gigPoster['profile_photo']);
         }
 
@@ -96,35 +98,40 @@ class AdminUsersController extends Controller
 
         $query = User::where('usertype', 'seeker')->whereNotIn('id', $blockedUsers)->with('seekerApplications');
         if ($search) {
-            $query->where('firstname', 'LIKE', "%{$search}%")
-                ->orWhere('lastname', 'LIKE', "%{$search}%")
-                ->orWhere('gender', 'LIKE', "%{$search}%")
-                ->orWhere('phone', 'LIKE', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('firstname', 'LIKE', "%{$search}%")
+                    ->orWhere('lastname', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('phone', 'LIKE', "%{$search}%");
+            });
         }
         $users = $query->orderBy('firstname', 'asc')->paginate(12);
 
         return response()->json(['success' => true, 'users' => $users]);
     }
 
-     public function getGigSeeker(Request $request, $id)
+    public function getGigSeeker(Request $request, $id)
     {
         $gigSeeker = User::with('blocked')->find($id);
 
         $applications = $gigSeeker->seekerApplications()->with('poster', 'job', 'job.status', 'status')->paginate(10);
 
-        $gigSeeker['profile_photo'] = asset('storage/' . $gigSeeker['profile_photo']);
+        if ($gigSeeker['profile_photo']) {
+            $gigSeeker['profile_photo'] = asset('storage/' . $gigSeeker['profile_photo']);
+        }
 
         return response()->json(['success' => true, 'gigSeeker' => $gigSeeker, 'applications' => $applications]);
     }
 
-    public function blockUser(Request $request, $id) {
+    public function blockUser(Request $request, $id)
+    {
         $request->validate([
             'reason' => 'required'
         ]);
 
         $user = User::find($id);
-        if(!$user) {
-            return response()->json(['success'=> true,'message'=> 'user not found'], 404);
+        if (!$user) {
+            return response()->json(['success' => true, 'message' => 'user not found'], 404);
         }
 
         $user->blocked()->create(['reason' => $request->reason]);
@@ -132,11 +139,12 @@ class AdminUsersController extends Controller
         return response()->json(['success' => true, 'message' => 'user blocked successfully']);
     }
 
-      public function unblockUser(Request $request, $id) {
+    public function unblockUser(Request $request, $id)
+    {
         $user = User::find($id);
 
-         if(!$user) {
-            return response()->json(['success'=> true,'message'=> 'user not found'], 404);
+        if (!$user) {
+            return response()->json(['success' => true, 'message' => 'user not found'], 404);
         }
 
         $user->blocked()->delete();
@@ -144,17 +152,17 @@ class AdminUsersController extends Controller
         return response()->json(['success' => true, 'message' => 'user unblocked successfully']);
     }
 
-     public function getBlockedUsers(Request $request)
+    public function getBlockedUsers(Request $request)
     {
         $search = $request->search;
         $page = $request->input('page');
 
         $query = BlockedUser::with('user');
-         if ($search) {
-            $query->whereHas('seeker', function ($query) use ($search) {
-                $query->where('firstname', 'LIKE', "%{$search}%")
+        if ($search) {
+            $query->whereHas('seeker', function ($q) use ($search) {
+                $q->where('firstname', 'LIKE', "%{$search}%")
                     ->orWhere('lastname', 'LIKE', "%{$search}%")
-                    ->orWhere('gender', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%")
                     ->orWhere('type', 'LIKE', "%{$search}%")
                     ->orWhere('phone', 'LIKE', "%{$search}%");
             });

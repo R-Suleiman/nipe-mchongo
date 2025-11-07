@@ -114,6 +114,20 @@ function GigPoster() {
             });
     };
 
+    const sendVerificationLink = () => {
+        axiosClient
+            .post(`/send-verification-link/${gigPoster.id}`)
+            .then(({ data }) => {
+                showTopSuccessAlert(data.message);
+            })
+            .catch((err) => {
+                const response = err.response;
+                if (response && response.status == 422) {
+                    showTopErrorAlert(response.data.errors);
+                }
+            });
+    };
+
     {
         return loading ? (
             <Loading />
@@ -274,6 +288,15 @@ function GigPoster() {
                                     onClick={blockUser}
                                 >
                                     <span>Block user</span>
+                                </button>
+                            )}
+
+                            {!gigPoster?.is_verified && (
+                                <button
+                                    className="bg-orange-500 py-2 px-4 rounded-md hover:bg-orange-600 text-white cursor-pointer flex items-center space-x-2 font-semibold text-sm"
+                                    onClick={sendVerificationLink}
+                                >
+                                    <span>send verification link</span>
                                 </button>
                             )}
                         </div>

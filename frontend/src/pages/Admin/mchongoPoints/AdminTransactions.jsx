@@ -1,41 +1,111 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axiosClient from "../../../assets/js/axios-client";
-
-// datatable
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { FilterMatchMode } from "primereact/api";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
+import { MultiSelect } from "primereact/multiselect";
+import { Calendar } from "primereact/calendar";
 
 export default function AdminTransactions() {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [filters, setFilters] = useState({
-        start_date: "",
-        end_date: "",
-        status: "",
+    const [totalRecords, setTotalRecords] = useState(0);
+    const [lazyParams, setLazyParams] = useState({
+        first: 0,
+        rows: 10,
+        page: 0,
+        sortField: "created_at",
+        sortOrder: -1, // Descending
+        filters: {
+            created_at: { value: null, matchMode: FilterMatchMode.DATE_IS },
+            "user.usertype": { value: null, matchMode: FilterMatchMode.EQUALS },
+            points_purchased: {
+                value: null,
+                matchMode: FilterMatchMode.CONTAINS,
+            },
+            phone_number: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            user: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            channel: { value: null, matchMode: FilterMatchMode.EQUALS },
+            amount: { value: null, matchMode: FilterMatchMode.CUSTOM },
+            collected_amount: {
+                value: null,
+                matchMode: FilterMatchMode.CUSTOM,
+            },
+            status: { value: null, matchMode: FilterMatchMode.IN },
+            reference: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            customer_details: {
+                value: null,
+                matchMode: FilterMatchMode.CONTAINS,
+            },
+            failure_reason: {
+                value: null,
+                matchMode: FilterMatchMode.CONTAINS,
+            },
+        },
     });
-    const status = {
-        SUCCESS: "bg-green-100 text-green-700",
-        PROCESSING: "bg-yellow-100 text-yellow-700",
-        FAILED: "bg-red-100 text-red-700",
-        PREVIEWED: "bg-gray-100 text-gray-700",
-    };
 
-    const getTransactions = () => {
+    const statuses = useMemo(
+        () => [...new Set(transactions.map((t) => t.status).filter(Boolean))],
+        [transactions]
+    );
+    const channels = useMemo(
+        () => [...new Set(transactions.map((t) => t.channel).filter(Boolean))],
+        [transactions]
+    );
+    const usertypes = useMemo(
+        () => [
+            ...new Set(
+                transactions.map((t) => t.user?.usertype).filter(Boolean)
+            ),
+        ],
+        [transactions]
+    );
+
+    const loadData = () => {
         setLoading(true);
+        const params = {
+            first: lazyParams.first,
+            rows: lazyParams.rows,
+            sortField: lazyParams.sortField,
+            sortOrder: lazyParams.sortOrder,
+            filters: JSON.stringify(lazyParams.filters),
+        };
         axiosClient
-            .get("/admin/transactions")
+            .get("/admin/transactions", { params })
             .then(({ data }) => {
-                setTransactions(data.data);
+                setTransactions(data.data.data);
+                setTotalRecords(data.data.total);
                 setLoading(false);
             })
             .catch(() => setLoading(false));
     };
 
     useEffect(() => {
-        getTransactions();
-    }, []);
+        loadData();
+    }, [lazyParams]);
 
-    console.log(transactions);
+    const onPage = (event) => {
+        setLazyParams({
+            ...lazyParams,
+            first: event.first,
+            rows: event.rows,
+            page: event.page,
+        });
+    };
+
+    const onSort = (event) => {
+        setLazyParams({
+            ...lazyParams,
+            sortField: event.sortField,
+            sortOrder: event.sortOrder,
+        });
+    };
+
+    const onFilter = (event) => {
+        setLazyParams({ ...lazyParams, filters: event.filters });
+    };
 
     const formatDate = (rowData) => {
         return new Date(rowData.created_at).toLocaleString("en-US", {
@@ -55,18 +125,33 @@ export default function AdminTransactions() {
         });
     };
 
-    const formatStatus = (rowData) => {
-        const status = rowData.status;
-        const severity =
-            status === "SUCCESS"
-                ? "success"
-                : status === "PREVIEWED"
-                ? "info"
-                : status === "FAILED"
-                ? "danger"
-                : "warning";
+    const getSeverity = (status) => {
+        switch (status) {
+            case "SUCCESS":
+                return "success";
+            case "PREVIEWED":
+                return "info";
+            case "FAILED":
+                return "danger";
+            default:
+                return "warning";
+        }
+    };
 
-        return <span className={`p-tag p-tag-${severity}`}>{status}</span>;
+    const formatStatus = (rowData) => {
+        return (
+            <span className={`p-tag p-tag-${getSeverity(rowData.status)}`}>
+                {rowData.status}
+            </span>
+        );
+    };
+
+    const statusItemTemplate = (option) => {
+        return (
+            <span className={`p-tag p-tag-${getSeverity(option)}`}>
+                {option}
+            </span>
+        );
     };
 
     const indexTemplate = (rowData, { rowIndex }) => rowIndex + 1;
@@ -82,241 +167,381 @@ export default function AdminTransactions() {
             if (value1 == null && value2 == null) return 0;
             if (value2 == null) return -1;
             if (value1 == null) return 1;
-            return value1.localeCompare(value2) * event.order; // Ascending/descending via event.order (1 or -1)
+            return (
+                value1.toString().localeCompare(value2.toString(), undefined, {
+                    sensitivity: "base",
+                }) * event.order
+            );
         });
     };
 
-    const columns = [
-        {
-            header: "#",
-            body: indexTemplate,
-            style: { width: "3rem", minWidth: "3rem" },
-            sortable: false,
-        },
-        {
-            field: "created_at",
-            header: "Date",
-            body: formatDate,
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+    const numericFilterFunction = (value, filter) => {
+        if (!filter) return true;
+        const cleanFilter = filter.replace(/[$,]/g, "");
+        return value.toString().includes(cleanFilter);
+    };
+
+    const textFilterTemplate = (options) => {
+        return (
+            <InputText
+                value={options.value || ""}
+                onChange={(e) => options.filterApplyCallback(e.target.value)}
+                placeholder={options.filterPlaceholder || "Search"}
+                style={{ minWidth: "12rem" }}
+            />
+        );
+    };
+
+    const dateFilterTemplate = (options) => {
+        return (
+            <Calendar
+                value={options.value ? new Date(options.value) : ''}
+                onChange={(e) => {
+                    if (e.value instanceof Date) {
+                        // Build a UTC date at midnight
+                        const utcDate = new Date(
+                            Date.UTC(
+                                e.value.getFullYear(),
+                                e.value.getMonth(),
+                                e.value.getDate()
+                            )
+                        );
+
+                        // Force UTC YYYY-MM-DD
+                        const value = utcDate.toISOString().split("T")[0];
+
+                        options.filterApplyCallback(value);
+                    } else {
+                        options.filterApplyCallback(null);
+                    }
+                }}
+                dateFormat="yy-mm-dd"
+                placeholder="Select date"
+                className="p-column-filter"
+                style={{ minWidth: "12rem" }}
+            />
+        );
+    };
+
+    const numericFilterTemplate = (options) => {
+        return (
+            <InputText
+                value={options.value || ''}
+                onChange={(e) => options.filterApplyCallback(e.target.value)}
+                placeholder="Search (e.g., 100)"
+                style={{ minWidth: "12rem" }}
+            />
+        );
+    };
+
+    const statusFilterTemplate = (options) => {
+        return (
+            <MultiSelect
+                value={options.value || ''}
+                options={statuses}
+                itemTemplate={statusItemTemplate}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                placeholder="Select Status"
+                className="p-column-filter"
+                showClear
+                style={{ minWidth: "12rem" }}
+            />
+        );
+    };
+
+    const channelFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value || ''}
+                options={channels}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                placeholder="Select Method"
+                className="p-column-filter"
+                showClear
+                style={{ minWidth: "12rem" }}
+            />
+        );
+    };
+
+    const usertypeFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value || ''}
+                options={usertypes}
+                onChange={(e) => options.filterApplyCallback(e.value)}
+                placeholder="Select Type"
+                className="p-column-filter"
+                showClear
+                style={{ minWidth: "10rem" }}
+            />
+        );
+    };
+
+    const columns = useMemo(
+        () => [
+            {
+                header: "#",
+                body: indexTemplate,
+                style: { width: "3rem", minWidth: "3rem" },
+                sortable: false,
+                filter: false,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "10rem", minWidth: "10rem" },
-            sortable: true
-        },
-        {
-            header: "User",
-            body: formatName,
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "created_at",
+                header: "Date",
+                body: formatDate,
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "10rem", minWidth: "10rem" },
+                sortable: true,
+                filter: true,
+                filterElement: dateFilterTemplate,
+                filterPlaceholder: "Select date",
+                filterMatchMode: FilterMatchMode.DATE_IS,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "12rem", minWidth: "12rem" },
-            sortable: false
-        },
-        {
-            field: "user.usertype",
-            header: "User Type",
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                header: "User",
+                body: formatName,
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "12rem", minWidth: "12rem" },
+                sortable: false,
+                filter: true,
+                filterField: "user",
+                filterElement: textFilterTemplate,
+                filterPlaceholder: "Search user",
+                filterMatchMode: FilterMatchMode.CONTAINS,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "8rem", minWidth: "8rem" },
-            sortable: true,
-        },
-        {
-            field: "points_purchased",
-            header: "Points Purchased",
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "user.usertype",
+                header: "User Type",
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "8rem", minWidth: "8rem" },
+                sortable: false, // Disabled sort for nested field (backend complexity)
+                filter: true,
+                filterField: "user.usertype",
+                filterElement: usertypeFilterTemplate,
+                filterPlaceholder: "Select Type",
+                filterMatchMode: FilterMatchMode.EQUALS,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "10rem", minWidth: "10rem" },
-            sortable: true,
-        },
-        {
-            field: "phone_number",
-            header: "Phone number",
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "points_purchased",
+                header: "Points Purchased",
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "10rem", minWidth: "10rem" },
+                sortable: true,
+                filter: true,
+                filterPlaceholder: "Search points",
+                filterMatchMode: FilterMatchMode.CONTAINS,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "12rem", minWidth: "12rem" },
-            sortable: true,
-        },
-        {
-            field: "channel",
-            header: "Payment method",
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "phone_number",
+                header: "Phone number",
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "20rem", minWidth: "12rem" },
+                sortable: true,
+                filter: true,
+                filterPlaceholder: "Search phone",
+                filterMatchMode: FilterMatchMode.CONTAINS,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "12rem", minWidth: "12rem" },
-            sortable: true,
-        },
-        {
-            field: "amount",
-            header: "Amount",
-            body: formatAmount,
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "channel",
+                header: "Payment method",
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "12rem", minWidth: "12rem" },
+                sortable: true,
+                filter: true,
+                filterElement: channelFilterTemplate,
+                showFilterMenu: false,
+                filterPlaceholder: "Select Method",
+                filterMatchMode: FilterMatchMode.EQUALS,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "10rem", minWidth: "10rem" },
-            sortable: true,
-        },
-        {
-            field: "collected_amount",
-            header: "Collected Amount",
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "amount",
+                header: "Amount",
+                body: formatAmount,
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "10rem", minWidth: "10rem" },
+                sortable: true,
+                filter: true,
+                filterElement: numericFilterTemplate,
+                filterPlaceholder: "Search amount",
+                filterMatchMode: FilterMatchMode.CUSTOM,
+                filterFunction: numericFilterFunction,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "12rem", minWidth: "12rem" },
-            sortable: true,
-        },
-        {
-            header: "Status",
-            body: formatStatus,
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "collected_amount",
+                header: "Collected Amount",
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "12rem", minWidth: "12rem" },
+                sortable: true,
+                filter: true,
+                filterElement: numericFilterTemplate,
+                filterPlaceholder: "Search collected",
+                filterMatchMode: FilterMatchMode.CUSTOM,
+                filterFunction: numericFilterFunction,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "8rem", minWidth: "8rem" },
-            sortable: true,
-            sortFunction: customStatusSort,
-        },
-        {
-            field: "reference",
-            header: "Reference",
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "status",
+                header: "Status",
+                body: formatStatus,
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "8rem", minWidth: "8rem" },
+                sortable: true,
+                sortFunction: customStatusSort,
+                filter: true,
+                filterField: "status",
+                filterElement: statusFilterTemplate,
+                showFilterMenu: false,
+                filterMatchMode: FilterMatchMode.IN,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "12rem", minWidth: "12rem" },
-            sortable: true,
-        },
-        {
-            field: "customer_details",
-            header: "Transac Customer",
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "reference",
+                header: "Reference",
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "12rem", minWidth: "12rem" },
+                sortable: true,
+                filter: true,
+                filterPlaceholder: "Search reference",
+                filterMatchMode: FilterMatchMode.CONTAINS,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "12rem", minWidth: "12rem" },
-        },
-        {
-            field: "failure_reason",
-            header: "Failure Reason",
-            bodyStyle: {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+            {
+                field: "customer_details",
+                header: "Transac Customer",
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "12rem", minWidth: "12rem" },
+                sortable: false,
+                filter: true,
+                filterPlaceholder: "Search customer",
+                filterMatchMode: FilterMatchMode.CONTAINS,
             },
-            headerStyle: { whiteSpace: "nowrap" },
-            style: { width: "12rem", minWidth: "12rem" },
-        },
-    ];
+            {
+                field: "failure_reason",
+                header: "Failure Reason",
+                bodyStyle: {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
+                headerStyle: { whiteSpace: "nowrap" },
+                style: { width: "12rem", minWidth: "12rem" },
+                sortable: true,
+                filter: true,
+                filterPlaceholder: "Search failure reason",
+                filterMatchMode: FilterMatchMode.CONTAINS,
+            },
+        ],
+        []
+    );
 
     return (
         <section className="p-6 bg-gray-100 min-h-screen">
             <h1 className="text-2xl font-bold text-blue-900 mb-6">
                 Transaction History
             </h1>
-
-            {/* Filter Section */}
-            <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row md:items-end gap-4">
-                <div>
-                    <label className="block text-sm text-gray-600">From</label>
-                    <input
-                        type="date"
-                        className="border border-gray-300 rounded-md p-2 w-full"
-                        value={filters.start_date}
-                        onChange={(e) =>
-                            setFilters({
-                                ...filters,
-                                start_date: e.target.value,
-                            })
-                        }
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm text-gray-600">To</label>
-                    <input
-                        type="date"
-                        className="border border-gray-300 rounded-md p-2 w-full"
-                        value={filters.end_date}
-                        onChange={(e) =>
-                            setFilters({ ...filters, end_date: e.target.value })
-                        }
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm text-gray-600">
-                        Status
-                    </label>
-                    <select
-                        className="border border-gray-300 rounded-md p-2 w-full"
-                        value={filters.status}
-                        onChange={(e) =>
-                            setFilters({ ...filters, status: e.target.value })
-                        }
-                    >
-                        <option value="">All</option>
-                        <option value="SUCCESS">Success</option>
-                        <option value="PROCESSING">Processing</option>
-                        <option value="FAILED">Failed</option>
-                        <option value="PREVIEWED">Previewed</option>
-                    </select>
-                </div>
-            </div>
-
             <div className="card" style={{ width: "100%", overflowX: "auto" }}>
                 <DataTable
                     value={transactions}
-                    tableStyle={{ minWidth: "120rem" }} // Set a large minWidth to force horizontal scroll if columns exceed viewport
+                    tableStyle={{ minWidth: "120rem" }}
                     scrollable
                     stripedRows
                     paginator
-                    rows={10}
+                    rows={lazyParams.rows}
                     rowsPerPageOptions={[5, 10, 25, 50]}
-                    sortMode="multiple"
+                    sortMode="single"
                     removableSort
                     loading={loading}
+                    filters={lazyParams.filters}
+                    filterDisplay="row"
+                    lazy
+                    totalRecords={totalRecords}
+                    first={lazyParams.first}
+                    sortField={lazyParams.sortField}
+                    sortOrder={lazyParams.sortOrder}
+                    onPage={onPage}
+                    onSort={onSort}
+                    onFilter={onFilter}
                 >
                     {columns.map((col, i) => (
                         <Column
-                            key={col.field || col.header || i} // Use i as fallback for columns without field
+                            key={col.field || col.header || i}
                             field={col.field}
                             header={col.header}
                             body={col.body}
-                            bodyStyle={col.bodyStyle}
-                            headerStyle={col.headerStyle}
-                            sortable={col.sortable}
+                            bodyStyle={col.bodyStyle || {}}
+                            headerStyle={col.headerStyle || {}}
+                            sortable={col.sortable || false}
                             sortFunction={col.sortFunction}
-                            style={col.style}
+                            style={
+                                col.style || {
+                                    width: "10rem",
+                                    minWidth: "10rem",
+                                }
+                            }
+                            filter={col.filter || false}
+                            filterElement={col.filterElement}
+                            filterPlaceholder={col.filterPlaceholder}
+                            filterField={col.filterField}
+                            showFilterMenu={
+                                col.showFilterMenu !== undefined
+                                    ? col.showFilterMenu
+                                    : true
+                            }
+                            filterMatchMode={col.filterMatchMode}
+                            filterFunction={col.filterFunction}
                         />
                     ))}
                 </DataTable>

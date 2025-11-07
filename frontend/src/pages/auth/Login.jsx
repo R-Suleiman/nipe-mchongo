@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { showTopErrorAlert, showTopSuccessAlert } from "../../utils/sweetAlert";
 import axiosClient from "../../assets/js/axios-client";
 import { useAuth } from "../../context/AuthProvider";
 import logo from "../../assets/images/logo-2.png";
+import { useSearchParams } from "react-router-dom";
 
 function Login() {
     const navigate = useNavigate();
@@ -18,6 +19,20 @@ function Login() {
     const handleChange = (e) => {
         setLoginData({ ...loginData, [e.target.name]: e.target.value });
     };
+
+    // for email verification
+    const [searchParams] = useSearchParams();
+    const status = searchParams.get("status");
+
+    useEffect(() => {
+        if (status === "verified") {
+            showTopSuccessAlert("Your email has been verified successfully!");
+        } else if (status === "already_verified") {
+            showTopSuccessAlert("ℹYour email was already verified.");
+        } else if (status === "invalid") {
+            showTopErrorAlert("Invalid or expired verification link.");
+        }
+    }, [status]);
 
     const login = async (e) => {
         e.preventDefault();

@@ -13,7 +13,6 @@ function GigPosters() {
     dayjs.extend(relativeTime);
     const [users, setusers] = useState();
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [meta, setMeta] = useState({});
     const [page, setPage] = useState(1);
@@ -24,6 +23,7 @@ function GigPosters() {
         axiosClient
             .post("/admin/users/gig-posters", { search, page })
             .then(({ data }) => {
+                console.log(data)
                 setusers(data.users.data);
                 setMeta({
                     currentPage: data.users.current_page,
@@ -103,10 +103,10 @@ function GigPosters() {
                                     Last Name
                                 </th>
                                 <th className="p-2 text-left border border-gray-300">
-                                    Username
+                                    Email
                                 </th>
                                 <th className="p-2 text-left border border-gray-300">
-                                    Gender
+                                    Username
                                 </th>
                                 <th className="p-2 text-left border border-gray-300">
                                     Phone
@@ -134,10 +134,10 @@ function GigPosters() {
                                                 {user.lastname}
                                             </td>
                                             <td className="p-2 text-left border border-gray-300">
-                                                {user.username}
+                                                {user.email}
                                             </td>
                                             <td className="p-2 text-left border border-gray-300">
-                                                {user.gender}
+                                                {user.username}
                                             </td>
                                             <td className="p-2 text-left border border-gray-300">
                                                 {user.phone}
