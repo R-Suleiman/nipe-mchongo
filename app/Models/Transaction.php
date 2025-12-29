@@ -17,7 +17,7 @@ class Transaction extends Model
         'phone_number',
         'reference',
         'available_methods',
-        'channel',
+        'channel', 
         'collected_amount',
         'customer_details',
         'failure_reason',

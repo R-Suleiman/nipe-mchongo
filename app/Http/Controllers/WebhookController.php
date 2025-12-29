@@ -90,7 +90,7 @@ class WebhookController extends Controller
         }
 
         // Skip if already processed (prevent duplicates)
-        if (in_array($transaction->status, ['completed', 'failed'])) {
+        if (in_array($transaction->status, ['SUCCESS', 'FAILED'])) {
             Log::info('ClickPesa webhook duplicate for already processed transaction', [
                 'orderReference' => $data['orderReference'],
                 'current_status' => $transaction->status,

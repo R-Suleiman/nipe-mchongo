@@ -91,7 +91,7 @@ class AuthController extends Controller
         // OTPs cleanup
         Otp::where('user_id', $user->id)->delete();
 
-        return response()->json(['message' => 'Phone number verified successfully.']);
+        return response()->json(['message' => 'Email verified successfully.']);
     }
 
     public function resendOtp(Request $request)
@@ -113,7 +113,7 @@ class AuthController extends Controller
             'expires_at' => now()->addMinutes(5),
         ]);
 
-        // Mail::to($user->email)->send(new SendOtpMail($otpCode, $user->firstname));
+        Mail::to($user->email)->send(new SendOtpMail($otpCode, $user->firstname));
 
         return response()->json([
             'success' => true,
@@ -226,7 +226,7 @@ class AuthController extends Controller
         Otp::where('user_id', $user->id)->delete();
 
         $otpCode = rand(100000, 999999);
-        Otp::create([
+        $otp = Otp::create([
             'user_id' => $user->id,
             'code' => $otpCode,
             'expires_at' => now()->addMinutes(5),
@@ -239,6 +239,7 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'A verification code has been sent to your email.',
             'user_id' => $user->id,
+            'expires_at' => $otp->expires_at
         ]);
     }
 

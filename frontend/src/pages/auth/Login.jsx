@@ -20,7 +20,7 @@ function Login() {
         setLoginData({ ...loginData, [e.target.name]: e.target.value });
     };
 
-    // for email verification
+    // for email verification via link
     const [searchParams] = useSearchParams();
     const status = searchParams.get("status");
 

@@ -23,7 +23,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
 // email verification via link
-Route::post('/send-verification-link/{$userId}', [AuthController::class, 'resendVerificationLink']);
 Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyLink'])
     ->middleware(['signed'])
     ->name('verification.verify');
@@ -58,6 +57,8 @@ Route::middleware(['auth:sanctum', 'checkToken'])->group(function () {
         Route::post('/user/create-user', [AdminUsersController::class, 'createUser']);
         Route::post('/user/update-user/{userId}', [AdminUsersController::class, 'updateUser']);
         Route::get('/transactions', [AdminTransactionsController::class, 'getTransactions']);
+
+        Route::post('/send-verification-link/{$userId}', [AuthController::class, 'resendVerificationLink']);
     });
 
     Route::middleware('role:poster')->group(function () {
